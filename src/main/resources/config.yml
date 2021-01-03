@@ -1,0 +1,16 @@
+
+# BEFORE RELEASE:
+
+# Need to connect driver to actual driver (it currently won't change anything!!!
+
+database:
+  # Drivers
+  # com.mysql.cj.jdbc.Driver
+  # com.mysql.jdbc.Driver
+  driver: "com.mysql.jdbc.Driver"
+  database_name: "MailMe"
+  host: "localhost"
+  port: 3306
+  username: "root"
+  password: "administrator"
+  useSSL: false

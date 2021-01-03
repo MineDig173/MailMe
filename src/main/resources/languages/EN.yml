@@ -1,0 +1,13 @@
+# EN
+
+cmd:
+  notify: "&e&lMailMe &7▹ &aNotification settings updated!"
+  lang:
+    failure: "&e&lMailMe &7▹ &cLanguage token does not exist!"
+    success: "&e&lMailMe &7▹ &aLanguage successfully changed!"
+  help:
+    - '&7&m--------------------------'
+    - '&e&lMailMe'
+    - '&7▹ &e/mailme lang <token> &7- Switches Language'
+    - '&7▹ &e/mailme notify <true/false> &7- Switches notification settings'
+    - '&7&m--------------------------'
