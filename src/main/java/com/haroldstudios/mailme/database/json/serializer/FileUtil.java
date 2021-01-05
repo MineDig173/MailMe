@@ -1,6 +1,7 @@
 package com.haroldstudios.mailme.database.json.serializer;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.mail.Mail;
 import org.bukkit.Bukkit;
@@ -48,12 +49,13 @@ public class FileUtil {
     }
 
     private GsonBuilder buildGson() {
-        return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping()
+        return new GsonBuilder().disableHtmlEscaping()
                 .enableComplexMapKeySerialization()
+                .setDateFormat("dd-MM-yyyy-hh:mm:ss.SSS")
                 .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
                 .registerTypeAdapter(Location.class, new LocationSerializer())
                 .registerTypeAdapter(ItemStack.class, new ItemStackTypeAdapter())
-                .registerTypeAdapter(Mail.class, new AbstractClassSerializer<>())
+                .registerTypeAdapter(Mail.class, new AbstractClassSerializer<Mail>())
                 .registerTypeAdapterFactory(EnumTypeAdapter.ENUM_FACTORY);
     }
 
@@ -92,17 +94,14 @@ public class FileUtil {
 
     // Serialization
 
-    public <T> String serialize(Class<T> clazz) {
-        return gson.toJson(clazz);
+    public String serialize(Mail mail) {
+        Type token = new TypeToken<Mail>() {}.getType();
+        return gson.toJson(mail, token);
     }
 
-    public <T> String serialize(T obj) {
-        return gson.toJson(obj);
-    }
-
-
-    public <T> T deserialize(Class<T> clazz, String json) {
-        return gson.fromJson(json, clazz);
+    public Mail deserializeMail(String json) {
+        Type token = new TypeToken<Mail>() {}.getType();
+        return gson.fromJson(json, token);
     }
 
     // LOAD BY CLASS

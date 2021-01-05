@@ -10,6 +10,7 @@ public class AbstractClassSerializer<T>
     @Override
     public final JsonElement serialize(final T object, final Type interfaceType, final JsonSerializationContext context) {
         final JsonObject member = new JsonObject();
+        System.out.println("here");
         member.addProperty("type", object.getClass().getName());
         member.add("data", context.serialize(object));
         return member;
@@ -30,10 +31,6 @@ public class AbstractClassSerializer<T>
     private Type typeForName(final JsonElement typeElem) {
         try {
             String type = typeElem.getAsString();
-            // Replaces old packaging
-            if (type.contains("me.harry0198.mailme")) {
-                type = type.replace("me.harry0198", "com.haroldstudios");
-            }
 
             return Class.forName(type);
         } catch (ClassNotFoundException e) {

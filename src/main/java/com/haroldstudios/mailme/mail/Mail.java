@@ -1,8 +1,14 @@
 package com.haroldstudios.mailme.mail;
 
 import com.haroldstudios.mailme.MailMe;
+import com.haroldstudios.mailme.database.PlayerMailDAO;
+import com.haroldstudios.mailme.utils.PlayerUtils;
+import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class Mail {
@@ -32,15 +38,44 @@ public abstract class Mail {
         return uuid;
     }
 
-    public abstract void onMailClick();
+    public String getSender() {
+        return sender;
+    }
+
+    public ItemStack getIcon() {
+        return icon;
+    }
+
+    public void send(List<UUID> recipients) {
+        PlayerMailDAO dao = MailMe.getInstance().getPlayerMailDAO();
+
+        dao.saveMailObj(this);
+
+        for (UUID recipient : recipients) {
+            dao.savePlayerMail(recipient, this).thenAccept(success -> {
+                PlayerUtils.notifyUnread(recipient);
+            });
+        }
+    }
+
+    public int getExpiryTimeMilliSeconds() { return expiryTimeMins * 60 * 1000; }
+
+    public boolean isExpired() {
+         return dateCreated + getExpiryTimeMilliSeconds() < System.currentTimeMillis();
+    }
+
+    public abstract void onMailClick(Player whoClicked);
+    public abstract BaseComponent[] getContentsAsText();
+    public abstract String[] getContentsAsString();
 
     // Hierarchical Builder Pattern
-    protected abstract static class Builder<T extends Builder<T>>{
+    public abstract static class Builder<T extends Builder<T>>{
 
         protected String sender;
         protected ItemStack icon;
         protected int expiryTimeMins;
         private Long dateCreated;
+        private final List<UUID> recipients = new ArrayList<>();
 
         public T setSender(String sender) {
             this.sender = sender;
@@ -50,6 +85,24 @@ public abstract class Mail {
         public T setIcon(ItemStack icon) {
             this.icon = icon;
             return self();
+        }
+
+        public T addRecipient(UUID uuid) {
+            this.recipients.add(uuid);
+            return self();
+        }
+
+        public T removeRecipient(UUID uuid) {
+            this.recipients.remove(uuid);
+            return self();
+        }
+
+        public List<UUID> getRecipients() {
+            return recipients;
+        }
+
+        public boolean isRecipient(UUID uuid) {
+            return this.recipients.contains(uuid);
         }
 
         public T setExpiryTimeMins(int expiry) {
@@ -66,6 +119,29 @@ public abstract class Mail {
             if (dateCreated == null) return System.currentTimeMillis();
             return dateCreated;
         }
+
+        public ItemStack getIcon() {
+            return icon.clone();
+        }
+
+        public String getSender() {
+            return sender;
+        }
+
+        public int getExpiryTimeMins() {
+            return expiryTimeMins;
+        }
+
+        public Mail.Builder<?> combine(Mail.Builder<?> combineTo) {
+            if (combineTo == null) return this;
+            this.getRecipients().addAll(combineTo.getRecipients());
+            this.setIcon(combineTo.getIcon());
+            this.setSender(combineTo.getSender());
+            this.setExpiryTimeMins(combineTo.getExpiryTimeMins());
+            return this;
+        }
+
+        public abstract String[] getContents();
 
         // Subclasses must override and return 'this' (themselves)
         protected abstract T self();

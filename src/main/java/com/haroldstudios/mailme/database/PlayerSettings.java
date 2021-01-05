@@ -30,7 +30,9 @@ public class PlayerSettings {
      * @return Mailbox locations
      */
     public List<Location> getMailboxLocations() {
-        return mailboxLocations;
+        List<Location> locationsList = new ArrayList<>(mailboxLocations);
+        locationsList.add(MailMe.getInstance().getCache().getServerSettings().getDefaultMailboxLocation());
+        return locationsList;
     }
 
     /**
@@ -46,11 +48,13 @@ public class PlayerSettings {
 
     public void removeMailboxLocation(Location location) {
         this.mailboxLocations.remove(location);
+        MailMe.getInstance().getCache().removeMailbox(location);
         save();
     }
 
     public void addMailboxLocation(Location location) {
         this.mailboxLocations.remove(location);
+        MailMe.getInstance().getCache().addMailbox(getUuid(), location);
         save();
     }
 

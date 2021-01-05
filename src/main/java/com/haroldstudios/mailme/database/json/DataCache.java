@@ -2,8 +2,11 @@ package com.haroldstudios.mailme.database.json;
 
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.database.PlayerSettings;
+import com.haroldstudios.mailme.database.ServerSettings;
 import com.haroldstudios.mailme.database.json.serializer.FileUtil;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +17,51 @@ public class DataCache {
     private final FileUtil fileUtil;
 
     private final Map<UUID, PlayerSettings> playerSettingsMap = new HashMap<>();
+    private final ServerSettings serverSettings;
+    private final Map<Location, UUID> mailboxLocations = new HashMap<>();
 
     public DataCache() {
         this.fileUtil = new FileUtil();
+        File folder = new File(MailMe.getInstance().getDataFolder(), "playersettings");
+        folder.mkdir();
+        this.serverSettings = this.getFileUtil().getFile(ServerSettings.class).exists() ? this.getFileUtil().load(ServerSettings.class) : new ServerSettings();
+
+        // Inserts all mailboxes on running server into cache.
+        for (File file : folder.listFiles()) {
+            PlayerSettings settings = getFileUtil().load(PlayerSettings.class, file);
+            List<Location> personalMailboxLocations = settings.getMailboxLocations();
+            for (Location loc : personalMailboxLocations) {
+                mailboxLocations.put(loc, settings.getUuid());
+            }
+        }
+    }
+
+    public boolean isMailboxAtLocation(Location location) {
+        return mailboxLocations.containsKey(location) || location.equals(serverSettings.getDefaultMailboxLocation());
+    }
+
+    public void addMailbox(UUID uuid, Location location) {
+        mailboxLocations.put(location, uuid);
+    }
+
+    public void removeMailbox(Location valueToRemove) {
+        Location removalKey = null;
+
+        for (Map.Entry<Location, UUID> entry : mailboxLocations.entrySet()) {
+            if (valueToRemove.equals(entry.getValue())) {
+                removalKey = entry.getKey();
+                break;
+            }
+        }
+
+        if (removalKey != null) {
+            mailboxLocations.remove(removalKey);
+        }
+    }
+
+    @Nullable
+    public UUID getWhoOwnsMailboxAtLocation(Location location) {
+        return mailboxLocations.get(location);
     }
 
     /**
@@ -66,5 +111,9 @@ public class DataCache {
 
     public FileUtil getFileUtil() {
         return fileUtil;
+    }
+
+    public ServerSettings getServerSettings() {
+        return serverSettings;
     }
 }

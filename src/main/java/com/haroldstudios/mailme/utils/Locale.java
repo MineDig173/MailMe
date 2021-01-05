@@ -1,10 +1,18 @@
 package com.haroldstudios.mailme.utils;
 
 import com.haroldstudios.mailme.MailMe;
+import me.mattstudios.mfgui.gui.components.ItemBuilder;
+import me.mattstudios.mfgui.gui.components.xseries.XMaterial;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -13,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import static com.haroldstudios.mailme.utils.Utils.colour;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Locale {
@@ -29,19 +38,20 @@ public class Locale {
         serverLangToken = plugin.getConfig().getString("lang");
 
         File folder = new File(plugin.getDataFolder() + "/languages");
+        folder.mkdir();
+        // Save all preset resources here
+        if (!new File(MailMe.getInstance().getDataFolder(), "languages/EN.yml").exists()) {
+            plugin.saveResource("languages/EN.yml", false);
+        }
         
         for (File lang : folder.listFiles()) {
             
             String fileName = lang.getName();
-            
-            if (!new File(MailMe.getInstance().getDataFolder() + "/languages", fileName).exists()) {
-                MailMe.getInstance().saveResource("languages/" + fileName + ".yml", false);
-            }
 
             File langFile = new File(MailMe.getInstance().getDataFolder() + "/languages/" + fileName);
             YamlConfiguration externalYamlConfig = YamlConfiguration.loadConfiguration(langFile);
 
-            InputStream resource = MailMe.getInstance().getResource(fileName);
+            InputStream resource = MailMe.getInstance().getResource("languages/" + fileName);
             if (resource != null) {
                 InputStreamReader defConfigStream = new InputStreamReader(resource, UTF_8);
 
@@ -82,11 +92,18 @@ public class Locale {
         if (msg == null) {
             return "Unknown Message! Please contact an administrator. Token: " + string;
         }
-        return Utils.colour(msg);
+        return colour(msg);
     }
 
     public String[] getMessages(CommandSender sender, String string) {
         return getMessages(getLanguageTokenFor(sender), string);
+    }
+
+    public void trySendMessageToUUID(UUID uuid, String msg) {
+        Player p = Bukkit.getPlayer(uuid);
+        if (p == null) return;
+
+        p.sendMessage(getMessage(p, msg));
     }
 
     public String[] getMessages(String string) {
@@ -113,7 +130,7 @@ public class Locale {
         Player player = (Player) sender;
         String languageToken = MailMe.getInstance().getCache().getPlayerSettings(player).getLanguageToken();
 
-        if (languageExists(languageToken))
+        if (!languageExists(languageToken))
             return serverLangToken;
         else
             return languageToken;
@@ -129,6 +146,38 @@ public class Locale {
         }
 
         return Arrays.stream(listOfFiles).anyMatch(file -> file.getName().startsWith(token.toUpperCase()));
+    }
+
+    public ItemStack getItemStack(String path) { return getItemStack(serverLangToken, path); }
+
+    public ItemStack getItemStack(Player player, String path) { return getItemStack(getLanguageTokenFor(player), path); }
+
+    public ItemStack getItemStack(String token, String path) {
+        ConfigurationSection section = languagesMap.get(token).getConfigurationSection(path);
+            XMaterial xMaterial = XMaterial.matchXMaterial(section.getString("material")).orElse(XMaterial.STONE);
+            Material material = xMaterial.parseMaterial().orElse(Material.STONE);
+
+            if (material.equals(Material.AIR)) return new ItemStack(Material.AIR);
+            ItemBuilder builder = new ItemBuilder(material)
+                    .setName(Utils.colour(section.getString("title")))
+                    .setLore(Utils.colourList(section.getStringList("lore")).toArray(new String[]{}))
+                    .setAmount(section.getInt("amount"))
+                    .glow(section.getBoolean("glow"))
+                    .addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
+
+            if (material.equals(XMaterial.PLAYER_HEAD.parseMaterial()))
+                builder.setSkullTexture(section.getString("skull-texture"));
+
+            ItemStack stack = builder.build();
+            int modelData = section.getInt("custom-model-data");
+            if (modelData != 0) {
+                ItemMeta meta = stack.getItemMeta();
+
+                meta.setCustomModelData(section.getInt("custom-model-data"));
+
+                stack.setItemMeta(meta);
+            }
+            return stack;
     }
 
 }

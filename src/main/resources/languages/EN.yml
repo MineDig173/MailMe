@@ -1,7 +1,9 @@
 # EN
 
 cmd:
-  notify: "&e&lMailMe &7▹ &aNotification settings updated!"
+  notify:
+    success: "&e&lMailMe &7▹ &aNotification settings updated!"
+    failure: "&e&lMailMe &7▹ &cInvalid argument! Must be true or false."
   lang:
     failure: "&e&lMailMe &7▹ &cLanguage token does not exist!"
     success: "&e&lMailMe &7▹ &aLanguage successfully changed!"
@@ -11,3 +13,190 @@ cmd:
     - '&7▹ &e/mailme lang <token> &7- Switches Language'
     - '&7▹ &e/mailme notify <true/false> &7- Switches notification settings'
     - '&7&m--------------------------'
+
+requires-written-book: "&e&lMailMe &7▹ &cYou need to click with a written book to compose this mail type!"
+
+mailbox:
+  limit-reached: "&e&lMailMe &7▹ &cYou've reached the maximum amount of mailboxes you can own!"
+  invalid-item: "&e&lMailMe &7▹ &cYour mailbox cannot be this block type!"
+  location-occupied: "&e&lMailMe &7▹ &cThere is already a mailbox at this location!"
+  placement-success: "&e&lMailMe &7▹ &aMailbox location added!"
+  no-mailbox-here: "&e&lMailMe &7▹ &cThere is no mailbox here to remove!"
+  location-removed: "&e&lMailMe &7▹ &aMailbox location removed!"
+
+mail-types:
+  message: Message
+  item: Items
+  book: Book
+  location: Location
+
+mail:
+  message: "What would you like your letter to say?"
+  sent: "&e&lMailMe &7▹ &aMail successfully dispatched."
+  received: "&e&lMailMe &7▹ You've received mail!"
+
+gui:
+  search: "Type the name of the player you wish to find. This can be online or offline."
+  titles:
+    click-to-send: "Click to Send"
+    choose-type: "Choose Mail Type"
+    icon-selector: "Select an Icon!"
+    recipient-selector: "Choose your recipients"
+    inbox: "Your Inbox"
+    item-input: "Input your items"
+  revealed-contents:
+    title: '&eFrom: &7%sender%'
+    lore:
+      - "&7&m----------"
+      - "&7Type: &e%type%"
+      - "&7Received at: &e%date%"
+      - "&cExpires: &n%expiry%"
+      - "&7&m----------"
+      - "&eContents: %contents%"
+      - "&7&m----------"
+  filler:
+    title: ''
+    material: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    custom-model-data: 0
+    glow: false
+    lore: []
+  item-input:
+    title: '&e&lClick with Item'
+    material: YELLOW_STAINED_GLASS_PANE
+    amount: 1
+    custom-model-data: 0
+    glow: false
+    lore:
+      - "&7Click with an item to"
+      - "&7add to the mail."
+  close-menu:
+    title: '&cClose Menu'
+    material: BARRIER
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to go to'
+      - '&7close the menu!'
+    glow: true
+    skull-texture: ''
+  previous-menu:
+    title: '&8[&ePrevious Page&8]'
+    material: OAK_DOOR
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to go to'
+      - '&7the previous menu!'
+    glow: true
+    skull-texture: ''
+  previous-page:
+    title: '&8[&ePrevious Page&8]'
+    material: REDSTONE_TORCH
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to go to'
+      - '&7the previous page!'
+    glow: true
+    skull-texture: ''
+  next-page:
+    title: '&8[&eNext Page&8]'
+    material: REDSTONE_TORCH
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to go to'
+      - '&7the next page!'
+    glow: true
+    skull-texture: ''
+  message:
+    title: '&8[&eMessage Mail&8]'
+    material: OAK_SIGN
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to send someone'
+      - '&7a message mail!'
+    glow: true
+    skull-texture: ''
+  item:
+    title: '&8[&eItem Mail&8]'
+    material: CHEST
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to send someone'
+      - '&7an item mail!'
+    glow: true
+    skull-texture: ''
+  book:
+    title: '&8[&eBook Mail&8]'
+    material: WRITTEN_BOOK
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&e&lClick with a written book'
+      - '&e&lto compose mail with it!'
+    glow: true
+    skull-texture: ''
+  icon-custom:
+    title: '&8[&cCustom&8]'
+    material: YELLOW_STAINED_GLASS_PANE
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click with item to have as icon'
+      - '&7You won''t lose this item.'
+    glow: true
+    skull-texture: ''
+  search-players:
+    title: '&8[&eSearch&8]'
+    material: FEATHER
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to search by'
+      - '&7player name!'
+    glow: true
+    skull-texture: ''
+  remove-filters:
+    title: '&8[&dRemove Filter&8]'
+    material: IRON_BARS
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to remove any filters'
+      - '&7on the menu!'
+    glow: true
+    skull-texture: ''
+  read-as-text:
+    title: '&8[&eRead as Text&8]'
+    material: MAP
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to'
+      - '&7read your mail as text'
+    glow: true
+    skull-texture: ''
+  expand:
+    title: '&e&lClick to Expand!'
+    material: COMPASS
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to expand'
+      - '&7your view of players!'
+    glow: true
+    skull-texture: ''
+  next-menu:
+    title: '&a&lClick for the Next Menu!'
+    material: EMERALD_BLOCK
+    amount: 1
+    custom-model-data: 0
+    lore:
+      - '&7Click to go to'
+      - '&7the next menu'
+    glow: true
+    skull-texture: ''

@@ -3,7 +3,10 @@
 
 # Need to connect driver to actual driver (it currently won't change anything!!!
 
+lang: "EN"
+
 database:
+  type: "sqlite" # sqlite, mysql
   # Drivers
   # com.mysql.cj.jdbc.Driver
   # com.mysql.jdbc.Driver
@@ -14,3 +17,23 @@ database:
   username: "root"
   password: "administrator"
   useSSL: false
+
+# Here, you may add all variations of mailboxes you'd like to add. In this example, a player can only set a mailbox to be a chest
+#valid-mailboxes:
+#  - CHEST
+valid-mailboxes:
+  - CHEST
+
+# Distance player has to be within for the mailbox to query the database for unread mail
+# and play the ping effect.
+# Lower distance usually equals better performance and less strain on database.
+mailbox-ping-distance: 50
+
+icons:
+  - BLACK_BANNER;0
+  - SEA_PICKLE;0
+  - ELYTRA;0
+  - DIAMOND_PICKAXE;0
+  - EMERALD;0
+  - MINECART;0
+  - DIAMOND;0

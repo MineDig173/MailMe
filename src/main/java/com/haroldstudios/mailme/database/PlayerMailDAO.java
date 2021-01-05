@@ -9,7 +9,7 @@ public interface PlayerMailDAO {
 
     CompletableFuture<Mail[]> getUnreadMail(final UUID uuid);
     CompletableFuture<Boolean> hasUnreadMail(final UUID uuid);
-    void saveMailObj(Mail mail);
-    void savePlayerMail(UUID uuid, Mail mail);
+    CompletableFuture<Boolean> saveMailObj(Mail mail);
+    CompletableFuture<Boolean> savePlayerMail(UUID uuid, Mail mail);
 
 }
