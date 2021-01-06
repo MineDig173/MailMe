@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ public class PlayerSettings {
 
     private final UUID uuid;
     private boolean receivingNotifications;
-    private List<Location> mailboxLocations;
+    private final List<Location> mailboxLocations;
     @Nullable private String languageToken;
 
     public PlayerSettings(final UUID uuid) {
@@ -32,7 +33,13 @@ public class PlayerSettings {
     public List<Location> getMailboxLocations() {
         List<Location> locationsList = new ArrayList<>(mailboxLocations);
         locationsList.add(MailMe.getInstance().getCache().getServerSettings().getDefaultMailboxLocation());
+        locationsList.removeAll(Collections.singleton(null));
         return locationsList;
+    }
+
+    // Only retrieves the mailbox locations of this player excluding the default mailbox
+    public List<Location> getOnlyMailboxLocations() {
+        return mailboxLocations;
     }
 
     /**
@@ -53,7 +60,7 @@ public class PlayerSettings {
     }
 
     public void addMailboxLocation(Location location) {
-        this.mailboxLocations.remove(location);
+        this.mailboxLocations.add(location);
         MailMe.getInstance().getCache().addMailbox(getUuid(), location);
         save();
     }

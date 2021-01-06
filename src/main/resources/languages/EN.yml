@@ -10,11 +10,28 @@ cmd:
   help:
     - '&7&m--------------------------'
     - '&e&lMailMe'
+    - '&7▹ &e/mailme compose &7- Compose a mail and send'
+    - '&7▹ &e/mailme inbox &7- Read Mail'
     - '&7▹ &e/mailme lang <token> &7- Switches Language'
     - '&7▹ &e/mailme notify <true/false> &7- Switches notification settings'
     - '&7&m--------------------------'
 
 requires-written-book: "&e&lMailMe &7▹ &cYou need to click with a written book to compose this mail type!"
+
+postoffice-help:
+  - '&7&m--------------------------'
+  - '&e&lMailMe'
+  - "&7▹ &e/postoffice add <send/read> &7- Adds a postoffice at location you're looking at. Specify type > inbox / compose"
+  - "&7▹ &e/postoffice remove &7- Removes postoffice at location you're looking at"
+  - "&7▹ &e/postoffice removeall &7- Removes all postoffices"
+  - '&7&m--------------------------'
+
+postoffice:
+  add: "&e&lMailMe &7▹ &aPost office added at location!"
+  removed: "&e&lMailMe &7▹ &aPost office removed at location!"
+  cleared: "&e&lMailMe &7▹ &aAll post offices removed!"
+  no-po-here: "&e&lMailMe &7▹ &cThere is no post office at this location!"
+  bad-material: "&e&lMailMe &7▹ &cMaterial cannot be AIR!"
 
 mailbox:
   limit-reached: "&e&lMailMe &7▹ &cYou've reached the maximum amount of mailboxes you can own!"

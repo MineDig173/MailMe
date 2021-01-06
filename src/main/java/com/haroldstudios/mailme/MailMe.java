@@ -2,6 +2,7 @@ package com.haroldstudios.mailme;
 
 import com.haroldstudios.mailme.commands.MailCommands;
 import com.haroldstudios.mailme.commands.MailboxCommands;
+import com.haroldstudios.mailme.commands.PostOfficeCommands;
 import com.haroldstudios.mailme.database.DatabaseConnector;
 import com.haroldstudios.mailme.database.DatabaseSettingsImpl;
 import com.haroldstudios.mailme.database.PlayerMailDAO;
@@ -42,6 +43,7 @@ public final class MailMe extends JavaPlugin {
 
         commandManager.register(new MailCommands(this));
         commandManager.register(new MailboxCommands(this));
+        commandManager.register(new PostOfficeCommands(this));
 
         getServer().getPluginManager().registerEvents(new EntityEvents(this), this);
 

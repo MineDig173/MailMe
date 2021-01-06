@@ -19,15 +19,15 @@ public class ChooseMailTypeGui extends AbstractMailGui {
     @Override
     public void open() {
 
-        getGui().setItem(2,4, new GuiItem(getPlugin().getLocale().getItemStack("gui.message"), e -> {
+        getGui().setItem(2,4, new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(),"gui.message"), e -> {
             createMailBuilder(MailType.MESSAGE);
             next();
         }));
-        getGui().setItem(2,5, new GuiItem(getPlugin().getLocale().getItemStack("gui.item"), e -> {
+        getGui().setItem(2,5, new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(),"gui.item"), e -> {
             createMailBuilder(MailType.ITEM);
             next();
         }));
-        getGui().setItem(2,6, new GuiItem(getPlugin().getLocale().getItemStack("gui.book"), e -> {
+        getGui().setItem(2,6, new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(),"gui.book"), e -> {
             ItemStack cursor = e.getCursor();
             if (cursor == null || !cursor.getType().equals(XMaterial.WRITTEN_BOOK.parseMaterial().get()) || !cursor.hasItemMeta()) {
                 getPlayer().sendMessage(getPlugin().getLocale().getMessage(getPlayer(), "requires-written-book"));

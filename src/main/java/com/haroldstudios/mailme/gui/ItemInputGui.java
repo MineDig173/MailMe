@@ -30,8 +30,9 @@ public class ItemInputGui extends AbstractScrollingMailGui {
             if (cursor == null) return;
             if (cursor.getType().equals(Material.AIR)) return;
 
-            items.add(cursor);
+            items.add(new ItemStack(cursor));
             event.setCursor(null);
+            safeToLeave = true;
             new ItemInputGui(getPlugin(), getPlayer(), previousMenu, builder, items).open();
         }));
 
@@ -62,13 +63,14 @@ public class ItemInputGui extends AbstractScrollingMailGui {
                 ItemStack clickedItem = event.getCurrentItem();
                 if (clickedItem == null) return;
 
-                Optional<ItemStack> itemStackOptional = items.stream().filter(item -> item.isSimilar(clickedItem)).findFirst();
+                Optional<ItemStack> itemStackOptional = items.stream().filter(item -> item.isSimilar(stack)).findFirst();
                 if (itemStackOptional.isPresent()) {
                     if (items.remove(itemStackOptional.get())) {
                         Utils.giveItem(getPlayer(), itemStackOptional.get());
                     }
                 }
 
+                safeToLeave = true;
                 new ItemInputGui(getPlugin(), getPlayer(), getPreviousMenu(), getBuilder(), items).open();
             }));
         }

@@ -37,23 +37,23 @@ public class MailboxCommands extends CommandBase {
     public void addMailbox(Player player) {
 
         if (plugin.getCache().getPlayerSettings(player).getMailboxLocations().size() >= Utils.getAllowedAmountOfMailboxes(player)) {
-            player.sendMessage(plugin.getLocale().getMessage("mailbox.limit-reached"));
+            player.sendMessage(plugin.getLocale().getMessage(player,"mailbox.limit-reached"));
             return;
         }
 
         Block block = player.getTargetBlock(null, 6);
         if (!ConfigValue.VALID_MAILBOXES.contains(block.getType())) {
-            player.sendMessage(plugin.getLocale().getMessage("mailbox.invalid-item"));
+            player.sendMessage(plugin.getLocale().getMessage(player,"mailbox.invalid-item"));
             return;
         }
 
         if (plugin.getCache().isMailboxAtLocation(block.getLocation())) {
-            player.sendMessage(plugin.getLocale().getMessage("mailbox.location-occupied"));
+            player.sendMessage(plugin.getLocale().getMessage(player,"mailbox.location-occupied"));
             return;
         }
 
         plugin.getCache().getPlayerSettings(player).addMailboxLocation(block.getLocation());
-        player.sendMessage(plugin.getLocale().getMessage("mailbox.placement-success"));
+        player.sendMessage(plugin.getLocale().getMessage(player,"mailbox.placement-success"));
     }
 
     @SubCommand("remove")
@@ -63,11 +63,11 @@ public class MailboxCommands extends CommandBase {
         PlayerSettings playerSettings = plugin.getCache().getPlayerSettings(player);
 
         if (!playerSettings.getMailboxLocations().contains(block.getLocation())) {
-            player.sendMessage(plugin.getLocale().getMessage("mailbox.no-mailbox-here"));
+            player.sendMessage(plugin.getLocale().getMessage(player,"mailbox.no-mailbox-here"));
             return;
         }
 
         playerSettings.removeMailboxLocation(block.getLocation());
-        player.sendMessage(plugin.getLocale().getMessage("mailbox.location-removed"));
+        player.sendMessage(plugin.getLocale().getMessage(player,"mailbox.location-removed"));
     }
 }

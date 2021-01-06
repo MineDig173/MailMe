@@ -5,16 +5,13 @@ import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailType;
 import me.mattstudios.mfgui.gui.components.ItemBuilder;
 import org.bukkit.*;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,10 +64,12 @@ public class Utils {
         return strings;
     }
 
-    private static String[] applyPlaceholders(String string, Mail.Builder builder, Player player) {
+    private static String[] applyPlaceholders(String string, Mail.Builder<?> builder, Player player) {
 
         string = string.replace("%type%", MailType.getLanguageType(MailType.getMailTypeFromMail(builder), player));
         string = string.replace("%sender%", builder.getSender());
+        string = string.replace("%expiry%", getTimeFromMS((builder.getExpiryTimeMins() * 60L) * 1000L));
+        string = string.replace("%date%", getDateFromMs(builder.getDateCreated()));
 
         String[] str;
         if (string.contains("%contents%")) {
@@ -89,6 +88,24 @@ public class Utils {
         return str;
     }
 
+    private static String getDateFromMs(long millis) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        return mDay + "/" + mMonth + "/" + mYear;
+    }
+
+    private static String getTimeFromMS(long millis) {
+        String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+        return hms;
+    }
+
     private static String[] applyPlaceholders(String[] list, Mail builder, Player player) {
         String[] strings = new String[0];
         for (String each : list) {
@@ -102,6 +119,8 @@ public class Utils {
 
         string = string.replace("%type%", MailType.getLanguageType(MailType.getMailTypeFromMail(mail), player));
         string = string.replace("%sender%", mail.getSender());
+        string = string.replace("%expiry%", getTimeFromMS(mail.getExpiryTimeMilliSeconds()));
+        string = string.replace("%date%", getDateFromMs(mail.getDateCreated()));
 
         String[] str;
         if (string.contains("%contents%")) {

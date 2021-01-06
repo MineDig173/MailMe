@@ -27,6 +27,9 @@ public class MailItems extends Mail {
 
     @Override
     public void onMailClick(Player whoClicked) {
+            for (ItemStack item : itemStackList) {
+                Utils.giveItem(whoClicked, item);
+            }
 
     }
 

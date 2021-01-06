@@ -41,6 +41,7 @@ public class MailCommands extends CommandBase {
     }
 
     @SubCommand("read")
+    @Alias("inbox")
     public void read(Player player) {
         new InboxGui(plugin, player, null, null).open();
     }
@@ -68,7 +69,7 @@ public class MailCommands extends CommandBase {
     public void setNotificationSettings(Player player, Boolean bool) {
 
         if (bool == null) {
-            player.sendMessage(plugin.getLocale().getMessage("cmd.notify.failure"));
+            player.sendMessage(plugin.getLocale().getMessage(player,"cmd.notify.failure"));
             return;
         }
         PlayerSettings playerSettings = plugin.getCache().getPlayerSettings(player);

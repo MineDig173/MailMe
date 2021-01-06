@@ -31,11 +31,11 @@ public abstract class AbstractScrollingMailGui extends AbstractMailGui {
     }
 
     protected GuiItem getPreviousPage() {
-        return new GuiItem(getPlugin().getLocale().getItemStack("gui.previous-page"), event -> getGui().previous());
+        return new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(),"gui.previous-page"), event -> getGui().previous());
     }
 
     protected GuiItem getNextPage() {
-        return new GuiItem(getPlugin().getLocale().getItemStack("gui.next-page"), event -> getGui().next());
+        return new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(), "gui.next-page"), event -> getGui().next());
     }
 
     public List<GuiItem> getItems() {

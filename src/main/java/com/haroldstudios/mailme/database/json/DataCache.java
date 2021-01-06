@@ -4,6 +4,7 @@ import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.database.PlayerSettings;
 import com.haroldstudios.mailme.database.ServerSettings;
 import com.haroldstudios.mailme.database.json.serializer.FileUtil;
+import com.haroldstudios.mailme.postoffice.PostOfficeStore;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +17,7 @@ public class DataCache {
 
     private final FileUtil fileUtil;
 
+    private final PostOfficeStore postOfficeStore;
     private final Map<UUID, PlayerSettings> playerSettingsMap = new HashMap<>();
     private final ServerSettings serverSettings;
     private final Map<Location, UUID> mailboxLocations = new HashMap<>();
@@ -24,12 +26,12 @@ public class DataCache {
         this.fileUtil = new FileUtil();
         File folder = new File(MailMe.getInstance().getDataFolder(), "playersettings");
         folder.mkdir();
+        this.postOfficeStore = this.getFileUtil().getFile(PostOfficeStore.class).exists() ? this.getFileUtil().load(PostOfficeStore.class) : new PostOfficeStore();
         this.serverSettings = this.getFileUtil().getFile(ServerSettings.class).exists() ? this.getFileUtil().load(ServerSettings.class) : new ServerSettings();
-
         // Inserts all mailboxes on running server into cache.
         for (File file : folder.listFiles()) {
-            PlayerSettings settings = getFileUtil().load(PlayerSettings.class, file);
-            List<Location> personalMailboxLocations = settings.getMailboxLocations();
+            PlayerSettings settings = fileUtil.load(PlayerSettings.class, file);
+            List<Location> personalMailboxLocations = settings.getOnlyMailboxLocations();
             for (Location loc : personalMailboxLocations) {
                 mailboxLocations.put(loc, settings.getUuid());
             }
@@ -103,6 +105,10 @@ public class DataCache {
     public PlayerSettings getPlayerSettings(UUID uuid) {
         if (!playerSettingsMap.containsKey(uuid)) addPlayerSettingsToCache(uuid);
         return playerSettingsMap.get(uuid);
+    }
+
+    public PostOfficeStore getPostOfficeStore() {
+        return postOfficeStore;
     }
 
     public PlayerSettings getPlayerSettings(Player player) {

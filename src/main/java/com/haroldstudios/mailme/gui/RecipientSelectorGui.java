@@ -26,8 +26,8 @@ public class RecipientSelectorGui extends AbstractScrollingMailGui {
     public RecipientSelectorGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder) {
         super(plugin, player, previousMenu, 6,  plugin.getLocale().getMessage(player, "gui.titles.recipient-selector"), builder);
 
-        getGui().setItem(4,4, new GuiItem(getPlugin().getLocale().getItemStack("gui.search-players"), event -> PlayerSearch.begin(plugin, builder, player)));
-        getGui().setItem(4,6, new GuiItem(getPlugin().getLocale().getItemStack("gui.remove-filters"), event -> {
+        getGui().setItem(4,4, new GuiItem(getPlugin().getLocale().getItemStack(player,"gui.search-players"), event -> PlayerSearch.begin(plugin, builder, player)));
+        getGui().setItem(4,6, new GuiItem(getPlugin().getLocale().getItemStack(player,"gui.remove-filters"), event -> {
             new RecipientSelectorGui(getPlugin(), getPlayer(), getPreviousMenu(), getBuilder()).open();
             playUISound();
         }));

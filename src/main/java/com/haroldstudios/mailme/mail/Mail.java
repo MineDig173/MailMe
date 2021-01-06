@@ -13,11 +13,15 @@ import java.util.UUID;
 
 public abstract class Mail {
 
+    // Mail class fields
     private final UUID uuid;
     private final long dateCreated;
     private final int expiryTimeMins;
     private final String sender;
     private final ItemStack icon;
+    // Per Player Fields
+    private transient boolean read;
+    private transient Integer colId;
 
     /**
      * Main class constructor
@@ -34,6 +38,22 @@ public abstract class Mail {
         this.dateCreated = System.currentTimeMillis();
     }
 
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public Integer getColId() {
+        return colId;
+    }
+
+    public void setColId(int colId) {
+        this.colId = colId;
+    }
+
     public UUID getUuid() {
         return uuid;
     }
@@ -44,6 +64,10 @@ public abstract class Mail {
 
     public ItemStack getIcon() {
         return icon;
+    }
+
+    public long getDateCreated() {
+        return dateCreated;
     }
 
     public void send(List<UUID> recipients) {
@@ -74,7 +98,6 @@ public abstract class Mail {
         protected String sender;
         protected ItemStack icon;
         protected int expiryTimeMins;
-        private Long dateCreated;
         private final List<UUID> recipients = new ArrayList<>();
 
         public T setSender(String sender) {
@@ -110,14 +133,8 @@ public abstract class Mail {
             return self();
         }
 
-        public T setDateCreated(long dateCreated) {
-            this.dateCreated = dateCreated;
-            return self();
-        }
-
         public long getDateCreated() {
-            if (dateCreated == null) return System.currentTimeMillis();
-            return dateCreated;
+            return System.currentTimeMillis();
         }
 
         public ItemStack getIcon() {

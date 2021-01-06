@@ -29,7 +29,7 @@ public class ClickToSendGui extends AbstractMailGui {
             getBuilder().build().send(recipients);
             playUISound();
             next();
-            getPlayer().sendMessage(getPlugin().getLocale().getMessage("mail.sent"));
+            getPlayer().sendMessage(getPlugin().getLocale().getMessage(getPlayer(),"mail.sent"));
         }));
 
         getGui().open(getPlayer());

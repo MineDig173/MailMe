@@ -89,11 +89,11 @@ public abstract class AbstractMailGui {
     }
 
     protected GuiItem getFillerItem() {
-        return new GuiItem(plugin.getLocale().getItemStack("gui.filler"));
+        return new GuiItem(plugin.getLocale().getItemStack(player,"gui.filler"));
     }
 
     protected GuiItem getPreviousMenuButton() {
-        return new GuiItem(plugin.getLocale().getItemStack("gui.previous-menu"), event -> {
+        return new GuiItem(plugin.getLocale().getItemStack(player,"gui.previous-menu"), event -> {
             playUISound();
             if (previousMenu == null) return;
             previousMenu.open();
@@ -106,14 +106,14 @@ public abstract class AbstractMailGui {
     }
 
     protected GuiItem getCloseMenu() {
-        return new GuiItem(plugin.getLocale().getItemStack("gui.close-menu"), event -> gui.close(player));
+        return new GuiItem(plugin.getLocale().getItemStack(player,"gui.close-menu"), event -> gui.close(player));
     }
 
     protected GuiItem getExpandItem() {
-        return new GuiItem(getPlugin().getLocale().getItemStack("gui.expand"));
+        return new GuiItem(getPlugin().getLocale().getItemStack(player,"gui.expand"));
     }
 
     protected ItemStack getNextMenuButton() {
-        return getPlugin().getLocale().getItemStack("gui.next-menu");
+        return getPlugin().getLocale().getItemStack(player,"gui.next-menu");
     }
 }
