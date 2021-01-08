@@ -45,6 +45,14 @@ public class MailCommands extends CommandBase {
         read((Player) sender);
     }
 
+    @SubCommand("reload")
+    @Permission(PermissionConstants.ADMIN)
+    public void reload(CommandSender sender) {
+        plugin.onDisable();
+        plugin.onEnable();
+        sender.sendMessage(plugin.getLocale().getMessage(sender, "cmd.reload"));
+    }
+
     @SubCommand("send")
     @Alias("compose")
     @Permission(PermissionConstants.COMPOSE_MAIL)

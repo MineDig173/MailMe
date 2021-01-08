@@ -1,9 +1,12 @@
 # EN
 
 # The Value players use to switch language
-key: 'EN'
+T: 'EN'
+VER: 1.2
 
 cmd:
+  identifiers: "&e&lMailMe &7▹ &aIdentifiers: &7@identifiers"
+  reload: "&e&lMailMe &7▹ &aPlugin reloaded."
   default-mb-set: "&e&lMailMe &7▹ &aDefault mailbox set!"
   no-permission: "&e&lMailMe &7▹ &cYou have insufficient permissions! Permission node: &f@perm"
   invalid-preset: "&e&lMailMe &7▹ &cPreset is invalid or does not exist (case sensitive)."

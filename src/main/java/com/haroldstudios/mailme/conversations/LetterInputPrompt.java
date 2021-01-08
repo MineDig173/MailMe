@@ -65,7 +65,6 @@ public final class LetterInputPrompt extends StringPrompt {
        new ConversationFactory(plugin).withModality(true)
                 .withFirstPrompt(new LetterInputPrompt(builder, player).withRunnable(runnable))
                 .withEscapeSequence("cancel").withTimeout(300)
-                .addConversationAbandonedListener(new ConversationAbandonedListener())
                 .thatExcludesNonPlayersWithMessage("Console is not supported by this command")
                 .buildConversation(player)
                 .begin();

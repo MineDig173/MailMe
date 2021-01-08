@@ -9,6 +9,7 @@ public class DatabaseSettingsImpl {
     private String password;
     private boolean useSSL;
     private String driver;
+    private String additionalUrl;
 
     /**
      * Hosts database settings
@@ -19,7 +20,7 @@ public class DatabaseSettingsImpl {
      * @param password - password
      * @param driver - Driver to use
      */
-    public DatabaseSettingsImpl(String host, int port, String databaseName, String username, String password, boolean useSSL, String driver) {
+    public DatabaseSettingsImpl(String host, int port, String databaseName, String username, String password, boolean useSSL, String driver, String additionalUrl) {
         this.host = host;
         this.port = port;
         this.databaseName = databaseName;
@@ -27,6 +28,7 @@ public class DatabaseSettingsImpl {
         this.password = password;
         this.useSSL = useSSL;
         this.driver = driver;
+        this.additionalUrl = additionalUrl;
     }
 
     public boolean useSSL() {
@@ -55,6 +57,10 @@ public class DatabaseSettingsImpl {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getAdditionalUrl() {
+        return additionalUrl;
     }
 
     public void setDatabaseName(String databaseName) {

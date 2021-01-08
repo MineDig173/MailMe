@@ -11,7 +11,7 @@ public class MySQLDatabase extends SQLDatabaseParent {
                         ":" + settings.getPort() +
                         "/" + settings.getDatabaseName() +
                         "?autoReconnect=true&useSSL=" + settings.useSSL() +
-                        "&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8"
+                        "&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8" + settings.getAdditionalUrl()
                 );
     }
 }

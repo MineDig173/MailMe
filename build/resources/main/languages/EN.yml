@@ -1,7 +1,7 @@
 # EN
 
 # The Value players use to switch language
-key: 'EN'
+T: 'EN'
 
 cmd:
   default-mb-set: "&e&lMailMe &7▹ &aDefault mailbox set!"

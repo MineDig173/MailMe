@@ -27,22 +27,23 @@ import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public final class PlayerSearch extends StringPrompt {
 
-    private final Mail.Builder mail;
+    private final Mail.Builder<?> mail;
 
-    public PlayerSearch(Mail.Builder mail) {
+    public PlayerSearch(Mail.Builder<?> mail) {
         this.mail = mail;
     }
 
     @Override
-    public String getPromptText(ConversationContext context) {
+    public @NotNull String getPromptText(ConversationContext context) {
         return MailMe.getInstance().getLocale().getMessage((Player) context.getForWhom(), "gui.search");
     }
 
     @Override
-    public Prompt acceptInput(ConversationContext context, String s) {
+    public Prompt acceptInput(@NotNull ConversationContext context, String s) {
         if (s == null || s.equalsIgnoreCase("cancel")) {
             return Prompt.END_OF_CONVERSATION;
         }
@@ -58,11 +59,10 @@ public final class PlayerSearch extends StringPrompt {
         return Prompt.END_OF_CONVERSATION;
     }
 
-    public static void begin(MailMe plugin, Mail.Builder builder, Player player) {
+    public static void begin(MailMe plugin, Mail.Builder<?> builder, Player player) {
         new ConversationFactory(plugin).withModality(true)
                 .withFirstPrompt(new PlayerSearch(builder))
                 .withEscapeSequence("cancel").withTimeout(300)
-                .addConversationAbandonedListener(new ConversationAbandonedListener())
                 .thatExcludesNonPlayersWithMessage("Console is not supported by this command")
                 .buildConversation(player)
                 .begin();

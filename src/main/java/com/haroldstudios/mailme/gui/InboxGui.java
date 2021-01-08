@@ -11,9 +11,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+
 public class InboxGui extends AbstractScrollingMailGui implements Expandable {
 
-    private Mail[] mailArray;
+    private LinkedList<Mail> mailList;
     private final GuiType type;
 
     public InboxGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, GuiType type) {
@@ -26,16 +29,16 @@ public class InboxGui extends AbstractScrollingMailGui implements Expandable {
         }));
 
         getGui().setItem(InteractableItem.CLOSE_MENU.getRow(type), InteractableItem.CLOSE_MENU.getCol(type), getCloseMenu());
-        getGui().setItem(InteractableItem.FILTER_UNREAD.getRow(type), InteractableItem.FILTER_UNREAD.getCol(type), new GuiItem(plugin.getLocale().getItemStack(player, "gui.filter-unread"), event -> plugin.getPlayerMailDAO().getUnreadMail(player.getUniqueId()).thenAccept(mail -> Bukkit.getScheduler().runTask(getPlugin(), () -> new InboxGui(plugin,player,previousMenu,builder,type,mail).open()))));
+        getGui().setItem(InteractableItem.FILTER_UNREAD.getRow(type), InteractableItem.FILTER_UNREAD.getCol(type), new GuiItem(plugin.getLocale().getItemStack(player, "gui.filter-unread"), event -> plugin.getPlayerMailDAO().getUnreadMail(player.getUniqueId()).thenAccept(mail -> Bukkit.getScheduler().runTask(getPlugin(), () -> new InboxGui(plugin,player,previousMenu,builder,type,new LinkedList<>(Arrays.asList(mail))).open()))));
         getGui().setItem(InteractableItem.REMOVE_FILTER.getRow(type),InteractableItem.REMOVE_FILTER.getCol(type), new GuiItem(getFilterItem(), event -> new InboxGui(plugin,player,previousMenu,builder, type).open()));
         getGui().setItem(InteractableItem.INFO.getRow(type),InteractableItem.INFO.getCol(type), new GuiItem(plugin.getLocale().getItemStack(player, "gui.inbox")));
 
         addExpandableItems(this, type);
     }
 
-    public InboxGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, GuiType type, Mail[] mail) {
+    public InboxGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, GuiType type, LinkedList<Mail> mail) {
         this(plugin,player,previousMenu,builder, type);
-        this.mailArray = mail;
+        mailList = mail;
     }
 
     @Override
@@ -44,22 +47,22 @@ public class InboxGui extends AbstractScrollingMailGui implements Expandable {
 
     @Override
     public void open() {
-        if (mailArray == null) {
+        if (mailList == null) {
             getPlugin().getPlayerMailDAO().getAllMail(getPlayer().getUniqueId()).thenAccept(mailArr -> {
-                mailArray = mailArr;
+                mailList = new LinkedList<>();
+                mailList.addAll(Arrays.asList(mailArr));
                 Bukkit.getScheduler().runTask(getPlugin(), this::initializeForPlayer);
             });
-            return;
         } else {
             initializeForPlayer();
         }
     }
 
     private void initializeForPlayer() {
-        GuiItem[] guiItems = new GuiItem[mailArray.length];
-        for (int i = 0; i < mailArray.length; i++) {
-            Mail mail = mailArray[i];
-            ItemBuilder itemBuilder = ItemBuilder.from(Utils.getItemFromMail(mailArray[i], getPlayer()));
+        GuiItem[] guiItems = new GuiItem[mailList.size()];
+        for (int i = 0; i < mailList.size(); i++) {
+            Mail mail = mailList.get(i);
+            ItemBuilder itemBuilder = ItemBuilder.from(Utils.getItemFromMail(mail, getPlayer()));
             itemBuilder.glow(!mail.isRead());
             GuiItem item = itemBuilder.asGuiItem();
             item.setAction(event -> {
@@ -69,9 +72,9 @@ public class InboxGui extends AbstractScrollingMailGui implements Expandable {
                         getPlugin().getPlayerMailDAO().setUnread(getPlayer().getUniqueId(), mail).thenAccept(bool -> {
                             if (bool) {
                                 mail.onMailClick(getPlayer());
-                                Bukkit.getScheduler().runTaskLater(getPlugin(), () -> new InboxGui(getPlugin(), getPlayer(), getPreviousMenu(), getBuilder(), type).open(), 1L);
+                                Bukkit.getScheduler().runTaskLater(getPlugin(), () -> new InboxGui(getPlugin(), getPlayer(), getPreviousMenu(), getBuilder(), type, mailList).open(), 1L);
                             } else {
-                                System.out.println("Failed to save to Database");
+                                MailMe.debug(InboxGui.class, "Failed to save to Database");
                             }
                         });
                         return;
@@ -81,7 +84,8 @@ public class InboxGui extends AbstractScrollingMailGui implements Expandable {
                 } else {
                     getGui().updatePageItem(event.getSlot(), new GuiItem(getAreYouSure(), e -> {
                         if (e.getClick().isRightClick()) {
-                            getPlugin().getPlayerMailDAO().deletePlayerMail(mail);
+                            getPlugin().getPlayerMailDAO().deletePlayerMail(getPlayer().getUniqueId(), mail);
+                            mailList.remove(mail);
                             getGui().updatePageItem(e.getSlot(), ItemBuilder.from(getPlugin().getLocale().getItemStack(getPlayer(), "gui.deleted")).asGuiItem());
                         } else {
                             getGui().updatePageItem(e.getSlot(), item);
@@ -103,12 +107,12 @@ public class InboxGui extends AbstractScrollingMailGui implements Expandable {
 
     @Override
     public void expand() {
-        new InboxGui(getPlugin(), getPlayer(), getPreviousMenu(), getBuilder(), GuiType.EXPANDED, mailArray).open();
+        new InboxGui(getPlugin(), getPlayer(), getPreviousMenu(), getBuilder(), GuiType.EXPANDED, mailList).open();
     }
 
     @Override
     public void collapse() {
-        new InboxGui(getPlugin(), getPlayer(), getPreviousMenu(), getBuilder(), GuiType.COMPACT, mailArray).open();
+        new InboxGui(getPlugin(), getPlayer(), getPreviousMenu(), getBuilder(), GuiType.COMPACT, mailList).open();
     }
 
     private enum InteractableItem {

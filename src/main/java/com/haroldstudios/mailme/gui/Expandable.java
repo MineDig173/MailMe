@@ -1,14 +1,12 @@
 package com.haroldstudios.mailme.gui;
 
-import org.bukkit.Material;
-
 public interface Expandable {
 
     void expand();
     void collapse();
 
     enum GuiType {
-        COMPACT(7), EXPANDED(21);
+        COMPACT(7), EXPANDED(18);
 
         private final int pageSize;
 

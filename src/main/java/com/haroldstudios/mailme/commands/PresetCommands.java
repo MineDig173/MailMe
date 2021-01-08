@@ -44,6 +44,12 @@ public class PresetCommands extends CommandBase {
         sender.sendMessage(plugin.getLocale().getMessage(sender, "preset-help"));
     }
 
+    @SubCommand("list")
+    @Permission(PermissionConstants.ADMIN)
+    public void list(CommandSender sender) {
+        String msg = plugin.getLocale().getMessage("cmd.identifiers");
+        plugin.getPlayerMailDAO().getPresetMailIdentifiers().thenAccept(identifiers -> sender.sendMessage(msg.replace("@identifiers", identifiers.toString())));
+    }
 
     @SubCommand("create")
     @Permission(PermissionConstants.ADMIN)
@@ -115,7 +121,7 @@ public class PresetCommands extends CommandBase {
                 player.sendMessage(plugin.getLocale().getMessage("cmd.id-taken"));
                 return;
             }
-            plugin.getPlayerMailDAO().saveMailObj(builder.build()).thenAccept(bool -> {
+            plugin.getPlayerMailDAO().savePreset(builder.build()).thenAccept(bool -> {
                 if (bool) {
                     player.sendMessage(plugin.getLocale().getMessage("cmd.preset-saved"));
                     return;

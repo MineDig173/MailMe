@@ -34,7 +34,8 @@ public class ClickToSendGui extends AbstractMailGui {
 
     @Override
     void nextMenu() {
-        getGui().close(getPlayer());
+        if (getGui().getInventory().getViewers().contains(getPlayer()))
+            getGui().close(getPlayer());
     }
 
     // Returns if success or not

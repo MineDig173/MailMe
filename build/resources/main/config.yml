@@ -32,7 +32,7 @@ lang: "EN"
 debug: false
 
 database:
-  type: "sqlite" # sqlite, mysql
+  type: "json" # json, mysql
   # Drivers
   # com.mysql.cj.jdbc.Driver
   # com.mysql.jdbc.Driver

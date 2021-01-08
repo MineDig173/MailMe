@@ -38,8 +38,9 @@ public class MailMessage extends Mail {
 
         private String message;
 
-        public void setMessage(String message) {
+        public MailMessage.Builder setMessage(String message) {
             this.message = message;
+            return this;
         }
 
         @Override

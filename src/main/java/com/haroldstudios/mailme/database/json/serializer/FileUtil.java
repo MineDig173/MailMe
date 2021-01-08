@@ -51,6 +51,7 @@ public class FileUtil {
     private GsonBuilder buildGson() {
         return new GsonBuilder().disableHtmlEscaping()
                 .enableComplexMapKeySerialization()
+                .setPrettyPrinting()
                 .setDateFormat("dd-MM-yyyy-hh:mm:ss.SSS")
                 .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
                 .registerTypeAdapter(Location.class, new LocationSerializer())
@@ -58,6 +59,8 @@ public class FileUtil {
                 .registerTypeAdapter(Mail.class, new AbstractClassSerializer<Mail>())
                 .registerTypeAdapterFactory(EnumTypeAdapter.ENUM_FACTORY);
     }
+
+    public Gson getGson() { return gson; }
 
     // ------------------------------------------------------------ //
     // GET FILE - In which file would we like to store this object?

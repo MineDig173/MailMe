@@ -63,8 +63,9 @@ public class MailItems extends Mail {
 
         private List<ItemStack> itemStackList = new ArrayList<>();
 
-        public void setItemStackList(List<ItemStack> items) {
+        public MailItems.Builder setItemStackList(List<ItemStack> items) {
             this.itemStackList = items;
+            return this;
         }
 
         @Override
@@ -78,7 +79,7 @@ public class MailItems extends Mail {
         }
 
         @Override
-        public Mail build() {
+        public MailItems build() {
             return new MailItems(icon, sender, expiryTimeMins, getIdentifier(), itemStackList);
         }
     }

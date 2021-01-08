@@ -10,17 +10,22 @@ import com.haroldstudios.mailme.database.DatabaseConnector;
 import com.haroldstudios.mailme.database.DatabaseSettingsImpl;
 import com.haroldstudios.mailme.database.PlayerMailDAO;
 import com.haroldstudios.mailme.database.json.DataCache;
+import com.haroldstudios.mailme.database.json.JsonDatabase;
 import com.haroldstudios.mailme.database.sql.MySQLDatabase;
-import com.haroldstudios.mailme.database.sql.SQLiteDatabase;
 import com.haroldstudios.mailme.listeners.EntityEvents;
 import com.haroldstudios.mailme.mail.MailboxTaskManager;
 import com.haroldstudios.mailme.utils.ConfigValue;
 import com.haroldstudios.mailme.utils.Locale;
 import me.mattstudios.mf.base.CommandManager;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 public final class MailMe extends JavaPlugin {
 
@@ -28,10 +33,12 @@ public final class MailMe extends JavaPlugin {
     private HologramHook hologramHook;
 
     private MailboxTaskManager mailboxTaskManager;
-    private DatabaseConnector connector;
+    @Nullable private DatabaseConnector connector;
     private PlayerMailDAO playerMailDAO;
     private DataCache dataCache;
     private Locale locale;
+
+    private EntityEvents listener;
 
     @Override
     public void onEnable() {
@@ -57,16 +64,30 @@ public final class MailMe extends JavaPlugin {
         commandManager.register(new PostOfficeCommands(this));
         commandManager.register(new PresetCommands(this));
 
-        getServer().getPluginManager().registerEvents(new EntityEvents(this), this);
+        commandManager.hideTabComplete(true);
+        listener = new EntityEvents(this);
+        getServer().getPluginManager().registerEvents(listener, this);
 
         this.mailboxTaskManager = new MailboxTaskManager(this);
         this.mailboxTaskManager.beginTasks();
 
+
+        if (getConfig().getInt("config-ver") <= 2) {
+            getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "WARNING!");
+            getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "MailMe has detected being upgraded! Before you continue, please read the following note;");
+            getServer().getConsoleSender().sendMessage(ChatColor.RED + "This version of MailMe is incompatible with previous types of MailMe data! " +
+                    "To fully upgrade you MUST delete the MailMe folder and RESTART. Please note; this will delete ALL player mail and settings and language files. If you have customized " +
+                    "the language folders. Please save them separately and you may re import them or re translate with the new messages. They are not the same.");
+            getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "Please view the wiki at https://wiki.haroldstudios.com for more information on why, how and other help / options!");
+            getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "WARNING!");
+        }
     }
 
     @Override
     public void onDisable() {
-        connector.disconnect();
+        HandlerList.unregisterAll(listener);
+        if (connector != null)
+            connector.disconnect();
         mailboxTaskManager.stopTasks();
     }
 
@@ -87,12 +108,29 @@ public final class MailMe extends JavaPlugin {
                     databaseConfig.getString("username"),
                     databaseConfig.getString("password"),
                     databaseConfig.getBoolean("useSSL"),
-                    databaseConfig.getString("driver")));
+                    databaseConfig.getString("driver"),
+                    databaseConfig.getString("additional_url")));
+            playerMailDAO = (PlayerMailDAO) connector;
+            connector.connect();
         } else {
-            connector = new SQLiteDatabase();
+            connector = null;
+            playerMailDAO = new JsonDatabase(this);
         }
-        playerMailDAO = (PlayerMailDAO) connector;
-        connector.connect();
+    }
+
+    public static void debug(Class<?> clazz, String msg) {
+        if (!ConfigValue.DEBUG) return;
+        Bukkit.getLogger().log(Level.INFO, String.format("%s: Class: %s", msg, clazz.getName()));
+    }
+
+    public static void debug(Exception exception) {
+        if (!ConfigValue.DEBUG) return;
+        exception.printStackTrace();
+    }
+
+    public static void debug(Throwable throwable) {
+        if (!ConfigValue.DEBUG) return;
+        throwable.printStackTrace();
     }
 
     public VaultHook getVaultHook() {

@@ -22,6 +22,7 @@ public class ConfigValue {
     public static double COST_MESSAGE, COST_ITEM, COST_BOOK = 0;
     public static boolean HOOK_VAULT_ENABLED, HOOK_HOLOGRAMS_ENABLED = true;
     public static int SEND_DELAY = 0;
+    public static boolean DEBUG = true;
 
     private ConfigValue() {}
 
@@ -54,5 +55,6 @@ public class ConfigValue {
         HOOK_HOLOGRAMS_ENABLED = config.getBoolean("hooks.holograms");
         HOOK_VAULT_ENABLED = config.getBoolean("hooks.vault");
         SEND_DELAY = config.getInt("send-delay");
+        DEBUG = config.getBoolean("debug");
     }
 }

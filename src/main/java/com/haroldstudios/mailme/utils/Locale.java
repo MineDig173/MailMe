@@ -74,8 +74,13 @@ public class Locale {
                     io.printStackTrace();
                 }
             }
+            String token = externalYamlConfig.getString("T");
+            if (token == null) {
+                //TODO debug logger
+                continue;
+            }
 
-            this.languagesMap.put(Objects.requireNonNull(externalYamlConfig.getString("key")).toUpperCase(), externalYamlConfig);
+            this.languagesMap.put(token.toUpperCase(), externalYamlConfig);
         }
     }
 

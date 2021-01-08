@@ -24,9 +24,11 @@ public abstract class Mail {
     private final ItemStack icon;
     private final String identifier;
     // Per Player Fields
-    private transient boolean read;
-    private transient Integer colId;
-    private transient long dateReceived;
+    private boolean read = false;
+    private Integer colId;
+    private long dateReceived;
+    // Legacy loading fields
+    private transient boolean legacy = false;
 
     /**
      * Main class constructor
@@ -42,6 +44,14 @@ public abstract class Mail {
         this.sender = sender;
         this.expiryTimeMins = expiryTimeMins;
         this.dateCreated = System.currentTimeMillis();
+    }
+
+    public void setLegacy(boolean legacy) {
+        this.legacy = legacy;
+    }
+
+    public boolean isLegacy() {
+        return legacy;
     }
 
     public long getDateReceived() {

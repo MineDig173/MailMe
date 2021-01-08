@@ -14,7 +14,7 @@
 #   Most of this plugin should be self explanatory. Values should
 #           be commented out for your ease of use.
 #
-#   If you're still stuck please refer to the wiki: wiki.haroldstudios.com
+#   If you're still stuck please refer to the wiki: https://wiki.haroldstudios.com
 #
 #   Alternatively, see plugin page for more help!
 #
@@ -32,7 +32,7 @@ lang: "EN"
 debug: false
 
 database:
-  type: "sqlite" # sqlite, mysql
+  type: "json" # json, mysql
   # Drivers
   # com.mysql.cj.jdbc.Driver
   # com.mysql.jdbc.Driver
@@ -43,6 +43,7 @@ database:
   username: "root"
   password: "administrator"
   useSSL: false
+  additional_url: ""
 
 # In some cases, it can be useful to have a sending delay. Set minutes until players receive mail.
 # Default: 0
