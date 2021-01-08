@@ -4,7 +4,7 @@ import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailItems;
 import com.haroldstudios.mailme.utils.Utils;
-import me.mattstudios.mfgui.gui.guis.GuiItem;
+import me.mattstudios.gui.guis.GuiItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +21,7 @@ public class ItemInputGui extends AbstractScrollingMailGui {
     private boolean safeToLeave = false;
 
     public ItemInputGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, List<ItemStack> items) {
-        super(plugin, player, previousMenu, 6, plugin.getLocale().getMessage(player, "gui.titles.item-input"), builder);
+        super(plugin, player, previousMenu, 6, plugin.getLocale().getMessage(player, "gui.titles.item-input"), builder, Expandable.GuiType.COMPACT);
         this.items = items;
 
         getGui().setItem(3, 5, new GuiItem(plugin.getLocale().getItemStack(player, "gui.item-input"), event -> {

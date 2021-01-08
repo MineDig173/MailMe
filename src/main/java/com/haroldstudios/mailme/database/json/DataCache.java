@@ -4,8 +4,11 @@ import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.database.PlayerSettings;
 import com.haroldstudios.mailme.database.ServerSettings;
 import com.haroldstudios.mailme.database.json.serializer.FileUtil;
+import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.postoffice.PostOfficeStore;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +19,8 @@ import java.util.*;
 public class DataCache {
 
     private final FileUtil fileUtil;
+
+    private final Map<UUID, Mail.Builder<?>> presetMailBuilders = new HashMap<>();
 
     private final PostOfficeStore postOfficeStore;
     private final Map<UUID, PlayerSettings> playerSettingsMap = new HashMap<>();
@@ -30,10 +35,11 @@ public class DataCache {
         this.serverSettings = this.getFileUtil().getFile(ServerSettings.class).exists() ? this.getFileUtil().load(ServerSettings.class) : new ServerSettings();
         // Inserts all mailboxes on running server into cache.
         for (File file : folder.listFiles()) {
+            if (!file.toString().endsWith(".json")) continue;
             PlayerSettings settings = fileUtil.load(PlayerSettings.class, file);
             List<Location> personalMailboxLocations = settings.getOnlyMailboxLocations();
             for (Location loc : personalMailboxLocations) {
-                mailboxLocations.put(loc, settings.getUuid());
+                addMailbox(settings.getUuid(), loc);
             }
         }
     }
@@ -44,20 +50,23 @@ public class DataCache {
 
     public void addMailbox(UUID uuid, Location location) {
         mailboxLocations.put(location, uuid);
+
+        if (MailMe.getInstance().getHologramHook() != null) {
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+            if (!offlinePlayer.hasPlayedBefore() || offlinePlayer.getName() == null) return;
+            MailMe.getInstance().getHologramHook().addHologram(location, offlinePlayer.getName());
+        }
     }
 
-    public void removeMailbox(Location valueToRemove) {
-        Location removalKey = null;
+    public Map<UUID, Mail.Builder<?>> getPresetMailBuilders() {
+        return presetMailBuilders;
+    }
 
-        for (Map.Entry<Location, UUID> entry : mailboxLocations.entrySet()) {
-            if (valueToRemove.equals(entry.getValue())) {
-                removalKey = entry.getKey();
-                break;
-            }
-        }
+    public void removeMailbox(Location key) {
+        mailboxLocations.remove(key);
 
-        if (removalKey != null) {
-            mailboxLocations.remove(removalKey);
+        if (MailMe.getInstance().getHologramHook() != null) {
+            MailMe.getInstance().getHologramHook().removeHologram(key);
         }
     }
 
@@ -117,6 +126,10 @@ public class DataCache {
 
     public FileUtil getFileUtil() {
         return fileUtil;
+    }
+
+    public Set<Location> getMailboxes() {
+        return mailboxLocations.keySet();
     }
 
     public ServerSettings getServerSettings() {

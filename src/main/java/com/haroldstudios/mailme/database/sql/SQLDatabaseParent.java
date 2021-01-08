@@ -8,9 +8,7 @@ import com.haroldstudios.mailme.mail.Mail;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
@@ -72,90 +70,63 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery("select mail_uuid from PlayerMail where uuid='" + uuid.toString() + "' and mail_read=false");
 
-                int fetchSize = resultSet.getFetchSize();
-
-                statement.close(); // Auto closes resultset when statement is closed
-
-                return fetchSize > 1;
+                return resultSet.next();
 
             } catch (SQLException e) {
                 logger.severe("Error occurred while retrieving data for " + uuid.toString() + ". Error code: " + e.getErrorCode() + ", " + e.getMessage());
             }
+            return false;
+        }).exceptionally(e -> {
+            logger.severe("Error occurred while retrieving data for " + uuid.toString() + ", " + e.getMessage());
             return false;
         });
     }
 
     @Override
     public CompletableFuture<Mail[]> getUnreadMail(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery("select mail_uuid, id from PlayerMail where uuid='" + uuid.toString() + "' and mail_read=false");
-                // Define our array size
-                List<Mail> mail = new ArrayList<>();
-
-                // Loop through all instances of the player's uuid
-                while (resultSet.next()) {
-                    String mailId = resultSet.getString("mail_uuid");
-                    Statement mailStmt = connection.createStatement();
-                    ResultSet mailRS = mailStmt.executeQuery("select mail_obj from Mail where mail_uuid='" + mailId + "'");
-
-                    // Grab from Mail table the uuid we found in our playermail table
-                    if (mailRS.next()) {
-                        // deserialize our object
-                        Mail mailObj = MailMe.getInstance().getCache().getFileUtil().deserializeMail(mailRS.getString("mail_obj"));
-                        mailObj.setRead(false);
-                        mailObj.setColId(resultSet.getInt("id"));
-                        mail.add(mailObj);
-                    } else {
-                        logger.warning("User: " + uuid + " tried to access mail object " + mailId + "in table but it does not exist!");
-                    }
-                }
-                return mail.toArray(new Mail[0]);
-            } catch (SQLException e) {
-                logger.severe("Error occurred while retrieving data for " + uuid.toString() + ". Error code: " + e.getErrorCode() + ", " + e.getMessage());
-            }
-            return null;
-        }).exceptionally(e -> {
-            e.printStackTrace();
-                    return null;
-        });
+        return getMailFromQuery("select mail_uuid, mail_read, id, ts from PlayerMail where uuid='" + uuid.toString() + "' and mail_read=false");
     }
 
     @Override
     public CompletableFuture<Mail[]> getAllMail(UUID uuid) {
+        return getMailFromQuery("select mail_uuid, mail_read, id, ts from PlayerMail where uuid='" + uuid.toString() + "'");
+    }
+
+    public CompletableFuture<Mail[]> getMailFromQuery(String query) {
         return CompletableFuture.supplyAsync(() -> {
+            List<Mail> mail = new ArrayList<>();
             try {
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery("select mail_uuid, mail_read, id from PlayerMail where uuid='" + uuid.toString() + "'");
-                // Define our array size
-                List<Mail> mail = new ArrayList<>();
+                ResultSet resultSet = statement.executeQuery(query);
 
                 // Loop through all instances of the player's uuid
                 while (resultSet.next()) {
                     String mailId = resultSet.getString("mail_uuid");
                     Statement mailStmt = connection.createStatement();
                     ResultSet mailRS = mailStmt.executeQuery("select mail_obj from Mail where mail_uuid='" + mailId + "'");
-
                     // Grab from Mail table the uuid we found in our playermail table
                     if (mailRS.next()) {
                         // deserialize our object
                         Mail mailObj = MailMe.getInstance().getCache().getFileUtil().deserializeMail(mailRS.getString("mail_obj"));
                         mailObj.setRead(resultSet.getBoolean("mail_read"));
                         mailObj.setColId(resultSet.getInt("id"));
-                        mail.add(mailObj);
+                        long ts = resultSet.getTimestamp("ts").getTime();
+                        mailObj.setDateReceived(ts);
+                        if (!isExpired(mailObj, ts))
+                            mail.add(mailObj);
+
                     } else {
-                        logger.warning("User: " + uuid + " tried to access mail object " + mailId + "in table but it does not exist!");
+                        //TODO Debug instead of always logging!
+                        logger.warning("Tried to access mail object " + mailId + " in table but it does not exist!");
                     }
                 }
-                return mail.toArray(new Mail[0]);
+
+                Collections.reverse(mail);
+
             } catch (SQLException e) {
-                logger.severe("Error occurred while retrieving data for " + uuid.toString() + ". Error code: " + e.getErrorCode() + ", " + e.getMessage());
+                logger.severe("Error occurred while retrieving data. Error code: " + e.getErrorCode() + ", " + e.getMessage());
             }
-            return null;
-        }).exceptionally(e -> {
-            e.printStackTrace();
-            return null;
+            return mail.toArray(new Mail[0]);
         });
     }
 
@@ -168,7 +139,7 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
             try {
                 statement = connection.createStatement();
                 String json = MailMe.getInstance().getCache().getFileUtil().serialize(mail);
-                sCode = statement.executeUpdate("insert into Mail values ('"+mail.getUuid()+"', '"+json+"')");
+                sCode = statement.executeUpdate("insert into Mail(mail_uuid, mail_obj, identifier_name) values ('"+mail.getUuid()+"', '"+json+"', '"+mail.getIdentifier()+"')");
 
                 statement.close();
             } catch (SQLException throwables) {
@@ -223,7 +194,73 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
         });
     }
 
+    @Override
+    public CompletableFuture<Mail> getPresetMail(String presetName) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery("select * from Mail where identifier_name='"+presetName+"'");
+                if (!resultSet.next()) return null;
+                Mail mailObj = MailMe.getInstance().getCache().getFileUtil().deserializeMail(resultSet.getString("mail_obj"));
 
+                statement.close();
+                return mailObj;
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            return null;
+        });
+    }
+
+    @Override
+    public CompletableFuture<Boolean> deletePresetMail(String presetName) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Statement statement = connection.createStatement();
+                int result = statement.executeUpdate("delete from Mail where identifier_name='"+presetName+"'");
+                statement.close();
+
+                return result > 0;
+
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            return false;
+        });
+    }
+
+    @Override
+    public void deletePlayerMail(Mail mail) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("delete from PlayerMail where id="+mail.getColId());
+            statement.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private boolean isExpired(Mail mail, long timeMillis) {
+
+        boolean expired = timeMillis + mail.getExpiryTimeMilliSeconds() < System.currentTimeMillis();
+        if (expired) {
+            CompletableFuture.runAsync(() -> {
+                try {
+                    Statement statement = connection.createStatement();
+                    statement.executeUpdate("delete from PlayerMail where id=" + mail.getColId());
+                    statement.close();
+
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+        }
+
+        return expired;
+    }
 
     /**
      * Creates any missing tables and columns
@@ -234,7 +271,7 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
             Statement stmt = connection.createStatement();
             // Create Tables if not already there
             stmt.execute("create table if not exists PlayerMail(id int auto_increment primary key, uuid varchar(36) not null, mail_uuid varchar(36) not null, mail_read tinyint(1) not null default false, ts timestamp default current_timestamp)");
-            stmt.execute("create table if not exists Mail(mail_uuid varchar(36) not null, mail_obj mediumtext not null)");
+            stmt.execute("create table if not exists Mail(mail_uuid varchar(36) not null, mail_obj mediumtext not null, identifier_name varchar(36))");
 
         } catch (SQLException e) {
             logger.severe("Error occurred while asserting table readiness. Error code: " + e.getErrorCode() + ", " + e.getMessage());

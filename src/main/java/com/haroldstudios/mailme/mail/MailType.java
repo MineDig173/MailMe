@@ -31,6 +31,17 @@ public enum MailType {
         return null;
     }
 
+    public static Mail.Builder<?> getInstanceFromEnum(MailType type) {
+        if (type.equals(MailType.BOOK)) {
+            return new MailBook.Builder();
+        } else if (type.equals(MailType.ITEM)) {
+            return new MailItems.Builder();
+        } else if (type.equals(MailType.MESSAGE)) {
+            return new MailMessage.Builder();
+        }
+        return null;
+    }
+
     public static String getLanguageType(MailType type, Player player) {
         switch (type) {
             case MESSAGE:

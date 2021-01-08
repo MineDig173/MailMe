@@ -28,10 +28,12 @@ import org.bukkit.entity.Player;
 
 public final class LetterInputPrompt extends StringPrompt {
 
-    private final Mail.Builder mail;
+    private final Mail.Builder<?> mail;
+    private Runnable runnable;
 
-    public LetterInputPrompt(Mail.Builder mail) {
+    public LetterInputPrompt(Mail.Builder<?> mail, Player player) {
         this.mail = mail;
+        this.runnable = () -> new ClickToSendGui(MailMe.getInstance(), player, null, mail).open();
     }
 
     public String getPromptText(ConversationContext context) {
@@ -45,18 +47,23 @@ public final class LetterInputPrompt extends StringPrompt {
         if (s == null || s.equalsIgnoreCase("cancel")) {
             return Prompt.END_OF_CONVERSATION;
         }
-
         if (mail instanceof MailMessage.Builder) {
             ((MailMessage.Builder) mail).setMessage(s);
-            new ClickToSendGui(MailMe.getInstance(), ((Player) context.getForWhom()), null, mail).open();
-            return Prompt.END_OF_CONVERSATION;
         }
+
+        runnable.run();
         return Prompt.END_OF_CONVERSATION;
     }
 
-    public static void begin(MailMe plugin, Mail.Builder builder, Player player) {
+    public LetterInputPrompt withRunnable(Runnable runnable) {
+        if (runnable == null) return this;
+        this.runnable = runnable;
+        return this;
+    }
+
+    public static void begin(MailMe plugin, Mail.Builder builder, Player player, Runnable runnable) {
        new ConversationFactory(plugin).withModality(true)
-                .withFirstPrompt(new LetterInputPrompt(builder))
+                .withFirstPrompt(new LetterInputPrompt(builder, player).withRunnable(runnable))
                 .withEscapeSequence("cancel").withTimeout(300)
                 .addConversationAbandonedListener(new ConversationAbandonedListener())
                 .thatExcludesNonPlayersWithMessage("Console is not supported by this command")

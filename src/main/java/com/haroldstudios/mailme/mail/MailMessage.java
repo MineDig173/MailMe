@@ -1,5 +1,6 @@
 package com.haroldstudios.mailme.mail;
 
+import com.haroldstudios.mailme.MailMe;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
@@ -9,14 +10,18 @@ public class MailMessage extends Mail {
 
     private final String message;
 
-    public MailMessage(ItemStack icon, String sender, int expiryTimeMins, String message) {
-        super(icon, sender, expiryTimeMins);
+    public MailMessage(ItemStack icon, String sender, int expiryTimeMins, String identifier, String message) {
+        super(icon, sender, expiryTimeMins, identifier);
         this.message = message;
     }
 
     @Override
     public void onMailClick(Player whoClicked) {
-        whoClicked.sendMessage(getContentsAsString());
+        String msg = MailMe.getInstance().getLocale().getMessage("mail.message-contents");
+        msg = msg.replace("%sender%", getSender());
+        msg = msg.replace("%contents%", getContentsAsString()[0]);
+        msg = msg.replace("%player_name%", whoClicked.getName());
+        whoClicked.sendMessage(msg);
     }
 
     @Override
@@ -50,7 +55,7 @@ public class MailMessage extends Mail {
         @Override
         public MailMessage build() {
 
-            return new MailMessage(icon, sender, expiryTimeMins, message);
+            return new MailMessage(icon, sender, expiryTimeMins, identifier, message);
         }
     }
 }

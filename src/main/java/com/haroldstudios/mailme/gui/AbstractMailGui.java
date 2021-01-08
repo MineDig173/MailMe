@@ -2,9 +2,9 @@ package com.haroldstudios.mailme.gui;
 
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.mail.Mail;
-import me.mattstudios.mfgui.gui.guis.BaseGui;
-import me.mattstudios.mfgui.gui.guis.Gui;
-import me.mattstudios.mfgui.gui.guis.GuiItem;
+import me.mattstudios.gui.guis.BaseGui;
+import me.mattstudios.gui.guis.Gui;
+import me.mattstudios.gui.guis.GuiItem;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -40,6 +40,7 @@ public abstract class AbstractMailGui {
                 event.setCancelled(true);
 
             }
+
             if (event.getClickedInventory() != null && !event.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
                 event.setCancelled(true);
             }
@@ -80,7 +81,7 @@ public abstract class AbstractMailGui {
         return player;
     }
 
-    protected BaseGui getGui() {
+    public BaseGui getGui() {
         return gui;
     }
 
@@ -100,6 +101,11 @@ public abstract class AbstractMailGui {
         });
     }
 
+    protected ItemStack getFilterItem() { return getPlugin().getLocale().getItemStack(player,"gui.remove-filters"); }
+
+    protected ItemStack getExpandableItem() { return getPlugin().getLocale().getItemStack(player, "gui.expand"); }
+
+    protected ItemStack getCollapsableItem() { return getPlugin().getLocale().getItemStack(player, "gui.collapse"); }
 
     protected void playUISound() {
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1F, 1F);

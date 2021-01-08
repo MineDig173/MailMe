@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +27,18 @@ public class EntityEvents implements Listener {
     }
 
     @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+
+        if (!player.hasPlayedBefore()) {
+            plugin.getPlayerMailDAO().getPresetMail("welcome").thenAccept(mail -> {
+                if (mail == null) return;
+                mail.sendPreset(player.getUniqueId());
+            });
+        }
+    }
+
+    @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getClickedBlock() == null) return;
 
@@ -33,14 +46,14 @@ public class EntityEvents implements Listener {
         Player player = event.getPlayer();
         DataCache cache = plugin.getCache();
         PlayerSettings playerSettings = cache.getPlayerSettings(player);
-        if (!cache.isMailboxAtLocation(block.getLocation()) || !cache.getPostOfficeStore().isPostOfficeAtLocation(block.getLocation())) return;
+        if (!cache.isMailboxAtLocation(block.getLocation()) && !cache.getPostOfficeStore().isPostOfficeAtLocation(block.getLocation())) return;
 
         event.setCancelled(true);
 
-        if (cache.isMailboxAtLocation(block.getLocation()) && player.hasPermission(PermissionConstants.USE_MAILBOX.getPerm())) {
+        if (cache.isMailboxAtLocation(block.getLocation()) && player.hasPermission(PermissionConstants.USE_MAILBOX)) {
             if (playerSettings.getMailboxLocations().contains(block.getLocation())) {
                 // Is player's mailbox location
-                player.performCommand("mailme read");
+                player.performCommand("mailme inbox");
             } else {
                 // Is someone else's mailbox
                 UUID playerWhoOwnsMailbox = cache.getWhoOwnsMailboxAtLocation(block.getLocation());
@@ -54,7 +67,7 @@ public class EntityEvents implements Listener {
         }
 
         Optional<PostOffice> postOfficeOptional = plugin.getCache().getPostOfficeStore().getPostOfficeFromLocation(block.getLocation()).stream().findFirst();
-        if (postOfficeOptional.isPresent() && player.hasPermission(PermissionConstants.USE_POSTOFFICE.getPerm())) {
+        if (postOfficeOptional.isPresent() && player.hasPermission(PermissionConstants.USE_POSTOFFICE)) {
             PostOffice postOffice = postOfficeOptional.get();
 
             if (postOffice.isSendType()) {

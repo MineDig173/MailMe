@@ -1,6 +1,7 @@
 package com.haroldstudios.mailme.mail;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -17,8 +18,8 @@ public class MailBook extends Mail{
      * @param sender         String of the sender e.g "Harry", "Server" etc
      * @param expiryTimeMins Minutes until the mail should expire and delete itself from existence!
      */
-    protected MailBook(ItemStack icon, String sender, int expiryTimeMins, ItemStack book) {
-        super(icon, sender, expiryTimeMins);
+    protected MailBook(ItemStack icon, String sender, int expiryTimeMins, String identifier, ItemStack book) {
+        super(icon, sender, expiryTimeMins, identifier);
         this.book = book;
     }
 
@@ -29,7 +30,7 @@ public class MailBook extends Mail{
 
     @Override
     public BaseComponent[] getContentsAsText() {
-        return new BaseComponent[0];
+        return new ComponentBuilder(getContents(book)[0]).create();
     }
 
     @Override
@@ -66,7 +67,7 @@ public class MailBook extends Mail{
 
         @Override
         public Mail build() {
-            return new MailBook(getIcon(), getSender(), getExpiryTimeMins(), book);
+            return new MailBook(getIcon(), getSender(), getExpiryTimeMins(), getIdentifier(), book);
         }
     }
 }

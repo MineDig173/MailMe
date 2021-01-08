@@ -1,8 +1,8 @@
 package com.haroldstudios.mailme.utils;
 
 import com.haroldstudios.mailme.MailMe;
-import me.mattstudios.mfgui.gui.components.ItemBuilder;
-import me.mattstudios.mfgui.gui.components.xseries.XMaterial;
+import me.mattstudios.gui.components.util.ItemBuilder;
+import me.mattstudios.gui.components.xseries.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +17,11 @@ public class ConfigValue {
     public static List<ItemStack> ICON_LIST = new ArrayList<>();
     public static List<Material> VALID_MAILBOXES = new ArrayList<>();
     public static int MAILBOX_PING_DISTANCE = 50;
+    public static int MAILBOX_FIND_DISTANCE = 50;
+    public static int EXPIRY_TIME_MINS = ((60 * 24) * 30); // 30 days in minutes
+    public static double COST_MESSAGE, COST_ITEM, COST_BOOK = 0;
+    public static boolean HOOK_VAULT_ENABLED, HOOK_HOLOGRAMS_ENABLED = true;
+    public static int SEND_DELAY = 0;
 
     private ConfigValue() {}
 
@@ -38,11 +43,16 @@ public class ConfigValue {
             ICON_LIST.add(stack);
         });
 
-        config.getStringList("valid-mailboxes").forEach(element -> {
-            Optional<Material> xMaterial = XMaterial.valueOf(element).parseMaterial();
-            xMaterial.ifPresent(material -> VALID_MAILBOXES.add(material));
-        });
+        config.getStringList("valid-mailboxes").forEach(element -> VALID_MAILBOXES.add(XMaterial.valueOf(element).parseMaterial()));
 
         MAILBOX_PING_DISTANCE = config.getInt("mailbox-ping-distance");
+        MAILBOX_FIND_DISTANCE = config.getInt("mailbox-find-distance");
+        EXPIRY_TIME_MINS = config.getInt("expiry-time-mins");
+        COST_MESSAGE = config.getDouble("cost.message");
+        COST_ITEM = config.getDouble("cost.item");
+        COST_BOOK = config.getDouble("cost.book");
+        HOOK_HOLOGRAMS_ENABLED = config.getBoolean("hooks.holograms");
+        HOOK_VAULT_ENABLED = config.getBoolean("hooks.vault");
+        SEND_DELAY = config.getInt("send-delay");
     }
 }

@@ -2,6 +2,7 @@ package com.haroldstudios.mailme.commands;
 
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.postoffice.PostOffice;
+import com.haroldstudios.mailme.utils.PermissionConstants;
 import me.mattstudios.mf.annotations.*;
 import me.mattstudios.mf.base.CommandBase;
 import org.bukkit.Material;
@@ -22,16 +23,19 @@ public class PostOfficeCommands extends CommandBase {
     }
 
     @Default
+    @Permission(PermissionConstants.ADMIN)
     public void postOffice(CommandSender sender) {
         sender.sendMessage(plugin.getLocale().getMessages(sender,"postoffice-help"));
     }
 
     @SubCommand("help")
+    @Permission(PermissionConstants.ADMIN)
     public void help(CommandSender sender) {
         postOffice(sender);
     }
 
     @SubCommand("add")
+    @Permission(PermissionConstants.ADMIN)
     public void addPostOffice(Player player, String type) {
         Block b = player.getTargetBlock(null, 5);
         if (b.getType().equals(Material.AIR)) {
@@ -50,6 +54,7 @@ public class PostOfficeCommands extends CommandBase {
     }
 
     @SubCommand("remove")
+    @Permission(PermissionConstants.ADMIN)
     public void removePostOffice(Player player) {
         Block b = player.getTargetBlock(null, 5);
 
@@ -69,6 +74,7 @@ public class PostOfficeCommands extends CommandBase {
     }
 
     @SubCommand("removeall")
+    @Permission(PermissionConstants.ADMIN)
     public void clearPostOffices(Player player) {
         plugin.getCache().getPostOfficeStore().getPostOffices().clear();
         plugin.getCache().getPostOfficeStore().update();

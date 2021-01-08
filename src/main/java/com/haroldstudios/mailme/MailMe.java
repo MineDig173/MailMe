@@ -3,6 +3,9 @@ package com.haroldstudios.mailme;
 import com.haroldstudios.mailme.commands.MailCommands;
 import com.haroldstudios.mailme.commands.MailboxCommands;
 import com.haroldstudios.mailme.commands.PostOfficeCommands;
+import com.haroldstudios.mailme.commands.PresetCommands;
+import com.haroldstudios.mailme.components.hooks.HologramHook;
+import com.haroldstudios.mailme.components.hooks.VaultHook;
 import com.haroldstudios.mailme.database.DatabaseConnector;
 import com.haroldstudios.mailme.database.DatabaseSettingsImpl;
 import com.haroldstudios.mailme.database.PlayerMailDAO;
@@ -14,14 +17,15 @@ import com.haroldstudios.mailme.mail.MailboxTaskManager;
 import com.haroldstudios.mailme.utils.ConfigValue;
 import com.haroldstudios.mailme.utils.Locale;
 import me.mattstudios.mf.base.CommandManager;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 
 public final class MailMe extends JavaPlugin {
+
+    private VaultHook vaultHook;
+    private HologramHook hologramHook;
 
     private MailboxTaskManager mailboxTaskManager;
     private DatabaseConnector connector;
@@ -35,6 +39,13 @@ public final class MailMe extends JavaPlugin {
         saveDefaultConfig();
         ConfigValue.load(this);
         initDatabaseConnection();
+        if (getServer().getPluginManager().getPlugin("Vault") != null && ConfigValue.HOOK_VAULT_ENABLED) {
+            this.vaultHook = new VaultHook(this);
+        }
+
+        if (getServer().getPluginManager().getPlugin("HolographicDisplays") != null && ConfigValue.HOOK_HOLOGRAMS_ENABLED) {
+            this.hologramHook = new HologramHook(this);
+        }
         this.locale = new Locale(this);
         this.dataCache = new DataCache();
 
@@ -44,11 +55,13 @@ public final class MailMe extends JavaPlugin {
         commandManager.register(new MailCommands(this));
         commandManager.register(new MailboxCommands(this));
         commandManager.register(new PostOfficeCommands(this));
+        commandManager.register(new PresetCommands(this));
 
         getServer().getPluginManager().registerEvents(new EntityEvents(this), this);
 
         this.mailboxTaskManager = new MailboxTaskManager(this);
         this.mailboxTaskManager.beginTasks();
+
     }
 
     @Override
@@ -80,6 +93,14 @@ public final class MailMe extends JavaPlugin {
         }
         playerMailDAO = (PlayerMailDAO) connector;
         connector.connect();
+    }
+
+    public VaultHook getVaultHook() {
+        return vaultHook;
+    }
+
+    public HologramHook getHologramHook() {
+        return hologramHook;
     }
 
     public Locale getLocale() {

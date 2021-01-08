@@ -1,8 +1,8 @@
 package com.haroldstudios.mailme.utils;
 
 import com.haroldstudios.mailme.MailMe;
-import me.mattstudios.mfgui.gui.components.ItemBuilder;
-import me.mattstudios.mfgui.gui.components.xseries.XMaterial;
+import me.mattstudios.gui.components.util.ItemBuilder;
+import me.mattstudios.gui.components.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -45,7 +45,7 @@ public class Locale {
         }
         
         for (File lang : folder.listFiles()) {
-            
+            if (!lang.toString().endsWith(".yml")) continue;
             String fileName = lang.getName();
 
             File langFile = new File(MailMe.getInstance().getDataFolder() + "/languages/" + fileName);
@@ -75,7 +75,7 @@ public class Locale {
                 }
             }
 
-            this.languagesMap.put(fileName.replace(".yml", "").toUpperCase(), externalYamlConfig);
+            this.languagesMap.put(Objects.requireNonNull(externalYamlConfig.getString("key")).toUpperCase(), externalYamlConfig);
         }
     }
 
@@ -155,24 +155,24 @@ public class Locale {
     public ItemStack getItemStack(String token, String path) {
         ConfigurationSection section = languagesMap.get(token).getConfigurationSection(path);
             XMaterial xMaterial = XMaterial.matchXMaterial(section.getString("material")).orElse(XMaterial.STONE);
-            Material material = xMaterial.parseMaterial().orElse(Material.STONE);
+            Material material = xMaterial.parseMaterial();
 
             if (material.equals(Material.AIR)) return new ItemStack(Material.AIR);
-            ItemBuilder builder = new ItemBuilder(material)
-                    .setName(Utils.colour(section.getString("title")))
+            ItemBuilder builder = ItemBuilder.from(material)
+                    .setName(colour(section.getString("title")))
                     .setLore(Utils.colourList(section.getStringList("lore")).toArray(new String[]{}))
                     .setAmount(section.getInt("amount"))
                     .glow(section.getBoolean("glow"))
                     .addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
 
-            if (material.equals(XMaterial.PLAYER_HEAD.parseMaterial()))
+            if (material.equals(XMaterial.PLAYER_HEAD.parseMaterial())) {
                 builder.setSkullTexture(section.getString("skull-texture"));
+            }
 
             ItemStack stack = builder.build();
             int modelData = section.getInt("custom-model-data");
             if (modelData != 0) {
                 ItemMeta meta = stack.getItemMeta();
-
                 meta.setCustomModelData(section.getInt("custom-model-data"));
 
                 stack.setItemMeta(meta);

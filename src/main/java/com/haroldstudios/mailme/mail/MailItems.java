@@ -1,7 +1,12 @@
 package com.haroldstudios.mailme.mail;
 
+import com.haroldstudios.mailme.utils.NMSReflection;
 import com.haroldstudios.mailme.utils.Utils;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,8 +25,8 @@ public class MailItems extends Mail {
      * @param expiryTimeMins Minutes until the mail should expire and delete itself from existence!
      * @param itemStackList  Items for this mail type to hold
      */
-    protected MailItems(ItemStack icon, String sender, int expiryTimeMins, List<ItemStack> itemStackList) {
-        super(icon, sender, expiryTimeMins);
+    protected MailItems(ItemStack icon, String sender, int expiryTimeMins, String identifier, List<ItemStack> itemStackList) {
+        super(icon, sender, expiryTimeMins, identifier);
         this.itemStackList = itemStackList;
     }
 
@@ -35,7 +40,14 @@ public class MailItems extends Mail {
 
     @Override
     public BaseComponent[] getContentsAsText() {
-        return new BaseComponent[0];
+        ComponentBuilder builder = new ComponentBuilder("");
+        for (ItemStack item : itemStackList) {
+            TextComponent txt = new TextComponent(item.getAmount() + " * " + item.getType() + " ");
+            txt.setColor(ChatColor.AQUA);
+            txt.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(NMSReflection.convertItemStackToJson(item)).create()));
+            builder.append(txt);
+        }
+        return builder.create();
     }
 
     @Override
@@ -67,7 +79,7 @@ public class MailItems extends Mail {
 
         @Override
         public Mail build() {
-            return new MailItems(icon, sender, expiryTimeMins, itemStackList);
+            return new MailItems(icon, sender, expiryTimeMins, getIdentifier(), itemStackList);
         }
     }
 }

@@ -3,7 +3,7 @@ package com.haroldstudios.mailme.utils;
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailType;
-import me.mattstudios.mfgui.gui.components.ItemBuilder;
+import me.mattstudios.gui.components.util.ItemBuilder;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -64,7 +64,7 @@ public class Utils {
         return strings;
     }
 
-    private static String[] applyPlaceholders(String string, Mail.Builder<?> builder, Player player) {
+    private static String[] applyPlaceholders(String string, Mail.Builder<?> builder, Player player) { // time received, now, expiry time | time received
 
         string = string.replace("%type%", MailType.getLanguageType(MailType.getMailTypeFromMail(builder), player));
         string = string.replace("%sender%", builder.getSender());
@@ -74,6 +74,9 @@ public class Utils {
         String[] str;
         if (string.contains("%contents%")) {
             String[] contents = builder.getContents();
+            for (int i = 0; i < contents.length; i++) {
+                contents[i] = contents[i].replace("%player_name%", player.getName());
+            }
             str = new String[contents.length + 1];
 
             string = string.replace("%contents%", "");
@@ -88,22 +91,21 @@ public class Utils {
         return str;
     }
 
-    private static String getDateFromMs(long millis) {
+    public static String getDateFromMs(long millis) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
 
         int mYear = calendar.get(Calendar.YEAR);
-        int mMonth = calendar.get(Calendar.MONTH);
+        int mMonth = calendar.get(Calendar.MONTH) + 1;
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         return mDay + "/" + mMonth + "/" + mYear;
     }
 
-    private static String getTimeFromMS(long millis) {
-        String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-        return hms;
+    public static String getTimeFromMS(long millis) {
+        return String.format("%02dd:%02dh:%02dm", TimeUnit.MILLISECONDS.toDays(millis),
+                TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis)),
+                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
     }
 
     private static String[] applyPlaceholders(String[] list, Mail builder, Player player) {
@@ -115,16 +117,19 @@ public class Utils {
         return strings;
     }
 
-    private static String[] applyPlaceholders(String string, Mail mail, Player player) {
+    public static String[] applyPlaceholders(String string, Mail mail, Player player) {
 
         string = string.replace("%type%", MailType.getLanguageType(MailType.getMailTypeFromMail(mail), player));
         string = string.replace("%sender%", mail.getSender());
-        string = string.replace("%expiry%", getTimeFromMS(mail.getExpiryTimeMilliSeconds()));
-        string = string.replace("%date%", getDateFromMs(mail.getDateCreated()));
+        string = string.replace("%expiry%", getTimeFromMS((mail.getDateReceived() - System.currentTimeMillis() + mail.getExpiryTimeMilliSeconds())));
+        string = string.replace("%date%", getDateFromMs(mail.getDateReceived()));
 
         String[] str;
         if (string.contains("%contents%")) {
             String[] contents = mail.getContentsAsString();
+            for (int i = 0; i < contents.length; i++) {
+                contents[i] = contents[i].replace("%player_name%", player.getName());
+            }
             str = new String[contents.length + 1];
 
             string = string.replace("%contents%", "");
@@ -142,7 +147,7 @@ public class Utils {
     public static String getLocalizedName(ItemStack stack) {
         ItemMeta meta = stack.getItemMeta();
         if (meta != null) {
-            return meta.getLocalizedName();
+            return meta.getDisplayName();
         }
         return "!Unknown!";
     }
@@ -154,8 +159,8 @@ public class Utils {
         for (PermissionAttachmentInfo effectivePermission : player.getEffectivePermissions()) {
             String permission = effectivePermission.getPermission();
 
-            if (permission.startsWith(PermissionConstants.NUM_OF_MAILBOXES.getPerm())) {
-                int length = PermissionConstants.NUM_OF_MAILBOXES.getPerm().length();
+            if (permission.startsWith(PermissionConstants.NUM_OF_MAILBOXES)) {
+                int length = PermissionConstants.NUM_OF_MAILBOXES.length();
 
                 if (permission.length() > length) {
                     try {
@@ -175,6 +180,25 @@ public class Utils {
 
     public static void playNoteEffect(Player player, Location location) {
         double note = 6 / 24D; // 6 is the value of the red note
-        player.spawnParticle(Particle.NOTE, location, 0, note, 0, 0, 1);
+        Location l = location.clone();
+        l.add(0.5,1.2,0.5);
+        player.spawnParticle(Particle.NOTE, l, 1, note, 0, 0, 1);
+    }
+
+    public static void particleTower(final Player player, final Location location) {
+        Location loc = location.clone();
+        loc.add(0.5,0,0.5);
+        for (int i = 0; i < 20; i++) {
+            loc.add(0,1,0);
+            player.spawnParticle(Particle.VILLAGER_HAPPY, loc, 1);
+        }
+    }
+
+    public static boolean passedPermissionCheck(Player player, String perm) {
+        if (player.hasPermission(perm)) return true;
+        String message = MailMe.getInstance().getLocale().getMessage(player, "cmd.no-permission");
+        message = message.replace("@perm", perm);
+        player.sendMessage(message);
+        return false;
     }
 }

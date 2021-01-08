@@ -5,6 +5,11 @@ api-version: 1.14
 authors: [Harolds]
 description: Transfer Mail across the virtual galaxy
 website: https://wiki.haroldstudios.com
+softdepend:
+  - PlaceholderAPI
+  - Vault
+  - Multiverse
+  - HolographicDisplays
 
 # Required to override essentials /mail
 commands:

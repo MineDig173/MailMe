@@ -4,34 +4,24 @@ import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.utils.ConfigValue;
 import com.haroldstudios.mailme.utils.Utils;
-import me.mattstudios.mfgui.gui.guis.GuiItem;
+import me.mattstudios.gui.guis.GuiItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 
-public class IconSelectorGui extends AbstractScrollingMailGui{
+public class IconSelectorGui extends AbstractScrollingMailGui {
 
     public IconSelectorGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder) {
-        super(plugin, player, previousMenu, 6, plugin.getLocale().getMessage(player, "gui.titles.icon-selector"), builder);
+        super(plugin, player, previousMenu, 6, plugin.getLocale().getMessage(player, "gui.titles.icon-selector"), builder, Expandable.GuiType.COMPACT);
         getGui().setItem(6,5,getCloseMenu());
-        getGui().getFiller().fillBorder(getFillerItem());
-        getGui().setItem(6,1,getPreviousMenuButton());
-
-        // Previous item
-        getGui().setItem(6, 3, getNextPage());
-        // Next item
-        getGui().setItem(6, 7, new GuiItem(plugin.getLocale().getItemStack(player,"gui.next-page"), event -> getGui().next()));
-
-
-        getGui().getFiller().fillBetweenPoints(3,2,5,8, getFillerItem());
     }
 
     @Override
     void nextMenu() {
         playUISound();
-        new RecipientSelectorGui(getPlugin(), getPlayer(), this, getBuilder()).open();
+        new RecipientSelectorGui(getPlugin(), getPlayer(), this, getBuilder(), Expandable.GuiType.COMPACT).open();
     }
 
     @Override
