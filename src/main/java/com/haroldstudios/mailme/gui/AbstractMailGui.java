@@ -2,6 +2,8 @@ package com.haroldstudios.mailme.gui;
 
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.mail.Mail;
+import com.haroldstudios.mailme.utils.GuiConfig;
+import com.haroldstudios.mailme.utils.Utils;
 import me.mattstudios.gui.guis.BaseGui;
 import me.mattstudios.gui.guis.Gui;
 import me.mattstudios.gui.guis.GuiItem;
@@ -12,6 +14,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+
 public abstract class AbstractMailGui {
 
     private final MailMe plugin;
@@ -20,12 +23,19 @@ public abstract class AbstractMailGui {
     private BaseGui gui;
     private Mail.Builder<?> builder;
     private Runnable runnable;
+    protected boolean gracefulExit = false;
+    private final GuiConfig guiConfig;
 
     private AbstractMailGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder) {
         this.plugin = plugin;
         this.player = player;
         this.previousMenu = previousMenu;
         this.builder = builder;
+        this.guiConfig = plugin.getGuiConfig();
+        if (previousMenu != null) {
+            previousMenu.gracefulExit = true;
+        }
+
     }
 
     public AbstractMailGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, int rows, String name, Mail.Builder<?> builder) {
@@ -35,14 +45,27 @@ public abstract class AbstractMailGui {
     public AbstractMailGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, BaseGui gui, Mail.Builder<?> builder) {
         this(plugin, player, previousMenu, builder);
         this.gui = gui;
+        gui.setDefaultTopClickAction(event -> {
+            event.setCancelled(true);
+        });
         gui.setDefaultClickAction(event -> {
             if (event.getClick().equals(ClickType.SHIFT_LEFT) || event.getClick().equals(ClickType.SHIFT_RIGHT)) {
                 event.setCancelled(true);
-
             }
-
-            if (event.getClickedInventory() != null && !event.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
+            if (event.getClickedInventory() != null && event.getClickedInventory().getType().equals(InventoryType.PLAYER)) return;
                 event.setCancelled(true);
+
+
+        });
+        gui.setDragAction(event -> {
+            event.setCancelled(true);
+        });
+
+        gui.setCloseGuiAction(event -> {
+            if (gracefulExit) return;
+            if (getBuilder() == null) return;
+            for (ItemStack stack : getBuilder().getInputtedItems()) {
+                Utils.giveItem(player, stack);
             }
         });
     }
@@ -51,6 +74,18 @@ public abstract class AbstractMailGui {
     public AbstractMailGui withRunnable(Runnable runnable) {
         this.runnable = runnable;
         return this;
+    }
+
+    protected void addItem(GuiItem item, GuiConfig.GContainer container) {
+        if (container.isEnabled()) {
+            getGui().setItem(container.getRow(), container.getCol(), item);
+        }
+    }
+
+    protected void addItem(GuiItem item, GuiConfig.GContainer container, Expandable.GuiType type) {
+        if (container.isEnabled()) {
+            getGui().setItem(container.getRow(type), container.getCol(type), item);
+        }
     }
 
     // What to do on completion of the menu. If runnable is null, it goes to next stage of mail builder.
@@ -81,6 +116,10 @@ public abstract class AbstractMailGui {
         return player;
     }
 
+    protected GuiConfig getGuiConfig() {
+        return guiConfig;
+    }
+
     public BaseGui getGui() {
         return gui;
     }
@@ -93,13 +132,6 @@ public abstract class AbstractMailGui {
         return new GuiItem(plugin.getLocale().getItemStack(player,"gui.filler"));
     }
 
-    protected GuiItem getPreviousMenuButton() {
-        return new GuiItem(plugin.getLocale().getItemStack(player,"gui.previous-menu"), event -> {
-            playUISound();
-            if (previousMenu == null) return;
-            previousMenu.open();
-        });
-    }
 
     protected ItemStack getFilterItem() { return getPlugin().getLocale().getItemStack(player,"gui.remove-filters"); }
 

@@ -1,5 +1,7 @@
 package com.haroldstudios.mailme.database.json.serializer;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.haroldstudios.mailme.MailMe;
@@ -10,17 +12,18 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
 import com.google.gson.Gson;
-import org.bukkit.Location;
 
 import com.google.common.io.Files;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Location;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -35,6 +38,11 @@ public class FileUtil {
     public static String getName(Class<?> clazz) {
         return clazz.getSimpleName().toLowerCase();
     }
+
+    private static final List<String> EXCLUDE = new ArrayList<String>() {{
+        add("serialVersionUID");
+        add("CREATOR");
+    }};
 
     // ------------------------------------------------------------ //
     // GET NAME - What should we call this type of object?
@@ -54,10 +62,26 @@ public class FileUtil {
                 .setPrettyPrinting()
                 .setDateFormat("dd-MM-yyyy-hh:mm:ss.SSS")
                 .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
-                .registerTypeAdapter(Location.class, new LocationSerializer())
-                .registerTypeAdapter(ItemStack.class, new ItemStackTypeAdapter())
                 .registerTypeAdapter(Mail.class, new AbstractClassSerializer<Mail>())
-                .registerTypeAdapterFactory(EnumTypeAdapter.ENUM_FACTORY);
+                .registerTypeAdapterFactory(new MailTypeAdapterFactory(MailMe.getInstance()))
+                .registerTypeAdapterFactory(EnumTypeAdapter.ENUM_FACTORY)
+                .registerTypeAdapter(Location.class, new LocationTypeAdapter())
+                .setExclusionStrategies(new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        boolean exclude = false;
+                        try {
+                            exclude = EXCLUDE.contains(f.getName());
+                        } catch (Exception ignore) {
+                        }
+                        return exclude;
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        return false;
+                    }
+                });
     }
 
     public Gson getGson() { return gson; }

@@ -5,6 +5,12 @@ T: 'EN'
 VER: 1.2
 
 cmd:
+  no-space: "&e&lMailMe &7▹ &cYour inventory is full! Make space to claim the items."
+  not-required: "&e&lMailMe &7▹ &eNot required."
+  needs-value: "&e&lMailMe &7▹ &cYou need a value e.g key:value"
+  generic-processing: "&e&l..."
+  generic-success: "&a&l✔✔✔"
+  has-unread: "&e&lMailMe &7▹ &eYou have unread mail!"
   identifiers: "&e&lMailMe &7▹ &aIdentifiers: &7@identifiers"
   reload: "&e&lMailMe &7▹ &aPlugin reloaded."
   default-mb-set: "&e&lMailMe &7▹ &aDefault mailbox set!"
@@ -17,6 +23,7 @@ cmd:
   unknown-argument: "&e&lMailMe &7▹ &cUnknown argument!"
   must-create-preset-first: "&e&lMailMe &7▹ &cYou must run /mailpreset create first!"
   vault-insufficient-funds: '&e&lMailMe &7▹ &cInsufficient funds!'
+  vault: "&e&lMailMe &7▹ &c-$@amount"
   unknown-player: "&e&lMailMe &7▹ &cUnknown player or player hasn't joined before!"
   delete:
     success: "&e&lMailMe &7▹ &aSuccessfully deleted."
@@ -146,15 +153,13 @@ gui:
     custom-model-data: 0
     glow: false
     lore: []
-  item-input:
-    title: '&e&lClick with Item'
-    material: YELLOW_STAINED_GLASS_PANE
+  item-input-title:
+    title: '&e&lInput Your Items'
+    material: OAK_SIGN
     amount: 1
     custom-model-data: 0
     glow: false
-    lore:
-      - "&7Click with an item to"
-      - "&7add to the mail."
+    lore: []
   close-menu:
     title: '&cClose Menu'
     material: BARRIER
@@ -372,3 +377,10 @@ gui:
     lore:
       - "&7Mail was deleted here"
       - "&7Reopen the gui to see changes."
+  send-from-inbox:
+    title: '&e&lSend Mail'
+    material: OAK_SIGN
+    amount: 1
+    custom-model-data: 0
+    glow: true
+    lore: []

@@ -14,7 +14,7 @@
 #   Most of this plugin should be self explanatory. Values should
 #           be commented out for your ease of use.
 #
-#   If you're still stuck please refer to the wiki: wiki.haroldstudios.com
+#   If you're still stuck please refer to the wiki: https://wiki.haroldstudios.com
 #
 #   Alternatively, see plugin page for more help!
 #
@@ -43,15 +43,20 @@ database:
   username: "root"
   password: "administrator"
   useSSL: false
+  additional_url: ""
 
 # In some cases, it can be useful to have a sending delay. Set minutes until players receive mail.
 # Default: 0
 send-delay: 0
 
+# Can the player send mail to themselves?
+can-send-to-self: true
+
 hooks:
-  vault: true #enabled?
+  vault: true # enabled?
   holograms: true
 
+# Requires Vault. Cost for each action
 cost:
   message: 25.00
   item: 40.00

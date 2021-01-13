@@ -15,6 +15,7 @@ import com.haroldstudios.mailme.database.sql.MySQLDatabase;
 import com.haroldstudios.mailme.listeners.EntityEvents;
 import com.haroldstudios.mailme.mail.MailboxTaskManager;
 import com.haroldstudios.mailme.utils.ConfigValue;
+import com.haroldstudios.mailme.utils.GuiConfig;
 import com.haroldstudios.mailme.utils.Locale;
 import me.mattstudios.mf.base.CommandManager;
 import org.bukkit.Bukkit;
@@ -24,6 +25,13 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -37,12 +45,15 @@ public final class MailMe extends JavaPlugin {
     private PlayerMailDAO playerMailDAO;
     private DataCache dataCache;
     private Locale locale;
+    private GuiConfig guiConfig;
 
     private EntityEvents listener;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
+        auth();
+        if (!sts) return;
         saveDefaultConfig();
         ConfigValue.load(this);
         initDatabaseConnection();
@@ -55,6 +66,7 @@ public final class MailMe extends JavaPlugin {
         }
         this.locale = new Locale(this);
         this.dataCache = new DataCache();
+        this.guiConfig = new GuiConfig(this);
 
         CommandManager commandManager = new CommandManager(this);
         commandManager.getCompletionHandler().register("#locale", val -> new ArrayList<>(locale.getLanguageTokens()));
@@ -75,10 +87,9 @@ public final class MailMe extends JavaPlugin {
         if (getConfig().getInt("config-ver") <= 2) {
             getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "WARNING!");
             getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "MailMe has detected being upgraded! Before you continue, please read the following note;");
-            getServer().getConsoleSender().sendMessage(ChatColor.RED + "This version of MailMe is incompatible with previous types of MailMe data! " +
-                    "To fully upgrade you MUST delete the MailMe folder and RESTART. Please note; this will delete ALL player mail and settings and language files. If you have customized " +
-                    "the language folders. Please save them separately and you may re import them or re translate with the new messages. They are not the same.");
-            getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "Please view the wiki at https://wiki.haroldstudios.com for more information on why, how and other help / options!");
+            getServer().getConsoleSender().sendMessage(ChatColor.RED + "This version of MailMe introduces a lot of new things! Including the data being stored differently." +
+                    " You should run /mailme convert legacy2latest to update your data. However, please note that your preset mail will not be converted.");
+            getServer().getConsoleSender().sendMessage("§a§lTo stop this message, set config-ver to 3 in config.yml");
             getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "WARNING!");
         }
     }
@@ -88,9 +99,9 @@ public final class MailMe extends JavaPlugin {
         HandlerList.unregisterAll(listener);
         if (connector != null)
             connector.disconnect();
-        mailboxTaskManager.stopTasks();
+        if (mailboxTaskManager != null)
+            mailboxTaskManager.stopTasks();
     }
-
 
     // Creates a connection to sql database
     private void initDatabaseConnection() {
@@ -99,6 +110,8 @@ public final class MailMe extends JavaPlugin {
             getLogger().severe("Database connection was not made. Key: database was missing in config.yml");
             return;
         }
+
+
 
         if (databaseConfig.getString("type").equalsIgnoreCase("MYSQL")) {
             connector = new MySQLDatabase(new DatabaseSettingsImpl(
@@ -133,6 +146,47 @@ public final class MailMe extends JavaPlugin {
         throwable.printStackTrace();
     }
 
+    public boolean sts = true;
+    public void auth() {
+        try {
+            URLConnection localURLConnection = new URL("https://github.com/harry0198/MailMe/blob/master/blacklisted.txt").openConnection();
+            localURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+            localURLConnection.connect();
+
+            BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(localURLConnection.getInputStream(), Charset.forName("UTF-8")));
+
+            StringBuilder localStringBuilder = new StringBuilder();
+            String str1;
+            while ((str1 = localBufferedReader.readLine()) != null) {
+                localStringBuilder.append(str1);
+            }
+            String str2 = localStringBuilder.toString();
+            if (str2.contains(String.valueOf(uid))) {
+                disableLeak();
+                return;
+            }
+            this.sts = true;
+        }
+        catch (IOException localIOException) {
+            localIOException.printStackTrace();
+            disableNoInternet();
+        }
+    }
+
+    public void disableLeak() {
+        getLogger().severe("Failed to authorize.");
+        getServer().getPluginManager().disablePlugin(this);
+        sts = false;
+    }
+
+    public void disableNoInternet() {
+        getLogger().severe("You don't have a valid internet connection, please connect to the internet for the plugin to work!");
+        getServer().getPluginManager().disablePlugin(this);
+        sts = false;
+    }
+
+    public static String uid = "%%__USER__%%";
+
     public VaultHook getVaultHook() {
         return vaultHook;
     }
@@ -147,6 +201,10 @@ public final class MailMe extends JavaPlugin {
 
     public DataCache getCache() {
         return dataCache;
+    }
+
+    public GuiConfig getGuiConfig() {
+        return guiConfig;
     }
 
     public PlayerMailDAO getPlayerMailDAO() {

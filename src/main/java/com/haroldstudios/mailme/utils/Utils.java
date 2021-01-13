@@ -6,6 +6,7 @@ import com.haroldstudios.mailme.mail.MailType;
 import me.mattstudios.gui.components.util.ItemBuilder;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -25,12 +26,25 @@ public class Utils {
         return string.stream().map(Utils::colour).collect(Collectors.toList());
     }
 
+    public static boolean hasSpaceInInventory(List<ItemStack> items, Inventory inventory) {
+        int freeSlots = 0;
+        for(ItemStack it : inventory.getContents()) {
+            if(it == null) continue;
+            freeSlots++;
+        }
+        // Inventory is size 36
+        freeSlots = 36 - freeSlots;
+        return freeSlots >= items.size();
+    }
+
     // Gives the player an item, if their inventory is full it drops it on the floor.
     public static void giveItem(Player player, ItemStack itemStack) {
-        final Map<Integer, ItemStack> map = player.getInventory().addItem(itemStack);
-        for (final ItemStack item : map.values()) {
-            player.getWorld().dropItemNaturally(player.getLocation(), item);
-        }
+        Bukkit.getScheduler().runTask(MailMe.getInstance(), () -> {
+            final Map<Integer, ItemStack> map = player.getInventory().addItem(itemStack);
+            for (final ItemStack item : map.values()) {
+                player.getWorld().dropItemNaturally(player.getLocation(), item);
+            }
+        });
     }
 
     public static ItemStack getItemFromBuilder(Mail.Builder builder, Player player) {

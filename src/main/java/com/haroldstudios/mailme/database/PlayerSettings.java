@@ -76,6 +76,7 @@ public class PlayerSettings {
 
     public void setLanguageToken(String languageToken) {
         this.languageToken = languageToken;
+        save();
     }
 
     /**

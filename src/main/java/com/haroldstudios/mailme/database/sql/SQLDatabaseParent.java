@@ -4,7 +4,6 @@ import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.database.DatabaseConnector;
 import com.haroldstudios.mailme.database.DatabaseSettingsImpl;
 import com.haroldstudios.mailme.database.PlayerMailDAO;
-import com.haroldstudios.mailme.database.json.JsonPresetFile;
 import com.haroldstudios.mailme.mail.Mail;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +12,8 @@ import java.sql.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
+
+import static org.bukkit.Bukkit.getServer;
 
 public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMailDAO {
 
@@ -27,6 +28,10 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
         this.connectionUrl = connectionUrl;
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
+
     @Override
     public boolean connect() {
         if (isConnected()) return true;
@@ -36,13 +41,13 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
             if (settings != null) {
                 logger.info(String.format("Beginning connection to SQL server at host: %s, port: %s, database_name: %s, using SSL: %s", settings.getHost(), settings.getPort(), settings.getDatabaseName(), settings.useSSL()));
                 connection = DriverManager.getConnection(connectionUrl, settings.getUsername(), settings.getPassword());
-            } else {
-                connection = DriverManager.getConnection(connectionUrl);
             }
             assertTableReady();
+            return true;
         } catch (SQLException e) {
-            logger.severe("Could not connect to the database! " + e.getMessage());
-            e.printStackTrace();
+             logger.severe("Could not connect to the database! " + e.getMessage());
+             e.printStackTrace();
+             getServer().getPluginManager().disablePlugin(MailMe.getInstance());
         }
         return false;
     }
@@ -121,7 +126,10 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
             try {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
-
+                if (resultSet == null) {
+                    MailMe.debug(SQLDatabaseParent.class, "Result set was null!");
+                    return new Mail[0];
+                }
                 // Loop through all instances of the player's uuid
                 while (resultSet.next()) {
                     String mailId = resultSet.getString("mail_uuid");
@@ -139,7 +147,6 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
                             mail.add(mailObj);
 
                     } else {
-                        //TODO Debug instead of always logging!
                         MailMe.debug(SQLDatabaseParent.class, "Tried to access mail object " + mailId + " in table but it does not exist!");
                     }
                 }
@@ -203,13 +210,11 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
     @Override
     public CompletableFuture<Boolean> setUnread(UUID uuid, Mail mail) {
         return CompletableFuture.supplyAsync(() -> {
-            System.out.println(mail.getColId());
             if (mail.getColId() == null) return false;
             int sCode = 0;
             try {
                 Statement statement = connection.createStatement();
                 sCode = statement.executeUpdate("update PlayerMail set mail_read = true where id = "+ mail.getColId());
-                System.out.println(sCode);
                 statement.close();
 
             } catch (SQLException ignore) { }

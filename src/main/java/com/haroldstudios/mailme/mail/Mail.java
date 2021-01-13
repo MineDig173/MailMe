@@ -113,8 +113,11 @@ public abstract class Mail {
 
         Bukkit.getScheduler().runTaskLater(MailMe.getInstance(), () -> {
             for (UUID recipient : recipients) {
+                MailMe.debug(Mail.class, "Attempting to send to " + recipient);
                 dao.savePlayerMail(recipient, this).thenAccept(success -> {
-                    PlayerUtils.notifyUnread(recipient);
+                    MailMe.debug(Mail.class, "Sent status: " + success);
+                    if (success)
+                        PlayerUtils.notifyUnread(recipient);
                 });
             }
         }, (20L * 60) * ConfigValue.SEND_DELAY);
@@ -145,7 +148,7 @@ public abstract class Mail {
         return builder.create();
     }
 
-    public abstract void onMailClick(Player whoClicked);
+    public abstract boolean onMailClick(Player whoClicked);
     public abstract BaseComponent[] getContentsAsText();
     public abstract String[] getContentsAsString();
 
@@ -205,6 +208,8 @@ public abstract class Mail {
                 return icon.clone();
             else return null;
         }
+
+        public abstract List<ItemStack> getInputtedItems();
 
         public String getIdentifier() {
             return identifier;

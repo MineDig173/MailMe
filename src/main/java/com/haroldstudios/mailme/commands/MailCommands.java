@@ -2,6 +2,9 @@ package com.haroldstudios.mailme.commands;
 
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.database.PlayerSettings;
+import com.haroldstudios.mailme.database.transition.Json2MySQL;
+import com.haroldstudios.mailme.database.transition.Legacy2Json;
+import com.haroldstudios.mailme.database.transition.MySQL2Json;
 import com.haroldstudios.mailme.gui.ChooseMailTypeGui;
 import com.haroldstudios.mailme.gui.Expandable;
 import com.haroldstudios.mailme.gui.InboxGui;
@@ -12,12 +15,8 @@ import com.haroldstudios.mailme.utils.Pagination;
 import com.haroldstudios.mailme.utils.PermissionConstants;
 import me.mattstudios.mf.annotations.*;
 import me.mattstudios.mf.base.CommandBase;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import net.md_5.bungee.api.chat.*;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -48,7 +47,11 @@ public class MailCommands extends CommandBase {
     @SubCommand("reload")
     @Permission(PermissionConstants.ADMIN)
     public void reload(CommandSender sender) {
+        for (Location loc : plugin.getCache().getMailboxes()) {
+            plugin.getHologramHook().removeHologram(loc);
+        }
         plugin.onDisable();
+        plugin.reloadConfig();
         plugin.onEnable();
         sender.sendMessage(plugin.getLocale().getMessage(sender, "cmd.reload"));
     }
@@ -75,6 +78,7 @@ public class MailCommands extends CommandBase {
 
     @SubCommand("lang")
     @Permission(PermissionConstants.MODIFY_LANG)
+    @Completion("#locale")
     public void setLanguage(Player player, String lang) {
 
         if (!locale.languageExists(lang)) {
@@ -147,6 +151,26 @@ public class MailCommands extends CommandBase {
         });
     }
 
+    @SubCommand("convert")
+    @Permission(PermissionConstants.ADMIN)
+    public void convertDatabaseStorage(CommandSender sender, String type) {
+        if (!(type.equalsIgnoreCase("json2mysql") || type.equals("mysql2json") || type.equals("legacy2json"))) {
+            sender.sendMessage("§c§l!!! -> " + ChatColor.GREEN + "json2mysql OR mysql2json OR legacy2json");
+            return;
+        }
+        sender.sendMessage(ChatColor.GREEN + "Beginning conversion. (Language is English for future debugging purposes)");
+        sender.sendMessage(plugin.getLocale().getMessage(sender, "cmd.generic-processing"));
+        if (type.equalsIgnoreCase("json2mysql")) {
+            sender.sendMessage("Plugin will convert in background. Plugin is safe to use while this process occurs, query times will just be slower. (Language is English for future debugging purposes)");
+            new Json2MySQL(plugin).transitionMail();
+        } else if (type.equalsIgnoreCase("mysql2json")) {
+            new MySQL2Json(plugin).transitionMail();
+        } else if (type.equalsIgnoreCase("legacy2json")) {
+            new Legacy2Json(plugin).transitionMail();
+        }
+        sender.sendMessage(plugin.getLocale().getMessage(sender, "cmd.generic-success"));
+    }
+
     @SubCommand("debug")
     @Permission(PermissionConstants.ADMIN)
     public void debug(CommandSender sender) {
@@ -159,7 +183,9 @@ public class MailCommands extends CommandBase {
                 .append("\nJava Version: ")
                 .append(System.getProperty("java.runtime.version"))
                 .append("\nLoaded Language files/tokens: ")
-                .append(plugin.getLocale().getLanguageTokens());
+                .append(plugin.getLocale().getLanguageTokens())
+                .append("\nSpigot User: ")
+                .append(MailMe.uid);
 
         sender.sendMessage(sb.toString());
     }

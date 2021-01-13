@@ -30,6 +30,12 @@ public class EntityEvents implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
+        plugin.getPlayerMailDAO().hasUnreadMail(player.getUniqueId()).thenAccept(hasUnread -> {
+            if (hasUnread) {
+                player.sendMessage(plugin.getLocale().getMessage(player, "cmd.has-unread"));
+            }
+        });
+
         if (!player.hasPlayedBefore()) {
             plugin.getPlayerMailDAO().getPresetMail("welcome").thenAccept(mail -> {
                 if (mail == null) return;

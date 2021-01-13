@@ -27,6 +27,9 @@ public class JsonDatabase implements PlayerMailDAO {
             List<Mail> dirtyReverse = Arrays.asList(mail.toArray(new Mail[0]));
             Collections.reverse(dirtyReverse);
             return dirtyReverse.toArray(new Mail[0]);
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return new Mail[0];
         });
     }
 
@@ -39,6 +42,9 @@ public class JsonDatabase implements PlayerMailDAO {
             List<Mail> dirtyReverse = Arrays.asList(mail.toArray(new Mail[0]));
             Collections.reverse(dirtyReverse);
             return dirtyReverse.toArray(new Mail[0]);
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return new Mail[0];
         });
     }
 
@@ -49,6 +55,9 @@ public class JsonDatabase implements PlayerMailDAO {
             Collection<Mail> mail = data.getAllMail();
             mail = mail.stream().filter(m -> !m.isRead()).collect(Collectors.toList());
             return mail.size() > 0;
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return false;
         });
     }
 
@@ -59,7 +68,7 @@ public class JsonDatabase implements PlayerMailDAO {
             mail.setRead(true);
             return data.updateMail(mail.getColId(), mail);
         }).exceptionally(e -> {
-            e.printStackTrace();
+            MailMe.debug(e);
             return false;
         });
     }
@@ -70,6 +79,9 @@ public class JsonDatabase implements PlayerMailDAO {
             JsonPresetFile presets = JsonPresetFile.getJsonPresetFile(plugin);
             presets.addPreset(mail);
             return true;
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return false;
         });
     }
 
@@ -78,6 +90,9 @@ public class JsonDatabase implements PlayerMailDAO {
         return CompletableFuture.supplyAsync(() -> {
             JsonPresetFile presets = JsonPresetFile.getJsonPresetFile(plugin);
             return presets.getPreset(presetName);
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return null;
         });
     }
 
@@ -86,6 +101,9 @@ public class JsonDatabase implements PlayerMailDAO {
         return CompletableFuture.supplyAsync(() -> {
             JsonPresetFile presets = JsonPresetFile.getJsonPresetFile(plugin);
             return presets.deletePreset(presetName);
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return false;
         });
     }
 
@@ -94,6 +112,9 @@ public class JsonDatabase implements PlayerMailDAO {
         return CompletableFuture.supplyAsync(() -> {
             JsonPresetFile presets = JsonPresetFile.getJsonPresetFile(plugin);
             return presets.getIdentifiers();
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return new HashSet<>();
         });
     }
 
@@ -102,6 +123,9 @@ public class JsonDatabase implements PlayerMailDAO {
         CompletableFuture.runAsync(() -> {
             PlayerDataFile data = PlayerDataFile.getPlayerDataFile(uuid, plugin);
             data.deleteMail(mail);
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return null;
         });
     }
 
@@ -116,6 +140,9 @@ public class JsonDatabase implements PlayerMailDAO {
             PlayerDataFile data = PlayerDataFile.getPlayerDataFile(uuid, plugin);
             data.insertMail(mail);
             return true;
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return false;
         });
     }
 

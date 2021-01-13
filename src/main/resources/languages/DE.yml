@@ -4,6 +4,13 @@ T: 'DE'
 VER: 1.2
 
 cmd:
+  no-space: "&e&lMailMe &7▹ &cDein Inventar ist voll! Machen Sie Platz, um die Artikel zu beanspruchen."
+  not-required: "&e&lMailMe &7▹ &eNicht benötigt"
+  needs-value: "&e&lMailMe &7▹ &cSie benötigen einen Wert, z. B. key: value"
+  vault: "&e&lMailMe &7▹ &c-$@amount"
+  generic-processing: "&e&l..."
+  generic-success: "&a&l✔✔✔"
+  has-unread: "&e&lMailMe &7▹ &eSie haben ungelesene E-Mails"
   identifiers: "&e&lMailMe &7▹ &aVoreingestellte: &7@identifiers"
   reload: "&e&lMailMe &7▹ &aPlugin neu geladen."
   default-mb-set: "&e&lMailMe &7▹ &aDeine Mailbox wurde gesetzt!"
@@ -145,15 +152,13 @@ gui:
     custom-model-data: 0
     glow: false
     lore: []
-  item-input:
-    title: '&e&lKlicken Sie mit Artikel'
-    material: YELLOW_STAINED_GLASS_PANE
+  item-input-title:
+    title: '&e&lEingabeelemente'
+    material: OAK_SIGN
     amount: 1
     custom-model-data: 0
     glow: false
-    lore:
-      - "&7Klicken Sie mit einem Artikel auf"
-      - "&7zur Mail hinzufügen."
+    lore: []
   close-menu:
     title: "&8[&eSeite verlassen&8]"
     material: BARRIER
@@ -243,7 +248,7 @@ gui:
       - "&7Spielername zu suchen!"
     glow: true
     skull-texture: ''
-  remove-filter:
+  remove-filters:
     title: "&8[&dFilter entfernen&8]"
     material: IRON_BARS
     amount: 1
@@ -361,6 +366,13 @@ gui:
       - ''
       - '&7Alternativ können Sie mit der linken Maustaste darauf klicken'
       - '&7Brechen Sie den Vorgang ab'
+  send-from-inbox:
+    title: '&e&lMail senden'
+    material: OAK_SIGN
+    amount: 1
+    custom-model-data: 0
+    glow: true
+    lore: []
   deleted:
     title: '&c[&fgelöscht&c]'
     material: REDSTONE_BLOCK

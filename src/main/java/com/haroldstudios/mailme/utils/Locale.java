@@ -43,45 +43,52 @@ public class Locale {
         if (!new File(MailMe.getInstance().getDataFolder(), "languages/EN.yml").exists()) {
             plugin.saveResource("languages/EN.yml", false);
         }
+        if (!new File(MailMe.getInstance().getDataFolder(), "languages/DE.yml").exists()) {
+            plugin.saveResource("languages/DE.yml", false);
+        }
+        if (!new File(MailMe.getInstance().getDataFolder(), "languages/PT.yml").exists()) {
+            plugin.saveResource("languages/PT.yml", false);
+        }
         
         for (File lang : folder.listFiles()) {
             if (!lang.toString().endsWith(".yml")) continue;
             String fileName = lang.getName();
+            YamlConfiguration externalYamlConfig = applyMissingValues("languages/" + fileName);
 
-            File langFile = new File(MailMe.getInstance().getDataFolder() + "/languages/" + fileName);
-            YamlConfiguration externalYamlConfig = YamlConfiguration.loadConfiguration(langFile);
-
-            InputStream resource = MailMe.getInstance().getResource("languages/" + fileName);
-            if (resource != null) {
-                InputStreamReader defConfigStream = new InputStreamReader(resource, UTF_8);
-
-                YamlConfiguration internalLangConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-
-
-                // Gets all the keys inside the internal file and iterates through all of it's key pairs
-
-                for (String string : internalLangConfig.getKeys(true)) {
-                    // Checks if the external file contains the key already.
-                    if (!externalYamlConfig.contains(string)) {
-                        // If it doesn't contain the key, we set the key based off what was found inside the plugin jar
-                        externalYamlConfig.set(string, internalLangConfig.get(string));
-                    }
-                }
-
-                try {
-                    externalYamlConfig.save(langFile);
-                } catch (IOException io) {
-                    io.printStackTrace();
-                }
-            }
             String token = externalYamlConfig.getString("T");
             if (token == null) {
-                //TODO debug logger
+                MailMe.debug(Locale.class, "Could not find token in language file: " + fileName);
                 continue;
             }
-
             this.languagesMap.put(token.toUpperCase(), externalYamlConfig);
         }
+    }
+
+    public YamlConfiguration applyMissingValues(String fileName) {
+        File langFile = new File(MailMe.getInstance().getDataFolder() + "/" + fileName);
+        YamlConfiguration externalYamlConfig = YamlConfiguration.loadConfiguration(langFile);
+
+        InputStream resource = MailMe.getInstance().getResource(fileName);
+        if (resource != null) {
+            InputStreamReader defConfigStream = new InputStreamReader(resource, UTF_8);
+            YamlConfiguration internalLangConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            // Gets all the keys inside the internal file and iterates through all of it's key pairs
+
+            for (String string : internalLangConfig.getKeys(true)) {
+                // Checks if the external file contains the key already.
+                if (!externalYamlConfig.contains(string)) {
+                    // If it doesn't contain the key, we set the key based off what was found inside the plugin jar
+                    externalYamlConfig.set(string, internalLangConfig.get(string));
+                }
+            }
+
+            try {
+                externalYamlConfig.save(langFile);
+            } catch (IOException io) {
+                io.printStackTrace();
+            }
+        }
+        return externalYamlConfig;
     }
 
     public String getMessage(CommandSender sender, String string) {
@@ -143,14 +150,7 @@ public class Locale {
 
     public boolean languageExists(@Nullable String token) {
         if (token == null) return false;
-        File folder = new File(plugin.getDataFolder() + "/languages");
-        File[] listOfFiles = folder.listFiles();
-        if (listOfFiles == null) {
-            plugin.getLogger().severe("Could not find languages folder! What the f**k did you do!!");
-            return false;
-        }
-
-        return Arrays.stream(listOfFiles).anyMatch(file -> file.getName().startsWith(token.toUpperCase()));
+        return languagesMap.keySet().stream().anyMatch(file -> file.equalsIgnoreCase(token));
     }
 
     public ItemStack getItemStack(String path) { return getItemStack(serverLangToken, path); }
@@ -159,6 +159,10 @@ public class Locale {
 
     public ItemStack getItemStack(String token, String path) {
         ConfigurationSection section = languagesMap.get(token).getConfigurationSection(path);
+        if (section == null) {
+            MailMe.debug(Locale.class, "Section is null for path: " + path + " and token: " + token);
+            return new ItemStack(Material.STONE);
+        }
             XMaterial xMaterial = XMaterial.matchXMaterial(section.getString("material")).orElse(XMaterial.STONE);
             Material material = xMaterial.parseMaterial();
 

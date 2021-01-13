@@ -2,6 +2,8 @@ package com.haroldstudios.mailme.gui;
 
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.mail.*;
+import com.haroldstudios.mailme.utils.ConfigValue;
+import com.haroldstudios.mailme.utils.GuiConfig;
 import com.haroldstudios.mailme.utils.PermissionConstants;
 import com.haroldstudios.mailme.utils.Utils;
 import me.mattstudios.gui.components.util.ItemBuilder;
@@ -16,28 +18,33 @@ public class ChooseMailTypeGui extends AbstractMailGui {
     private boolean anonymous = false;
 
     public ChooseMailTypeGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder) {
-        super(plugin, player, previousMenu,3,plugin.getLocale().getMessage(player, "gui.titles.choose-type"), builder);
+        super(plugin, player, previousMenu, 3, plugin.getLocale().getMessage(player, "gui.titles.choose-type"), builder);
         getGui().getFiller().fill(getFillerItem());
-        getGui().setItem(3,5,getCloseMenu());
+
+        addItem(getCloseMenu(), getGuiConfig().getItemGContainer("choose-type-menu.exit", getGui().getRows()));
+
         if (player.hasPermission(PermissionConstants.SEND_ANONYMOUS)) {
-            getGui().setItem(1, 5, getSetAnonymousItem());
+            addItem(getSetAnonymousItem(), getGuiConfig().getItemGContainer("choose-type-menu.anonymous", getGui().getRows()));
         }
     }
 
     @Override
     public void open() {
 
-        getGui().setItem(2,4, new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(),"gui.message"), e -> {
+        GuiItem messageItem = new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(), "gui.message"), e -> {
             if (!Utils.passedPermissionCheck(getPlayer(), PermissionConstants.SEND_MAIL_MESSAGE)) return;
             createMailBuilder(MailType.MESSAGE);
             next();
-        }));
-        getGui().setItem(2,5, new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(),"gui.item"), e -> {
+        });
+        addItem(messageItem, getGuiConfig().getItemGContainer("choose-type-menu.message", getGui().getRows()));
+
+        GuiItem itemsItem = new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(), "gui.item"), e -> {
             if (!Utils.passedPermissionCheck(getPlayer(), PermissionConstants.SEND_MAIL_ITEM)) return;
             createMailBuilder(MailType.ITEM);
             next();
-        }));
-        getGui().setItem(2,6, new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(),"gui.book"), e -> {
+        });
+        addItem(itemsItem, getGuiConfig().getItemGContainer("choose-type-menu.items", getGui().getRows()));
+        GuiItem booksItem = new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(), "gui.book"), e -> {
             if (!Utils.passedPermissionCheck(getPlayer(), PermissionConstants.SEND_MAIL_BOOK)) return;
             ItemStack cursor = e.getCursor();
             if (cursor == null || !cursor.getType().equals(XMaterial.WRITTEN_BOOK.parseMaterial()) || !cursor.hasItemMeta()) {
@@ -50,7 +57,9 @@ public class ChooseMailTypeGui extends AbstractMailGui {
             builder.setBook(new ItemStack(cursor));
             e.setCursor(null);
             next();
-        }));
+        });
+        addItem(booksItem, getGuiConfig().getItemGContainer("choose-type-menu.books", getGui().getRows()));
+
 
         getGui().open(getPlayer());
     }
@@ -76,11 +85,7 @@ public class ChooseMailTypeGui extends AbstractMailGui {
             stack.glow(true);
         }
         return stack.asGuiItem(event -> {
-            if (anonymous) {
-                anonymous = false;
-            } else {
-                anonymous = true;
-            }
+            anonymous = !anonymous;
             getGui().updateItem(1,5,getSetAnonymousItem());
         });
 

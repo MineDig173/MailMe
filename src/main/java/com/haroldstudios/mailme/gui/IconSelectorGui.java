@@ -15,7 +15,7 @@ public class IconSelectorGui extends AbstractScrollingMailGui {
 
     public IconSelectorGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder) {
         super(plugin, player, previousMenu, 6, plugin.getLocale().getMessage(player, "gui.titles.icon-selector"), builder, Expandable.GuiType.COMPACT);
-        getGui().setItem(6,5,getCloseMenu());
+        addItem(getCloseMenu(), getGuiConfig().getItemGContainer("icon-selector-menu.exit"));
     }
 
     @Override
@@ -36,7 +36,7 @@ public class IconSelectorGui extends AbstractScrollingMailGui {
 
         ItemStack stack = getPlugin().getLocale().getItemStack(getPlayer(), "gui.icon-custom");
 
-        getGui().setItem(3,5, new GuiItem(stack, event -> {
+        GuiItem customIcon = new GuiItem(stack, event -> {
             if (event.getCursor() == null) return;
             if (event.getCursor().getType().equals(Material.AIR)) return;
 
@@ -47,7 +47,8 @@ public class IconSelectorGui extends AbstractScrollingMailGui {
 
             Utils.giveItem(getPlayer(), cursor);
             next();
-        }));
+        });
+        addItem(customIcon, getGuiConfig().getItemGContainer("icon-selector-menu.exit"));
 
         getGui().open(getPlayer());
     }

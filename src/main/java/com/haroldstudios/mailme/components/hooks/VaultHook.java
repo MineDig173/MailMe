@@ -34,15 +34,18 @@ public final class VaultHook {
 
     public VaultHook(final MailMe plugin) {
         this.plugin = plugin;
-        if (!plugin.getConfig().getBoolean("enable-vault")) return;
-
         RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
             plugin.getLogger().log(Level.WARNING, "No Vault Economy Plugin found!");
             return;
         }
+
         econ = rsp.getProvider();
     }
+
+    /**
+     * Attempts to use economy for sending mail
+     * @param player Player to attempt with
 
     /**
      * Attempts to use economy for sending mail
@@ -52,13 +55,12 @@ public final class VaultHook {
      */
     public boolean attemptTransaction(Player player, double amount) {
         if (econ == null) return true;
-
         EconomyResponse r = econ.withdrawPlayer(player, amount);
         if(!r.transactionSuccess()) {
             player.sendMessage(plugin.getLocale().getMessage(player, "cmd.vault-insufficient-funds"));
             return false;
         } else {
-            String msg = plugin.getLocale().getMessage(player, "vault");
+            String msg = plugin.getLocale().getMessage(player, "cmd.vault");
             msg = msg.replaceAll("@amount", String.valueOf(r.amount));
             player.sendMessage(msg);
         }
@@ -66,7 +68,7 @@ public final class VaultHook {
     }
 
     public boolean attemptTransaction(Player player, MailType type) {
-        if (econ == null) return true;
+
 
         double r;
 

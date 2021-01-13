@@ -5,50 +5,74 @@ import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailItems;
 import com.haroldstudios.mailme.utils.Utils;
 import me.mattstudios.gui.guis.GuiItem;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ItemInputGui extends AbstractScrollingMailGui {
+public class ItemInputGui extends AbstractMailGui {
 
     private final List<ItemStack> items;
-    // When false, items are given back on menu closure
-    private boolean safeToLeave = false;
 
     public ItemInputGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, List<ItemStack> items) {
-        super(plugin, player, previousMenu, 6, plugin.getLocale().getMessage(player, "gui.titles.item-input"), builder, Expandable.GuiType.COMPACT);
+        super(plugin, player, previousMenu, 6, plugin.getLocale().getMessage(player, "gui.titles.item-input"), builder);
         this.items = items;
 
-        getGui().setItem(3, 5, new GuiItem(plugin.getLocale().getItemStack(player, "gui.item-input"), event -> {
-            ItemStack cursor = event.getCursor();
-
-            if (cursor == null) return;
-            if (cursor.getType().equals(Material.AIR)) return;
-
-            items.add(new ItemStack(cursor));
-            event.setCursor(null);
-            safeToLeave = true;
-            new ItemInputGui(getPlugin(), getPlayer(), previousMenu, builder, items).open();
-        }));
-
-        // On close it gives player the items back
         getGui().setCloseGuiAction(event -> {
-            if (!safeToLeave) {
-                items.forEach(item -> Utils.giveItem(player, item));
-            }
+            if (gracefulExit) return;
+            getInputtedItems(event.getInventory()).forEach(item -> Utils.giveItem(player, item));
         });
 
-        getGui().setItem(6,9, new GuiItem(getNextMenuButton(), event -> next()));
+        getGui().setDefaultTopClickAction(event -> {
+            if (isValidItemSlot(event.getSlot())) {
+                return;
+            }
+            event.setCancelled(true);
+        });
+        getGui().setDefaultClickAction(event -> { });
+        getGui().setDragAction(event -> { });
+        GuiItem title = new GuiItem(plugin.getLocale().getItemStack(player, "gui.item-input-title"));
+        GuiItem nextMenu = new GuiItem(getNextMenuButton(), event -> {
+            items.addAll(getInputtedItems(event.getInventory()));
+
+            if (items.size() < 1) return;
+            next();
+        });
+
+        getGui().getFiller().fillBorder(getFillerItem());
+        getGui().getFiller().fillBetweenPoints(2,8,5,8, getFillerItem());
+        getGui().getFiller().fillBetweenPoints(5,2,5,8, getFillerItem());
+        getGui().getFiller().fillBetweenPoints(2,2,5,2, getFillerItem());
+
+        addItem(getCloseMenu(), getGuiConfig().getItemGContainer("item-input-menu.exit"));
+        addItem(title, getGuiConfig().getItemGContainer("item-input-menu.title"));
+        addItem(nextMenu, getGuiConfig().getItemGContainer("item-input-menu.next-menu"));
+
+    }
+
+    private boolean isValidItemSlot(int slot) {
+        return (slot >= 11 && slot <= 15) || (slot >= 20 && slot <= 24) || (slot >= 29 && slot <= 33);
+    }
+
+    public List<ItemStack> getInputtedItems(Inventory inventory) {
+        List<ItemStack> list = new ArrayList<>();
+        for (int i = 10; i <= 33; i++) {
+            if (!isValidItemSlot(i)) continue;
+            if (inventory.getItem(i) == null)
+                continue;
+            org.bukkit.inventory.ItemStack stack = new ItemStack(inventory.getItem(i)); // Convert from NMS ItemStack to Bukkit ItemStack
+            list.add(stack);
+        }
+        return list;
     }
 
     @Override
     void nextMenu() {
-        safeToLeave = true;
+        gracefulExit = true;
         MailItems.Builder mb = (MailItems.Builder) getBuilder();
         // Ensures it's not an NMS item as we can't / don't serialize those.
         mb.setItemStackList(items.stream().map(ItemStack::new).collect(Collectors.toList()));
@@ -57,24 +81,6 @@ public class ItemInputGui extends AbstractScrollingMailGui {
 
     @Override
     public void open() {
-
-        for (ItemStack stack : items) {
-            getGui().addItem(new GuiItem(stack, event -> {
-                ItemStack clickedItem = event.getCurrentItem();
-                if (clickedItem == null) return;
-
-                Optional<ItemStack> itemStackOptional = items.stream().filter(item -> item.isSimilar(stack)).findFirst();
-                if (itemStackOptional.isPresent()) {
-                    if (items.remove(itemStackOptional.get())) {
-                        Utils.giveItem(getPlayer(), itemStackOptional.get());
-                    }
-                }
-
-                safeToLeave = true;
-                new ItemInputGui(getPlugin(), getPlayer(), getPreviousMenu(), getBuilder(), items).open();
-            }));
-        }
-
         getGui().open(getPlayer());
     }
 }

@@ -31,11 +31,11 @@ public class MailItems extends Mail {
     }
 
     @Override
-    public void onMailClick(Player whoClicked) {
-            for (ItemStack item : itemStackList) {
-                Utils.giveItem(whoClicked, item);
-            }
-
+    public boolean onMailClick(Player whoClicked) {
+        for (ItemStack item : itemStackList) {
+            Utils.giveItem(whoClicked, item);
+        }
+        return true;
     }
 
     @Override
@@ -54,9 +54,13 @@ public class MailItems extends Mail {
     public String[] getContentsAsString() {
         List<String> contents = new ArrayList<>();
         for (ItemStack stack : itemStackList) {
-            contents.add("x" + stack.getAmount() + " " + Utils.getLocalizedName(stack));
+            contents.add(ChatColor.GRAY + "x" + stack.getAmount() + " " + stack.getType().toString());
         }
         return contents.toArray(new String[0]);
+    }
+
+    public List<ItemStack> getItemStackList() {
+        return itemStackList;
     }
 
     public static class Builder extends Mail.Builder<MailItems.Builder>{
@@ -69,8 +73,17 @@ public class MailItems extends Mail {
         }
 
         @Override
+        public List<ItemStack> getInputtedItems() {
+            return itemStackList;
+        }
+
+        @Override
         public String[] getContents() {
-            return new String[0];
+            List<String> contents = new ArrayList<>();
+            for (ItemStack stack : itemStackList) {
+                contents.add(ChatColor.GRAY + "x" + stack.getAmount() + " " + stack.getType().toString());
+            }
+            return contents.toArray(new String[0]);
         }
 
         @Override

@@ -14,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Set;
 
 @Command("mailbox")
@@ -71,7 +72,7 @@ public class MailboxCommands extends CommandBase {
     @Alias("delete")
     @Permission(PermissionConstants.REMOVE_MAILBOX)
     public void removeMailbox(Player player) {
-        Block block = player.getTargetBlock((Set<Material>) null, 6);
+        Block block = player.getTargetBlock(null, 6);
         PlayerSettings playerSettings = plugin.getCache().getPlayerSettings(player);
 
         if (!playerSettings.getMailboxLocations().contains(block.getLocation())) {
@@ -87,7 +88,8 @@ public class MailboxCommands extends CommandBase {
     @Alias("highlight")
     @Permission(PermissionConstants.FIND_NEAR_MAILBOXES)
     public void findMailboxes(Player player) {
-        Set<Location> mailboxes = plugin.getCache().getMailboxes();
+        List<Location> mailboxes = plugin.getCache().getMailboxes();
+        mailboxes.add(plugin.getCache().getServerSettings().getDefaultMailboxLocation());
         Location playerLocation = player.getLocation();
 
         player.sendMessage(plugin.getLocale().getMessage(player, "mailbox.highlighted"));

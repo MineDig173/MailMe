@@ -23,6 +23,7 @@ public class ConfigValue {
     public static boolean HOOK_VAULT_ENABLED, HOOK_HOLOGRAMS_ENABLED = true;
     public static int SEND_DELAY = 0;
     public static boolean DEBUG = true;
+    public static boolean CAN_SEND_TO_SELF = false;
 
     private ConfigValue() {}
 
@@ -56,5 +57,6 @@ public class ConfigValue {
         HOOK_VAULT_ENABLED = config.getBoolean("hooks.vault");
         SEND_DELAY = config.getInt("send-delay");
         DEBUG = config.getBoolean("debug");
+        CAN_SEND_TO_SELF = config.getBoolean("can-send-to-self");
     }
 }

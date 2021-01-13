@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerDataFile {
@@ -47,7 +48,19 @@ public class PlayerDataFile {
         return this.mail.get(colId);
     }
 
-    public void insertMail(Mail mail) {
+    public synchronized void insertMail(Mail mail) {
+        insertMailNoSave(mail);
+        save();
+    }
+
+    public synchronized void insertMail(List<Mail> mails) {
+        for (Mail mail : mails) {
+            insertMailNoSave(mail);
+        }
+        save();
+    }
+
+    private synchronized void insertMailNoSave(Mail mail) {
         key++;
         // May be linked when sending to multiple players. Should overwrite and ignore since we don't store it in a cache currently.
         mail.setColId(key);
@@ -57,10 +70,10 @@ public class PlayerDataFile {
         mail.setDateReceived(System.currentTimeMillis());
 
         this.mail.put(key, mail);
-        save();
     }
 
-    public void save() {
+
+    public synchronized void save() {
         Bukkit.getScheduler().runTaskAsynchronously(MailMe.getInstance(), () -> {
             MailMe.getInstance().getCache().getFileUtil().save(this, new File(MailMe.getInstance().getDataFolder() + "/playerdata_json/" + uuid.toString() + ".json"));
         });

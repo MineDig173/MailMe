@@ -31,6 +31,7 @@ public class DataCache {
         this.fileUtil = new FileUtil();
         File folder = new File(MailMe.getInstance().getDataFolder(), "playersettings");
         folder.mkdir();
+        MailMe.debug(DataCache.class, "Beginning to load postofficestore and serversettings... Note: If failed to load, you may have previously been running on an outdated serializer! A quick fix is to delete these files and restart.");
         this.postOfficeStore = this.getFileUtil().getFile(PostOfficeStore.class).exists() ? this.getFileUtil().load(PostOfficeStore.class) : new PostOfficeStore();
         this.serverSettings = this.getFileUtil().getFile(ServerSettings.class).exists() ? this.getFileUtil().load(ServerSettings.class) : new ServerSettings();
         // Inserts all mailboxes on running server into cache.
@@ -128,8 +129,8 @@ public class DataCache {
         return fileUtil;
     }
 
-    public Set<Location> getMailboxes() {
-        return mailboxLocations.keySet();
+    public List<Location> getMailboxes() {
+        return new ArrayList<>(mailboxLocations.keySet());
     }
 
     public ServerSettings getServerSettings() {

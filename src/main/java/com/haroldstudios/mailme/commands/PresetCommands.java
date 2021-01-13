@@ -41,14 +41,17 @@ public class PresetCommands extends CommandBase {
     @SubCommand("help")
     @Permission(PermissionConstants.ADMIN)
     public void help(CommandSender sender) {
-        sender.sendMessage(plugin.getLocale().getMessage(sender, "preset-help"));
+        sender.sendMessage(plugin.getLocale().getMessages(sender, "preset-help"));
     }
 
     @SubCommand("list")
     @Permission(PermissionConstants.ADMIN)
     public void list(CommandSender sender) {
         String msg = plugin.getLocale().getMessage("cmd.identifiers");
-        plugin.getPlayerMailDAO().getPresetMailIdentifiers().thenAccept(identifiers -> sender.sendMessage(msg.replace("@identifiers", identifiers.toString())));
+        plugin.getPlayerMailDAO().getPresetMailIdentifiers().thenAccept(identifiers -> {
+            identifiers.remove(null); //TODO does this remove null?
+            sender.sendMessage(msg.replace("@identifiers", identifiers.toString()));
+        });
     }
 
     @SubCommand("create")
@@ -82,20 +85,25 @@ public class PresetCommands extends CommandBase {
     public void give(CommandSender sender, String playerName, String preset) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
+
             Bukkit.getScheduler().runTask(plugin, () -> {
-                if (!offlinePlayer.hasPlayedBefore()) {
+                List<UUID> uuids = new ArrayList<>();
+                if (playerName.equals("*")) {
+                    Bukkit.getOnlinePlayers().forEach(player -> uuids.add(player.getUniqueId()));
+                }
+                if (!playerName.equals("*") && !offlinePlayer.hasPlayedBefore()) {
                     sender.sendMessage(plugin.getLocale().getMessage(sender, "cmd.unknown-player"));
                     return;
+                } else {
+                    UUID uuid = offlinePlayer.getUniqueId();
+                    uuids.add(uuid);
                 }
-                UUID uuid = offlinePlayer.getUniqueId();
                 plugin.getPlayerMailDAO().getPresetMail(preset).thenAccept(mail -> {
                     if (mail == null) {
                         sender.sendMessage(plugin.getLocale().getMessage(sender, "cmd.invalid-preset"));
                         return;
                     }
-                    List<UUID> recipients = new ArrayList<>();
-                    recipients.add(uuid);
-                    mail.send(recipients);
+                    mail.send(uuids);
                     sender.sendMessage(plugin.getLocale().getMessage(sender, "mail.sent"));
                 });
             });
@@ -111,7 +119,7 @@ public class PresetCommands extends CommandBase {
             return;
         }
 
-        if (builder.getSender() == null || builder.getIdentifier() == null || builder.getIcon() == null || builder.getContents()[0] == null) {
+        if (builder.getSender() == null || builder.getIdentifier() == null || builder.getIcon() == null || builder.getContents() == null || builder.getContents().length < 1) {
             player.sendMessage(plugin.getLocale().getMessage(player, "cmd.missing-params-preset"));
             return;
         }
@@ -150,6 +158,39 @@ public class PresetCommands extends CommandBase {
             return;
         }
 
+        if (args[1].equalsIgnoreCase("icon")){
+            IconSelectorGui gui = new IconSelectorGui(plugin, player, null, builder);
+            gui.withRunnable(() -> {
+                gui.getGui().close(player);
+                player.performCommand("mailpreset edit");
+            });
+            gui.open();
+            return;
+        } else if (args[1].equalsIgnoreCase("contents")) {
+            if (builder instanceof MailItems.Builder) {
+                ItemInputGui gui = new ItemInputGui(plugin, player, null, builder, new ArrayList<>());
+                gui.withRunnable(() -> {
+                    gui.getGui().close(player);
+                    ((MailItems.Builder) builder).setItemStackList(gui.getInputtedItems(gui.getGui().getInventory()));
+                    player.performCommand("mailpreset edit");
+                });
+                gui.open();
+                return;
+            } else if (builder instanceof MailMessage.Builder) {
+                LetterInputPrompt.begin(plugin, builder, player, () -> player.performCommand("mailpreset edit"));
+                return;
+            } else {
+                player.sendMessage(plugin.getLocale().getMessage(player, "cmd.not-required"));
+                return;
+            }
+        }
+
+        if (!args[1].contains(":") || args[1].split(":").length <= 1) {
+            player.sendMessage(plugin.getLocale().getMessage(player, "cmd.needs-value"));
+            return;
+        }
+
+
         if (args[1].startsWith("id:")) {
             String identifier = args[1].split(":")[1];
             builder.setIdentifier(identifier);
@@ -170,24 +211,7 @@ public class PresetCommands extends CommandBase {
                 return;
             }
             builder.setExpiryTimeMins(expire);
-        } else if (args[1].equalsIgnoreCase("icon")){
-            IconSelectorGui gui = new IconSelectorGui(plugin, player, null, builder);
-            gui.withRunnable(() -> {
-                gui.getGui().close(player);
-                player.performCommand("mailpreset edit");
-            });
-            gui.open();
-        } else if (args[1].equalsIgnoreCase("contents")) {
-            if (builder instanceof MailItems.Builder) {
-                ItemInputGui gui = new ItemInputGui(plugin, player, null, builder, new ArrayList<>());
-                gui.withRunnable(() -> {
-                    gui.getGui().close(player);
-                    player.performCommand("mailpreset edit");
-                });
-                gui.open();
-            } else if (builder instanceof MailMessage.Builder) {
-                LetterInputPrompt.begin(plugin, builder, player, () -> player.performCommand("mailpreset edit"));
-            }
+            return;
         } else {
             player.sendMessage(plugin.getLocale().getMessage(player, "cmd.unknown-argument"));
         }

@@ -1,5 +1,6 @@
 package com.haroldstudios.mailme.mail;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
@@ -7,9 +8,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Collections;
+import java.util.List;
+
 public class MailBook extends Mail{
 
-    private ItemStack book;
+    private final ItemStack book;
 
     /**
      * Main class constructor
@@ -24,8 +28,9 @@ public class MailBook extends Mail{
     }
 
     @Override
-    public void onMailClick(Player whoClicked) {
+    public boolean onMailClick(Player whoClicked) {
         whoClicked.openBook(book);
+        return true;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class MailBook extends Mail{
         BookMeta bookMeta = (BookMeta) meta;
         if (!bookMeta.hasPages()) return new String[0];
 
-        return new String[]{bookMeta.getTitle()};
+        return new String[]{ChatColor.GRAY + bookMeta.getTitle()};
     }
 
     public static class Builder extends Mail.Builder<MailBook.Builder>{
@@ -53,6 +58,11 @@ public class MailBook extends Mail{
 
         public void setBook(ItemStack book) {
             this.book = book;
+        }
+
+        @Override
+        public List<ItemStack> getInputtedItems() {
+            return Collections.singletonList(book);
         }
 
         @Override

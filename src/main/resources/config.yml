@@ -49,10 +49,14 @@ database:
 # Default: 0
 send-delay: 0
 
+# Can the player send mail to themselves?
+can-send-to-self: true
+
 hooks:
-  vault: true #enabled?
+  vault: true # enabled?
   holograms: true
 
+# Requires Vault. Cost for each action
 cost:
   message: 25.00
   item: 40.00
