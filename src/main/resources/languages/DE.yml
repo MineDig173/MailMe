@@ -4,6 +4,7 @@ T: 'DE'
 VER: 1.2
 
 cmd:
+  mailbox-removeall: "&e&lMailMe &7▹ &aAlle Postfächer entfernt"
   no-space: "&e&lMailMe &7▹ &cDein Inventar ist voll! Machen Sie Platz, um die Artikel zu beanspruchen."
   not-required: "&e&lMailMe &7▹ &eNicht benötigt"
   needs-value: "&e&lMailMe &7▹ &cSie benötigen einen Wert, z. B. key: value"
@@ -105,6 +106,7 @@ mail-types:
   message: Nachricht
   item: Item
   book: Buch
+  console: 'Konsole'
 
 text:
   format:

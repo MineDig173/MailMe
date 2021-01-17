@@ -38,6 +38,15 @@ public class MailboxCommands extends CommandBase {
         sender.sendMessage(plugin.getLocale().getMessages(sender, "mailbox-help"));
     }
 
+    @SubCommand("removeall")
+    @Permission(PermissionConstants.MAILBOX_REMOVEALL)
+    public void removeAll(Player player) {
+        PlayerSettings playerSettings = plugin.getCache().getPlayerSettings(player.getUniqueId());
+        List<Location> mailboxLocs = playerSettings.getOnlyMailboxLocations();
+        playerSettings.removeMailboxLocations(mailboxLocs);
+        player.sendMessage(plugin.getLocale().getMessage(player, "cmd.mailbox-removeall"));
+    }
+
     @SubCommand("add")
     @Permission(PermissionConstants.ADD_MAILBOX)
     public void addMailbox(Player player) {

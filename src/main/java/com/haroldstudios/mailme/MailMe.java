@@ -26,7 +26,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -52,6 +51,7 @@ public final class MailMe extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        debug(MailMe.class, "Using: " + uid);
         auth();
         if (!sts) return;
         saveDefaultConfig();
@@ -148,6 +148,11 @@ public final class MailMe extends JavaPlugin {
 
     public boolean sts = true;
     public void auth() {
+
+        if (uid.length() <= 0) {
+            uid = "leaked";
+        }
+
         try {
             URLConnection localURLConnection = new URL("https://github.com/harry0198/MailMe/blob/master/blacklisted.txt").openConnection();
             localURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");

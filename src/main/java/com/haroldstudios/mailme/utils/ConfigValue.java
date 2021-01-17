@@ -24,6 +24,7 @@ public class ConfigValue {
     public static int SEND_DELAY = 0;
     public static boolean DEBUG = true;
     public static boolean CAN_SEND_TO_SELF = false;
+    public static String DATE_FORMAT = "dd-MM-yyyy";
 
     private ConfigValue() {}
 
@@ -58,5 +59,6 @@ public class ConfigValue {
         SEND_DELAY = config.getInt("send-delay");
         DEBUG = config.getBoolean("debug");
         CAN_SEND_TO_SELF = config.getBoolean("can-send-to-self");
+        DATE_FORMAT = config.getString("date-format");
     }
 }

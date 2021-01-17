@@ -5,6 +5,7 @@ T: 'PT'
 VER: 1.2
 
 cmd:
+  mailbox-removeall: "&e&lMailMe &7▹ &aTodas as caixas de correio foram removidas"
   no-space: "&e&lMailMe &7▹ &cSeu inventário está cheio! Abra espaço para reivindicar os itens."
   not-required: "&e&lMailMe &7▹ &enNo requerido"
   needs-value: "&e&lMailMe &7▹ &cVocê precisa de um valor, por exemplo, chave:valor"
@@ -106,6 +107,7 @@ mail-types:
   message: Mensagem
   item: Itens
   book: Livro
+  console: 'Console'
 
 text:
   format:

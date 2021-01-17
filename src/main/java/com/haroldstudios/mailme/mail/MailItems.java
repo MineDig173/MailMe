@@ -42,7 +42,7 @@ public class MailItems extends Mail {
     public BaseComponent[] getContentsAsText() {
         ComponentBuilder builder = new ComponentBuilder("");
         for (ItemStack item : itemStackList) {
-            TextComponent txt = new TextComponent(item.getAmount() + " * " + item.getType() + " ");
+            TextComponent txt = new TextComponent(item.getAmount() + " * " + Utils.getItemName(item) + " ");
             txt.setColor(ChatColor.AQUA);
             txt.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(NMSReflection.convertItemStackToJson(item)).create()));
             builder.append(txt);
@@ -54,7 +54,7 @@ public class MailItems extends Mail {
     public String[] getContentsAsString() {
         List<String> contents = new ArrayList<>();
         for (ItemStack stack : itemStackList) {
-            contents.add(ChatColor.GRAY + "x" + stack.getAmount() + " " + stack.getType().toString());
+            contents.add(ChatColor.GRAY + "x" + stack.getAmount() + " " + Utils.getItemName(stack));
         }
         return contents.toArray(new String[0]);
     }
@@ -81,7 +81,7 @@ public class MailItems extends Mail {
         public String[] getContents() {
             List<String> contents = new ArrayList<>();
             for (ItemStack stack : itemStackList) {
-                contents.add(ChatColor.GRAY + "x" + stack.getAmount() + " " + stack.getType().toString());
+                contents.add(ChatColor.GRAY + "x" + stack.getAmount() + " " + Utils.getItemName(stack));
             }
             return contents.toArray(new String[0]);
         }

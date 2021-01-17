@@ -31,7 +31,14 @@ public class MailboxTaskManager {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 Location playerLocation = player.getLocation();
                 PlayerSettings playerSettings = plugin.getCache().getPlayerSettings(player);
-                playerSettings.getMailboxLocations().stream().filter(loc -> loc.distance(playerLocation) <= ConfigValue.MAILBOX_PING_DISTANCE).forEach(mailbox -> {
+                playerSettings.getMailboxLocations().stream().filter(loc -> {
+                    if (loc.getWorld() != null && playerLocation.getWorld() != null) {
+                        if (loc.getWorld().toString().equals(playerLocation.getWorld().toString())) {
+                            return loc.distance(playerLocation) <= ConfigValue.MAILBOX_PING_DISTANCE;
+                        }
+                    }
+                    return false;
+                }).forEach(mailbox -> {
                     if (!ConfigValue.VALID_MAILBOXES.contains(mailbox.getBlock().getType())) return; // If block is no longer a valid mailbox, do not ping it. (e.g someone moved it with a piston / got destroyed)
                     plugin.getPlayerMailDAO().hasUnreadMail(player.getUniqueId()).thenAccept(hasUnread -> {
                         if (hasUnread)

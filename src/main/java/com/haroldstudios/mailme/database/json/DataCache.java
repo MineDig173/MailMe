@@ -71,6 +71,12 @@ public class DataCache {
         }
     }
 
+    public void removeAllMailboxes(List<Location> locations) {
+        for (Location loc : locations) {
+            removeMailbox(loc);
+        }
+    }
+
     @Nullable
     public UUID getWhoOwnsMailboxAtLocation(Location location) {
         return mailboxLocations.get(location);

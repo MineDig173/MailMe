@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -24,6 +25,15 @@ public class Utils {
 
     public static List<String> colourList(List<String> string) {
         return string.stream().map(Utils::colour).collect(Collectors.toList());
+    }
+
+    // Gets display name or item name if not present
+    public static String getItemName(ItemStack item) {
+        String itemName = item.getType().toString();
+        if (item.getItemMeta() != null) {
+            itemName = item.getItemMeta().getDisplayName().equals("") ? item.getType().toString() : item.getItemMeta().getDisplayName();
+        }
+        return itemName;
     }
 
     public static boolean hasSpaceInInventory(List<ItemStack> items, Inventory inventory) {
@@ -108,12 +118,11 @@ public class Utils {
     public static String getDateFromMs(long millis) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
+        Date date = calendar.getTime();
 
-        int mYear = calendar.get(Calendar.YEAR);
-        int mMonth = calendar.get(Calendar.MONTH) + 1;
-        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        SimpleDateFormat format1 = new SimpleDateFormat(ConfigValue.DATE_FORMAT);
 
-        return mDay + "/" + mMonth + "/" + mYear;
+        return format1.format(date);
     }
 
     public static String getTimeFromMS(long millis) {

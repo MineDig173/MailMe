@@ -5,6 +5,7 @@ T: 'EN'
 VER: 1.2
 
 cmd:
+  mailbox-removeall: "&e&lMailMe &7▹ &aRemoved all Mailboxes."
   no-space: "&e&lMailMe &7▹ &cYour inventory is full! Make space to claim the items."
   not-required: "&e&lMailMe &7▹ &eNot required."
   needs-value: "&e&lMailMe &7▹ &cYou need a value e.g key:value"
@@ -106,6 +107,7 @@ mail-types:
   message: Message
   item: Items
   book: Book
+  console: 'Console Cmd'
 
 text:
   format:

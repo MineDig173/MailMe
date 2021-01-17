@@ -10,6 +10,7 @@ public class PermissionConstants {
     public static final String ADD_MAILBOX = "mailbox.add";
     public static final String REMOVE_MAILBOX = "mailbox.remove";
     public static final String FIND_NEAR_MAILBOXES = "mailbox.find";
+    public static final String MAILBOX_REMOVEALL = "mailbox.removeall";
 
     public static final String MAIL_HELP = "mailme.help";
     public static final String COMPOSE_MAIL = "mailme.compose";
