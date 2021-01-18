@@ -1,6 +1,9 @@
 package com.haroldstudios.mailme.mail;
 
-import net.md_5.bungee.api.chat.BaseComponent;
+import com.haroldstudios.mailme.MailMe;
+import com.haroldstudios.mailme.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -26,17 +29,16 @@ public class MailConsoleCommand extends Mail {
 
     @Override
     public boolean onMailClick(Player whoClicked) {
-        return false;
+        String apCommand = Utils.applyPlaceholders(this.command, this, whoClicked)[0];
+        Bukkit.getScheduler().runTask(MailMe.getInstance(), () ->
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), apCommand));
+        return true;
     }
 
-    @Override
-    public BaseComponent[] getContentsAsText() {
-        return new BaseComponent[0];
-    }
 
     @Override
     public String[] getContentsAsString() {
-        return new String[0];
+        return new String[]{ChatColor.GRAY + command};
     }
 
     public static class Builder extends Mail.Builder<MailConsoleCommand.Builder>{
@@ -50,7 +52,7 @@ public class MailConsoleCommand extends Mail {
 
         @Override
         public String[] getContents() {
-            return new String[]{command};
+            return new String[]{ChatColor.GRAY + command};
         }
 
         public void setCommand(String command) {

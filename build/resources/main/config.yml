@@ -31,6 +31,8 @@ lang: "EN"
 # Default false (off)
 debug: false
 
+date-format: "dd-MM-yyyy"
+
 database:
   type: "json" # json, mysql
   # Drivers

@@ -2,6 +2,7 @@ package com.haroldstudios.mailme.gui;
 
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.mail.Mail;
+import com.haroldstudios.mailme.mail.MailConsoleCommand;
 import com.haroldstudios.mailme.mail.MailItems;
 import com.haroldstudios.mailme.utils.Utils;
 import me.mattstudios.gui.components.util.ItemBuilder;
@@ -105,7 +106,7 @@ public class InboxGui extends AbstractScrollingMailGui implements Expandable {
                     });
                     return;
                 }
-                if (mail instanceof MailItems) return;
+                if (mail instanceof MailItems || mail instanceof MailConsoleCommand) return;
                 mail.onMailClick(getPlayer());
             } else {
                 getGui().updatePageItem(event.getSlot(), new GuiItem(getAreYouSure(), e -> {

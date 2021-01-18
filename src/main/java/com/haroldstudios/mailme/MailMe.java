@@ -5,6 +5,7 @@ import com.haroldstudios.mailme.commands.MailboxCommands;
 import com.haroldstudios.mailme.commands.PostOfficeCommands;
 import com.haroldstudios.mailme.commands.PresetCommands;
 import com.haroldstudios.mailme.components.hooks.HologramHook;
+import com.haroldstudios.mailme.components.hooks.HolographicDisplaysHook;
 import com.haroldstudios.mailme.components.hooks.VaultHook;
 import com.haroldstudios.mailme.database.DatabaseConnector;
 import com.haroldstudios.mailme.database.DatabaseSettingsImpl;
@@ -62,7 +63,7 @@ public final class MailMe extends JavaPlugin {
         }
 
         if (getServer().getPluginManager().getPlugin("HolographicDisplays") != null && ConfigValue.HOOK_HOLOGRAMS_ENABLED) {
-            this.hologramHook = new HologramHook(this);
+            this.hologramHook = new HolographicDisplaysHook(this);
         }
         this.locale = new Locale(this);
         this.dataCache = new DataCache();

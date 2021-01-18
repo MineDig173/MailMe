@@ -55,7 +55,7 @@ public class DataCache {
         if (MailMe.getInstance().getHologramHook() != null) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
             if (!offlinePlayer.hasPlayedBefore() || offlinePlayer.getName() == null) return;
-            MailMe.getInstance().getHologramHook().addHologram(location, offlinePlayer.getName());
+            MailMe.getInstance().getHologramHook().addTempHologram(location, offlinePlayer.getName());
         }
     }
 
@@ -67,7 +67,7 @@ public class DataCache {
         mailboxLocations.remove(key);
 
         if (MailMe.getInstance().getHologramHook() != null) {
-            MailMe.getInstance().getHologramHook().removeHologram(key);
+            MailMe.getInstance().getHologramHook().removeTempHologram(key);
         }
     }
 

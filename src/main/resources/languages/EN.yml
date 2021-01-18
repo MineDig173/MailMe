@@ -123,6 +123,7 @@ text:
   next-page-hover: '&cClick for the next page!'
 
 mail:
+  console: "Enter the command to execute on read."
   message-contents: "&e&l%sender% &7▹ &e%contents%"
   message: "What would you like your letter to say?"
   sent: "&e&lMailMe &7▹ &aMail successfully dispatched."
@@ -386,3 +387,13 @@ gui:
     custom-model-data: 0
     glow: true
     lore: []
+  console:
+    title: '&e&lConsole Command'
+    material: COMMAND_BLOCK
+    amount: 1
+    custom-model-data: 0
+    glow: true
+    lore:
+      - "&7Executes command on read"
+      - "&7Visibility: &aHidden"
+      - "&7Placeholder: &a%player_name%"

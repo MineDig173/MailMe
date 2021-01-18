@@ -48,7 +48,7 @@ public class MailCommands extends CommandBase {
     @Permission(PermissionConstants.ADMIN)
     public void reload(CommandSender sender) {
         for (Location loc : plugin.getCache().getMailboxes()) {
-            plugin.getHologramHook().removeHologram(loc);
+            plugin.getHologramHook().removeTempHologram(loc);
         }
         plugin.onDisable();
         plugin.reloadConfig();

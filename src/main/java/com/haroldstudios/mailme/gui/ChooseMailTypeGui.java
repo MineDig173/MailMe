@@ -60,6 +60,15 @@ public class ChooseMailTypeGui extends AbstractMailGui {
         });
         addItem(booksItem, getGuiConfig().getItemGContainer("choose-type-menu.books", getGui().getRows()));
 
+        GuiItem consoleItem = new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(),"gui.console"), event -> {
+            if (!Utils.passedPermissionCheck(getPlayer(), PermissionConstants.SEND_CONSOLE_COMMAND)) return;
+            createMailBuilder(MailType.CONSOLE_CMD);
+            next();
+        });
+
+        if (getPlayer().hasPermission(PermissionConstants.SEND_CONSOLE_COMMAND)) {
+            addItem(consoleItem, getGuiConfig().getItemGContainer("choose-type-menu.console"));
+        }
 
         getGui().open(getPlayer());
     }
@@ -101,6 +110,9 @@ public class ChooseMailTypeGui extends AbstractMailGui {
                 break;
             case MESSAGE:
                 setBuilder(new MailMessage.Builder().combine(getBuilder()));
+                break;
+            case CONSOLE_CMD:
+                setBuilder(new MailConsoleCommand.Builder().combine(getBuilder()));
                 break;
         }
     }

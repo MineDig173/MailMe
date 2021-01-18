@@ -123,6 +123,7 @@ text:
   next-page-hover: '&cClique para a página seguinte!'
 
 mail:
+  console: "Digite o comando a ser executado na leitura."
   message-contents: "&e&l%sender% &7▹ &e%contents%"
   message: "O que você gostaria que sua carta dissesse?"
   sent: "&e&lMailMe &7▹ &aCorreio enviado com sucesso."
@@ -386,3 +387,13 @@ gui:
     lore:
       - "&7O correio foi apagado aqui"
       - "&7Reabra a interface do usuário para ver as alterações."
+  console:
+    title: '&e&lComando de console'
+    material: COMMAND_BLOCK
+    amount: 1
+    custom-model-data: 0
+    glow: true
+    lore:
+      - "&7Executa o comando na leitura"
+      - "&7Visibilidade: &aEscondido"
+      - "&7Placeholder: &a%player_name%"

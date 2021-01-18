@@ -39,18 +39,6 @@ public class MailItems extends Mail {
     }
 
     @Override
-    public BaseComponent[] getContentsAsText() {
-        ComponentBuilder builder = new ComponentBuilder("");
-        for (ItemStack item : itemStackList) {
-            TextComponent txt = new TextComponent(item.getAmount() + " * " + Utils.getItemName(item) + " ");
-            txt.setColor(ChatColor.AQUA);
-            txt.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(NMSReflection.convertItemStackToJson(item)).create()));
-            builder.append(txt);
-        }
-        return builder.create();
-    }
-
-    @Override
     public String[] getContentsAsString() {
         List<String> contents = new ArrayList<>();
         for (ItemStack stack : itemStackList) {

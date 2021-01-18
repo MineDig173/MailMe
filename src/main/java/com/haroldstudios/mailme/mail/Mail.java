@@ -149,7 +149,6 @@ public abstract class Mail {
     }
 
     public abstract boolean onMailClick(Player whoClicked);
-    public abstract BaseComponent[] getContentsAsText();
     public abstract String[] getContentsAsString();
 
     // Hierarchical Builder Pattern

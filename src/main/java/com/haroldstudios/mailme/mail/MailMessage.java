@@ -30,11 +30,6 @@ public class MailMessage extends Mail {
     }
 
     @Override
-    public BaseComponent[] getContentsAsText() {
-        return new ComponentBuilder(message).create();
-    }
-
-    @Override
     public String[] getContentsAsString() {
         return new String[]{ChatColor.GRAY + message};
     }

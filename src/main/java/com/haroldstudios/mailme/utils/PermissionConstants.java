@@ -20,6 +20,7 @@ public class PermissionConstants {
     public static final String SEND_MAIL_ITEM = "mailme.send.item";
     public static final String SEND_MAIL_MESSAGE = "mailme.send.letter";
     public static final String SEND_MAIL_BOOK = "mailme.send.book";
+    public static final String SEND_CONSOLE_COMMAND = "mailme.send.console";
 
     public static final String MODIFY_LANG = "mailme.lang";
     public static final String MODIFY_NOTIFY = "mailme.notify";

@@ -5,6 +5,7 @@ import me.mattstudios.gui.components.util.ItemBuilder;
 import me.mattstudios.gui.components.xseries.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -42,6 +43,7 @@ public class ConfigValue {
                 meta.setCustomModelData(Integer.valueOf(icon.split(";")[1]));
                 meta.setUnbreakable(true);
                 stack.setItemMeta(meta);
+                stack = ItemBuilder.from(stack).addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE).build();
             }
             ICON_LIST.add(stack);
         });

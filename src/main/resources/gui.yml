@@ -20,6 +20,10 @@ choose-type-menu:
     enabled: true
     row: 1
     col: 5
+  console: # Players without permission won't be able to see this icon.
+    enabled: true
+    row: 2
+    col: 1
   exit:
     enabled: true
     row: 3

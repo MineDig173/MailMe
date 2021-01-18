@@ -1,8 +1,6 @@
 package com.haroldstudios.mailme.mail;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -31,11 +29,6 @@ public class MailBook extends Mail{
     public boolean onMailClick(Player whoClicked) {
         whoClicked.openBook(book);
         return true;
-    }
-
-    @Override
-    public BaseComponent[] getContentsAsText() {
-        return new ComponentBuilder(getContents(book)[0]).create();
     }
 
     @Override

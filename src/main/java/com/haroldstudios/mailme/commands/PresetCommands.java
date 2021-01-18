@@ -1,11 +1,13 @@
 package com.haroldstudios.mailme.commands;
 
 import com.haroldstudios.mailme.MailMe;
+import com.haroldstudios.mailme.conversations.ConsoleMailInput;
 import com.haroldstudios.mailme.conversations.LetterInputPrompt;
 import com.haroldstudios.mailme.gui.ChooseMailTypeGui;
 import com.haroldstudios.mailme.gui.IconSelectorGui;
 import com.haroldstudios.mailme.gui.ItemInputGui;
 import com.haroldstudios.mailme.mail.Mail;
+import com.haroldstudios.mailme.mail.MailConsoleCommand;
 import com.haroldstudios.mailme.mail.MailItems;
 import com.haroldstudios.mailme.mail.MailMessage;
 import com.haroldstudios.mailme.utils.PermissionConstants;
@@ -178,6 +180,9 @@ public class PresetCommands extends CommandBase {
                 return;
             } else if (builder instanceof MailMessage.Builder) {
                 LetterInputPrompt.begin(plugin, builder, player, () -> player.performCommand("mailpreset edit"));
+                return;
+            } else if (builder instanceof MailConsoleCommand.Builder) {
+                ConsoleMailInput.begin(plugin, builder, player, () -> player.performCommand("mailpreset edit"));
                 return;
             } else {
                 player.sendMessage(plugin.getLocale().getMessage(player, "cmd.not-required"));

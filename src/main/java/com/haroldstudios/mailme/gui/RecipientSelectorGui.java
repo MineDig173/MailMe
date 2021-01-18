@@ -1,6 +1,7 @@
 package com.haroldstudios.mailme.gui;
 
 import com.haroldstudios.mailme.MailMe;
+import com.haroldstudios.mailme.conversations.ConsoleMailInput;
 import com.haroldstudios.mailme.conversations.LetterInputPrompt;
 import com.haroldstudios.mailme.conversations.PlayerSearch;
 import com.haroldstudios.mailme.mail.*;
@@ -97,6 +98,10 @@ public class RecipientSelectorGui extends AbstractScrollingMailGui implements Ex
             new ItemInputGui(getPlugin(), getPlayer(), this, getBuilder(), new ArrayList<>()).open();
         } else if (getBuilder() instanceof MailBook.Builder) {
             new ClickToSendGui(getPlugin(), getPlayer(), this, getBuilder()).open();
+        } else if (getBuilder() instanceof MailConsoleCommand.Builder) {
+            gracefulExit = true;
+            getGui().close(getPlayer());
+            ConsoleMailInput.begin(getPlugin(), getBuilder(), getPlayer(), null);
         }
     }
 
