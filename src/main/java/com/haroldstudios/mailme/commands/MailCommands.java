@@ -183,9 +183,7 @@ public class MailCommands extends CommandBase {
                 .append("\nJava Version: ")
                 .append(System.getProperty("java.runtime.version"))
                 .append("\nLoaded Language files/tokens: ")
-                .append(plugin.getLocale().getLanguageTokens())
-                .append("\nSpigot User: ")
-                .append(MailMe.uid);
+                .append(plugin.getLocale().getLanguageTokens());
 
         sender.sendMessage(sb.toString());
     }

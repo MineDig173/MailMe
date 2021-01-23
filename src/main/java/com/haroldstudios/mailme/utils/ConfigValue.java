@@ -26,6 +26,7 @@ public class ConfigValue {
     public static boolean DEBUG = true;
     public static boolean CAN_SEND_TO_SELF = false;
     public static String DATE_FORMAT = "dd-MM-yyyy";
+    public static String TIMEZONE = "UTC";
 
     private ConfigValue() {}
 
@@ -62,5 +63,6 @@ public class ConfigValue {
         DEBUG = config.getBoolean("debug");
         CAN_SEND_TO_SELF = config.getBoolean("can-send-to-self");
         DATE_FORMAT = config.getString("date-format");
+        TIMEZONE = config.getString("timezone");
     }
 }

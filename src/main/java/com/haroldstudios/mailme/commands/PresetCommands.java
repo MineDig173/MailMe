@@ -51,7 +51,7 @@ public class PresetCommands extends CommandBase {
     public void list(CommandSender sender) {
         String msg = plugin.getLocale().getMessage("cmd.identifiers");
         plugin.getPlayerMailDAO().getPresetMailIdentifiers().thenAccept(identifiers -> {
-            identifiers.remove(null); //TODO does this remove null?
+            identifiers.remove(null);
             sender.sendMessage(msg.replace("@identifiers", identifiers.toString()));
         });
     }

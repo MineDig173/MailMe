@@ -1,0 +1,103 @@
+# Allows very basic gui changes.
+# You can change the items in the language files.
+# If you exceed gui bounds, the item will disable itself.
+
+# Basic Gui Changes
+choose-type-menu:
+  message:
+    enabled: true
+    row: 2
+    col: 4
+  items:
+    enabled: true
+    row: 2
+    col: 5
+  books:
+    enabled: true
+    row: 2
+    col: 6
+  anonymous:
+    enabled: true
+    row: 1
+    col: 5
+  console: # Players without permission won't be able to see this icon.
+    enabled: true
+    row: 2
+    col: 1
+  exit:
+    enabled: true
+    row: 3
+    col: 5
+icon-selector-menu:
+  exit:
+    enabled: true
+    row: 3
+    col: 5
+inbox-menu:
+  send-mail:
+    enabled: true
+    row: 6
+    col: 9
+    expandedRow: 6
+    expandedCol: 9
+  read-as-text:
+    enabled: true
+    row: 5
+    col: 4
+    expandedRow: 5
+    expandedCol: 4
+  exit:
+    enabled: true
+    row: 6
+    col: 5
+    expandedRow: 6
+    expandedCol: 5
+  filter-unread:
+    enabled: true
+    row: 5
+    col: 5
+    expandedRow: 5
+    expandedCol: 5
+  remove-filter:
+    enabled: true
+    row: 5
+    col: 6
+    expandedRow: 5
+    expandedCol: 6
+  info:
+    enabled: true
+    row: 1
+    col: 5
+    expandedRow: 1
+    expandedCol: 5
+item-input-menu:
+  exit:
+    enabled: true
+    row: 5
+    col: 5
+  title:
+    enabled: true
+    row: 1
+    col: 5
+  next-menu:
+    row: 6
+    col: 9
+recipient-selector-menu:
+  search-players:
+    enabled: true
+    row: 4
+    col: 4
+    expandedRow: 5
+    expandedCol: 4
+  remove-filter:
+    enabled: true
+    row: 4
+    col: 6
+    expandedRow: 5
+    expandedCol: 6
+  next-menu:
+    enabled: true
+    row: 6
+    col: 9
+    expandedRow: 6
+    expandedCol: 9

@@ -38,8 +38,8 @@ public class Utils {
 
     public static boolean hasSpaceInInventory(List<ItemStack> items, Inventory inventory) {
         int freeSlots = 0;
-        for(ItemStack it : inventory.getContents()) {
-            if(it == null) continue;
+        for (ItemStack it : inventory.getContents()) {
+            if (it == null) continue;
             freeSlots++;
         }
         // Inventory is size 36
@@ -206,15 +206,15 @@ public class Utils {
     public static void playNoteEffect(Player player, Location location) {
         double note = 6 / 24D; // 6 is the value of the red note
         Location l = location.clone();
-        l.add(0.5,1.2,0.5);
+        l.add(0.5, 1.2, 0.5);
         player.spawnParticle(Particle.NOTE, l, 1, note, 0, 0, 1);
     }
 
     public static void particleTower(final Player player, final Location location) {
         Location loc = location.clone();
-        loc.add(0.5,0,0.5);
+        loc.add(0.5, 0, 0.5);
         for (int i = 0; i < 20; i++) {
-            loc.add(0,1,0);
+            loc.add(0, 1, 0);
             player.spawnParticle(Particle.VILLAGER_HAPPY, loc, 1);
         }
     }

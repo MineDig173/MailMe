@@ -104,6 +104,7 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
                 while (resultSet.next()) {
                     String id = resultSet.getString("identifier_name");
                     if (id == null) continue;
+                    if (id.equals("null")) continue;
                     identifiers.add(id);
                 }
 
@@ -192,7 +193,7 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
             int sCode = 0;
             try {
                 Statement statement = connection.createStatement();
-                sCode = statement.executeUpdate("insert into PlayerMail(uuid, mail_uuid) values ('"+uuid+"','"+mail.getUuid().toString()+"')");
+                sCode = statement.executeUpdate("insert into PlayerMail(uuid, mail_uuid, ts) values ('"+uuid+"','"+mail.getUuid().toString()+"', "+System.currentTimeMillis()+")");
 
 
                 statement.close();
@@ -313,7 +314,7 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
         try {
             Statement stmt = connection.createStatement();
             // Create Tables if not already there
-            stmt.execute("create table if not exists PlayerMail(id int auto_increment primary key, uuid varchar(36) not null, mail_uuid varchar(36) not null, mail_read tinyint(1) not null default false, ts bigint default "+System.currentTimeMillis()+")");
+            stmt.execute("create table if not exists PlayerMail(id int auto_increment primary key, uuid varchar(36) not null, mail_uuid varchar(36) not null, mail_read tinyint(1) not null default false, ts bigint not null)");
             stmt.execute("create table if not exists Mail(mail_uuid varchar(36) not null, mail_obj mediumtext not null, identifier_name varchar(36))");
 
         } catch (SQLException e) {

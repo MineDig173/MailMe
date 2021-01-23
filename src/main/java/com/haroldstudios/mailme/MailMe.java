@@ -25,13 +25,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -52,9 +45,6 @@ public final class MailMe extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        debug(MailMe.class, "Using: " + uid);
-        auth();
-        if (!sts) return;
         saveDefaultConfig();
         ConfigValue.load(this);
         initDatabaseConnection();
@@ -112,8 +102,6 @@ public final class MailMe extends JavaPlugin {
             return;
         }
 
-
-
         if (databaseConfig.getString("type").equalsIgnoreCase("MYSQL")) {
             connector = new MySQLDatabase(new DatabaseSettingsImpl(
                     databaseConfig.getString("host"),
@@ -146,52 +134,6 @@ public final class MailMe extends JavaPlugin {
         if (!ConfigValue.DEBUG) return;
         throwable.printStackTrace();
     }
-
-    public boolean sts = true;
-    public void auth() {
-
-        if (uid.length() <= 0) {
-            uid = "leaked";
-        }
-
-        try {
-            URLConnection localURLConnection = new URL("https://github.com/harry0198/MailMe/blob/master/blacklisted.txt").openConnection();
-            localURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-            localURLConnection.connect();
-
-            BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(localURLConnection.getInputStream(), Charset.forName("UTF-8")));
-
-            StringBuilder localStringBuilder = new StringBuilder();
-            String str1;
-            while ((str1 = localBufferedReader.readLine()) != null) {
-                localStringBuilder.append(str1);
-            }
-            String str2 = localStringBuilder.toString();
-            if (str2.contains(String.valueOf(uid))) {
-                disableLeak();
-                return;
-            }
-            this.sts = true;
-        }
-        catch (IOException localIOException) {
-            localIOException.printStackTrace();
-            disableNoInternet();
-        }
-    }
-
-    public void disableLeak() {
-        getLogger().severe("Failed to authorize.");
-        getServer().getPluginManager().disablePlugin(this);
-        sts = false;
-    }
-
-    public void disableNoInternet() {
-        getLogger().severe("You don't have a valid internet connection, please connect to the internet for the plugin to work!");
-        getServer().getPluginManager().disablePlugin(this);
-        sts = false;
-    }
-
-    public static String uid = "%%__USER__%%";
 
     public VaultHook getVaultHook() {
         return vaultHook;
