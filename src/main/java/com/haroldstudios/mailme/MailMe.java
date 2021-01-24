@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-public final class MailMe extends JavaPlugin {
+public final class MailMe extends JavaPlugin implements MailMeAPI{
 
     private VaultHook vaultHook;
     private HologramHook hologramHook;
@@ -147,16 +147,18 @@ public final class MailMe extends JavaPlugin {
         return locale;
     }
 
-    public DataCache getCache() {
-        return dataCache;
-    }
-
     public GuiConfig getGuiConfig() {
         return guiConfig;
     }
 
+    @Override
     public PlayerMailDAO getPlayerMailDAO() {
         return playerMailDAO;
+    }
+
+    @Override
+    public DataCache getCache() {
+        return dataCache;
     }
 
     public static MailMe getInstance() {

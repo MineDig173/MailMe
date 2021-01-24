@@ -4,31 +4,21 @@ import com.haroldstudios.mailme.database.PlayerMailDAO;
 import com.haroldstudios.mailme.database.json.DataCache;
 
 @SuppressWarnings("unused")
-public class MailMeAPI {
-
-    private final MailMe plugin;
-
-    public MailMeAPI() {
-        this.plugin = MailMe.getInstance();
-    }
+public interface MailMeAPI {
 
     /**
      * Retrieves the in-use Data access object interface
      * for using the mail database.
      *
-     * @return PlayerMailDAO Interface for accessing database.
+     * @return PlayerMailDAO {@link com.haroldstudios.mailme.database.PlayerMailDAO}
      */
-    public PlayerMailDAO getPlayerMailDAO() {
-        return plugin.getPlayerMailDAO();
-    }
+    PlayerMailDAO getPlayerMailDAO();
 
     /**
      * Retrieves the on-server cache that stores per-server
      * data such as mailbox locations.
      *
-     * @return DataCache Cached data per server.
+     * @return DataCache {@link com.haroldstudios.mailme.database.json.DataCache}
      */
-    public DataCache getDataCache() {
-        return plugin.getCache();
-    }
+    DataCache getCache();
 }

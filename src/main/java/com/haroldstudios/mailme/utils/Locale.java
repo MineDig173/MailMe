@@ -49,7 +49,10 @@ public class Locale {
         if (!new File(MailMe.getInstance().getDataFolder(), "languages/PT.yml").exists()) {
             plugin.saveResource("languages/PT.yml", false);
         }
-        
+        if (!new File(MailMe.getInstance().getDataFolder(), "languages/CN.yml").exists()) {
+            plugin.saveResource("languages/CN.yml", false);
+        }
+
         for (File lang : folder.listFiles()) {
             if (!lang.toString().endsWith(".yml")) continue;
             String fileName = lang.getName();

@@ -21,7 +21,7 @@ import java.util.List;
 
 public final class Pagination<T> extends ArrayList<T>  {
 
-    private int pageSize;
+    private final int pageSize;
 
     public Pagination(int pageSize, List<T> objects) {
         this.pageSize = pageSize;
