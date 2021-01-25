@@ -62,7 +62,7 @@ public class JsonDatabase implements PlayerMailDAO {
     }
 
     @Override
-    public CompletableFuture<Boolean> setUnread(UUID uuid, Mail mail) {
+    public CompletableFuture<Boolean> setRead(UUID uuid, Mail mail) {
         return CompletableFuture.supplyAsync(() -> {
             PlayerDataFile data = PlayerDataFile.getPlayerDataFile(uuid, plugin);
             mail.setRead(true);

@@ -96,7 +96,7 @@ public class InboxGui extends AbstractScrollingMailGui implements Expandable {
                         }
                     }
                     mail.setRead(true);
-                    getPlugin().getPlayerMailDAO().setUnread(getPlayer().getUniqueId(), mail).thenAccept(bool -> {
+                    getPlugin().getPlayerMailDAO().setRead(getPlayer().getUniqueId(), mail).thenAccept(bool -> {
                         if (bool) {
                             mail.onMailClick(getPlayer());
                             getGui().updatePageItem(event.getSlot(), getGuiItemFromMail(mail));

@@ -209,7 +209,7 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
     }
 
     @Override
-    public CompletableFuture<Boolean> setUnread(UUID uuid, Mail mail) {
+    public CompletableFuture<Boolean> setRead(UUID uuid, Mail mail) {
         return CompletableFuture.supplyAsync(() -> {
             if (mail.getColId() == null) return false;
             int sCode = 0;
