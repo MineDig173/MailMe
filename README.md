@@ -14,7 +14,5 @@ You can contribute to the codebase by creating a branch and then creating a pull
 issues.
 
 ## Developers
-If you're here to use the API be advised, the plugin does not currently have a dedicated API. However, if you use jitpack or any other method you prefer
-to depend on the plugin, you can get an instance of the main class and access and modify the majority of the plugin's functionality. 
-
-An API is coming eventually however.
+If you're here to use the API be advised, the plugin currently has a limited API and incorrect use may have damaging effects.
+You can find the API at: https://wiki.haroldstudios.com
