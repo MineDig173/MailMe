@@ -2,6 +2,7 @@ package com.haroldstudios.mailme;
 
 import com.haroldstudios.mailme.database.PlayerMailDAO;
 import com.haroldstudios.mailme.database.json.DataCache;
+import com.haroldstudios.mailme.gui.AbstractMailGui;
 
 @SuppressWarnings("unused")
 public interface MailMeAPI {
@@ -10,7 +11,7 @@ public interface MailMeAPI {
      * Retrieves the in-use Data access object interface
      * for using the mail database.
      *
-     * @return PlayerMailDAO {@link com.haroldstudios.mailme.database.PlayerMailDAO}
+     * @return PlayerMailDAO {@link PlayerMailDAO}
      */
     PlayerMailDAO getPlayerMailDAO();
 
@@ -18,7 +19,7 @@ public interface MailMeAPI {
      * Retrieves the on-server cache that stores per-server
      * data such as mailbox locations.
      *
-     * @return DataCache {@link com.haroldstudios.mailme.database.json.DataCache}
+     * @return DataCache {@link DataCache}
      */
     DataCache getCache();
 }

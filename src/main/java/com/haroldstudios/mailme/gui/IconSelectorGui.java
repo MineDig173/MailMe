@@ -21,7 +21,7 @@ public class IconSelectorGui extends AbstractScrollingMailGui {
     @Override
     void nextMenu() {
         playUISound();
-        new RecipientSelectorGui(getPlugin(), getPlayer(), this, getBuilder(), Expandable.GuiType.COMPACT).open();
+        new RecipientSelectorGui(getPlugin(), getPlayer(), this, getBuilder(), getPlugin().getGuiConfig().getGuiTypeFor("recipient-selector-menu")).open();
     }
 
     @Override

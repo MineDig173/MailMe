@@ -107,6 +107,7 @@ public abstract class Mail {
     }
 
     public void send(List<UUID> recipients) {
+
         PlayerMailDAO dao = MailMe.getInstance().getPlayerMailDAO();
 
         dao.saveMailObj(this);

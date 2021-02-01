@@ -34,6 +34,7 @@ icon-selector-menu:
     row: 3
     col: 5
 inbox-menu:
+  default-setting: compact
   send-mail:
     enabled: true
     row: 6
@@ -83,6 +84,7 @@ item-input-menu:
     row: 6
     col: 9
 recipient-selector-menu:
+  default-setting: compact
   search-players:
     enabled: true
     row: 4

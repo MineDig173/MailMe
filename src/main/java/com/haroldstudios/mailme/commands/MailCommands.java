@@ -67,7 +67,7 @@ public class MailCommands extends CommandBase {
     @Alias("inbox")
     @Permission(PermissionConstants.READ_MAIL)
     public void read(Player player) {
-        new InboxGui(plugin, player, null, null, Expandable.GuiType.COMPACT).open();
+        new InboxGui(plugin, player, null, null, plugin.getGuiConfig().getGuiTypeFor("icon-selector-menu")).open();
     }
 
     @SubCommand("help")

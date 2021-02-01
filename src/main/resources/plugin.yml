@@ -1,5 +1,5 @@
 name: MailMe
-version: 1.5.6
+version: 1.5.7
 main: com.haroldstudios.mailme.MailMe
 api-version: 1.14
 authors: [Harolds]

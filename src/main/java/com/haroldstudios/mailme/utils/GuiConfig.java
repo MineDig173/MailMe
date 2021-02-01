@@ -49,6 +49,20 @@ public class GuiConfig {
         }
     }
 
+    public Expandable.GuiType getGuiTypeFor(String path) {
+        try {
+            String type = guiConfig.getString(path + ".default-setting");
+            if (type == null) {
+                MailMe.debug(GuiConfig.class, "Default setting was not found!");
+                return Expandable.GuiType.COMPACT;
+            }
+            return Expandable.GuiType.valueOf(type.toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            MailMe.debug(GuiConfig.class, "Default setting for: " + path + " was not a valid gui type. Valid types are COMPACT AND EXPANDED");
+        }
+        return Expandable.GuiType.COMPACT;
+    }
+
     public GContainer getItemGContainer(String id) {
         return getItemGContainer(id, 6);
     }

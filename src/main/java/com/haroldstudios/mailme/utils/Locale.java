@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.logging.Level;
 
 import static com.haroldstudios.mailme.utils.Utils.colour;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -29,16 +30,15 @@ public class Locale {
     //          TOKEN       YAML
     private final Map<String, YamlConfiguration> languagesMap = new HashMap<>();
     private final String serverLangToken;
-    private final MailMe plugin;
 
     public Locale(final MailMe plugin) {
-
-        this.plugin = plugin;
 
         serverLangToken = plugin.getConfig().getString("lang");
 
         File folder = new File(plugin.getDataFolder() + "/languages");
-        folder.mkdir();
+        if (folder.mkdir()) {
+            plugin.getLogger().log(Level.SEVERE, "Could not create languages directory! Are we permitted to write here?");
+        }
         // Save all preset resources here
         if (!new File(MailMe.getInstance().getDataFolder(), "languages/EN.yml").exists()) {
             plugin.saveResource("languages/EN.yml", false);
