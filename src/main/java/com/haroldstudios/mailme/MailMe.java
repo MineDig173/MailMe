@@ -39,6 +39,7 @@ public final class MailMe extends JavaPlugin implements MailMeAPI{
     private DataCache dataCache;
     private Locale locale;
     private GuiConfig guiConfig;
+    private MailCommands mailCommandHandler;
 
     private EntityEvents listener;
 
@@ -62,7 +63,8 @@ public final class MailMe extends JavaPlugin implements MailMeAPI{
         CommandManager commandManager = new CommandManager(this);
         commandManager.getCompletionHandler().register("#locale", val -> new ArrayList<>(locale.getLanguageTokens()));
 
-        commandManager.register(new MailCommands(this));
+        mailCommandHandler = new MailCommands(this);
+        commandManager.register(mailCommandHandler);
         commandManager.register(new MailboxCommands(this));
         commandManager.register(new PostOfficeCommands(this));
         commandManager.register(new PresetCommands(this));
@@ -133,6 +135,10 @@ public final class MailMe extends JavaPlugin implements MailMeAPI{
     public static void debug(Throwable throwable) {
         if (!ConfigValue.DEBUG) return;
         throwable.printStackTrace();
+    }
+
+    public MailCommands getMailCommandHandler() {
+        return mailCommandHandler;
     }
 
     public VaultHook getVaultHook() {

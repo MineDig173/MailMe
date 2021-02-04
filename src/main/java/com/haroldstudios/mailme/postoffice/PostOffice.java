@@ -23,11 +23,6 @@ public class PostOffice {
     private final Location postOfficeLocation;
     private final boolean sendType;
 
-    public PostOffice(final Location location) {
-        this.postOfficeLocation = location;
-        this.sendType = true;
-    }
-
     public PostOffice(final Location location, final boolean sendType) {
         this.postOfficeLocation = location;
         this.sendType = sendType;

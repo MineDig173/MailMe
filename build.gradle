@@ -30,7 +30,7 @@ dependencies {
 }
 
 group = 'com.haroldstudios'
-version = '1.5.7'
+version = '1.5.8'
 description = 'MailMe'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
@@ -42,5 +42,5 @@ shadowJar {
     relocate 'me.mattstudios.mfgui', 'com.haroldstudios.mailme.mfgui'
     relocate 'me.mattstudios.mf', 'com.haroldstudios.mailme.mf'
     relocate 'me.mattstudios.mfmsg', 'com.haroldstudios.mailme.mfmsg'
-    destinationDir = file("/Users/harrydrummond/Desktop/Coding Applications/Servers/1.16.4/plugins")
+    destinationDir = file("/Users/harrydrummond/Desktop/Coding Applications/Servers/1.16.5/plugins")
 }

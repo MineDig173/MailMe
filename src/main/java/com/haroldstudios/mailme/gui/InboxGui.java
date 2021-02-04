@@ -17,15 +17,14 @@ import java.util.LinkedList;
 
 public class InboxGui extends AbstractScrollingMailGui implements Expandable {
 
+    private final boolean readOnly;
     private LinkedList<Mail> mailList;
 
-    public InboxGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, GuiType type) {
+    public InboxGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, GuiType type, boolean readOnly) {
         super(plugin, player, previousMenu, 6, plugin.getLocale().getMessage(player, "gui.titles.inbox"), builder, type);
+        this.readOnly = readOnly;
 
-        GuiItem composeMail = new GuiItem(plugin.getLocale().getItemStack(player, "gui.send-from-inbox"), event -> {
-            player.chat("/mailme compose");
-        });
-
+        GuiItem composeMail = new GuiItem(plugin.getLocale().getItemStack(player, "gui.send-from-inbox"), event -> MailMe.getInstance().getMailCommandHandler().compose(player));
         GuiItem readAsText = new GuiItem(plugin.getLocale().getItemStack(player, "gui.read-as-text"), event -> {
             gracefulExit = true;
             getGui().close(player);
@@ -43,6 +42,10 @@ public class InboxGui extends AbstractScrollingMailGui implements Expandable {
         addItem(infoItem, getGuiConfig().getItemGContainer("inbox-menu.info"), type);
 
         addExpandableItems(this, type);
+    }
+
+    public InboxGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, GuiType type) {
+        this(plugin, player, previousMenu, builder, type, false);
     }
 
     public InboxGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, GuiType type, LinkedList<Mail> mail) {
@@ -83,10 +86,15 @@ public class InboxGui extends AbstractScrollingMailGui implements Expandable {
     }
 
     private GuiItem getGuiItemFromMail(Mail mail) {
+        // Literal donkey code, probably should refactor in near future
         ItemBuilder itemBuilder = ItemBuilder.from(Utils.getItemFromMail(mail, getPlayer()));
         itemBuilder.glow(!mail.isRead());
         GuiItem item = itemBuilder.asGuiItem();
         item.setAction(event -> {
+            if (readOnly) {
+                getPlayer().sendMessage(getPlugin().getLocale().getMessage(getPlayer(), "cmd.read-only"));
+                return;
+            }
             if (event.getClick().isLeftClick()) {
                 if (!mail.isRead()) {
                     if (mail instanceof MailItems) {

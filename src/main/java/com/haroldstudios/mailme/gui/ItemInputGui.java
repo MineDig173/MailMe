@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ItemInputGui extends AbstractMailGui {
@@ -39,7 +40,7 @@ public class ItemInputGui extends AbstractMailGui {
         GuiItem nextMenu = new GuiItem(getNextMenuButton(), event -> {
             items.addAll(getInputtedItems(event.getInventory()));
 
-            if (items.size() < 1) return;
+            if (items.isEmpty()) return;
             next();
         });
 
@@ -62,9 +63,10 @@ public class ItemInputGui extends AbstractMailGui {
         List<ItemStack> list = new ArrayList<>();
         for (int i = 10; i <= 33; i++) {
             if (!isValidItemSlot(i)) continue;
-            if (inventory.getItem(i) == null)
+            ItemStack item = inventory.getItem(i);
+            if (item == null)
                 continue;
-            org.bukkit.inventory.ItemStack stack = new ItemStack(inventory.getItem(i)); // Convert from NMS ItemStack to Bukkit ItemStack
+            org.bukkit.inventory.ItemStack stack = new ItemStack(item); // Convert from NMS ItemStack to Bukkit ItemStack
             list.add(stack);
         }
         return list;

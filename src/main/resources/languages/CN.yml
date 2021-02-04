@@ -5,6 +5,7 @@ T: 'CN'
 VER: 1.2
 
 cmd:
+  read-only: "&e&lMailMe &7▹ &f&l( Requires Translation ) &cInbox is read only! Visit the postoffice to claim the rewards."
   mailbox-removeall: "&e&lMailMe &7▹ &a移除所有邮箱。"
   no-space: "&e&lMailMe &7▹ &c您的背包已满! 您需要清理出一些空间才能获得物品。"
   not-required: "&e&lMailMe &7▹ &e非必要的。"

@@ -7,6 +7,7 @@ T: 'DE'
 VER: 1.2
 
 cmd:
+  read-only: "&e&lMailMe &7▹ &cPosteingang ist schreibgeschützt! Besuchen Sie die Post, um die Belohnungen zu erhalten"
   mailbox-removeall: "&e&lMailMe &7▹ &aAlle Briefkästen entfernt."
   no-space: "&e&lMailMe &7▹ &cDein Inventar ist voll! Mache etwas platz um die Items zu erhalten."
   not-required: "&e&lMailMe &7▹ &eNicht benötigt."

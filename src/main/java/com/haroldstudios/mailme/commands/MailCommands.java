@@ -6,10 +6,10 @@ import com.haroldstudios.mailme.database.transition.Json2MySQL;
 import com.haroldstudios.mailme.database.transition.Legacy2Json;
 import com.haroldstudios.mailme.database.transition.MySQL2Json;
 import com.haroldstudios.mailme.gui.ChooseMailTypeGui;
-import com.haroldstudios.mailme.gui.Expandable;
 import com.haroldstudios.mailme.gui.InboxGui;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailMessage;
+import com.haroldstudios.mailme.utils.ConfigValue;
 import com.haroldstudios.mailme.utils.Locale;
 import com.haroldstudios.mailme.utils.Pagination;
 import com.haroldstudios.mailme.utils.PermissionConstants;
@@ -48,7 +48,8 @@ public class MailCommands extends CommandBase {
     @Permission(PermissionConstants.ADMIN)
     public void reload(CommandSender sender) {
         for (Location loc : plugin.getCache().getMailboxes()) {
-            plugin.getHologramHook().removeTempHologram(loc);
+            if (plugin.getHologramHook() != null)
+                plugin.getHologramHook().removeTempHologram(loc);
         }
         plugin.onDisable();
         plugin.reloadConfig();
@@ -67,7 +68,7 @@ public class MailCommands extends CommandBase {
     @Alias("inbox")
     @Permission(PermissionConstants.READ_MAIL)
     public void read(Player player) {
-        new InboxGui(plugin, player, null, null, plugin.getGuiConfig().getGuiTypeFor("icon-selector-menu")).open();
+        new InboxGui(plugin, player, null, null, plugin.getGuiConfig().getGuiTypeFor("inbox-menu"), ConfigValue.MAILBOX_READ_ONLY).open();
     }
 
     @SubCommand("help")

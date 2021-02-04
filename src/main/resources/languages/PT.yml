@@ -5,6 +5,7 @@ T: 'PT'
 VER: 1.2
 
 cmd:
+  read-only: "&e&lMailMe &7▹ A caixa de entrada é somente leitura! Visite o correio para resgatar as recompensas."
   mailbox-removeall: "&e&lMailMe &7▹ &aTodas as caixas de correio foram removidas"
   no-space: "&e&lMailMe &7▹ &cSeu inventário está cheio! Abra espaço para reivindicar os itens."
   not-required: "&e&lMailMe &7▹ &enNo requerido"

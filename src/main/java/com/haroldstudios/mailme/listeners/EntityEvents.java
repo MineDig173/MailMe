@@ -4,9 +4,11 @@ import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.database.PlayerSettings;
 import com.haroldstudios.mailme.database.json.DataCache;
 import com.haroldstudios.mailme.gui.ChooseMailTypeGui;
+import com.haroldstudios.mailme.gui.InboxGui;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailMessage;
 import com.haroldstudios.mailme.postoffice.PostOffice;
+import com.haroldstudios.mailme.utils.ConfigValue;
 import com.haroldstudios.mailme.utils.PermissionConstants;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -59,7 +61,7 @@ public class EntityEvents implements Listener {
         if (cache.isMailboxAtLocation(block.getLocation()) && player.hasPermission(PermissionConstants.USE_MAILBOX)) {
             if (playerSettings.getMailboxLocations().contains(block.getLocation())) {
                 // Is player's mailbox location
-                player.performCommand("mailme inbox");
+                new InboxGui(plugin, player, null, null, plugin.getGuiConfig().getGuiTypeFor("inbox-menu"), ConfigValue.MAILBOX_READ_ONLY).open();
             } else {
                 // Is someone else's mailbox
                 UUID playerWhoOwnsMailbox = cache.getWhoOwnsMailboxAtLocation(block.getLocation());
@@ -77,9 +79,9 @@ public class EntityEvents implements Listener {
             PostOffice postOffice = postOfficeOptional.get();
 
             if (postOffice.isSendType()) {
-                player.performCommand("mailme compose");
+                plugin.getMailCommandHandler().compose(player);
             } else {
-                player.performCommand("mailme inbox");
+                new InboxGui(plugin, player, null, null, plugin.getGuiConfig().getGuiTypeFor("inbox-menu")).open();
             }
         }
     }

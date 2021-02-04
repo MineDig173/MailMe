@@ -51,6 +51,9 @@ database:
 # Default: 0
 send-delay: 0
 
+# Useful for when wanting pickup from post offices ONLY.
+mailbox-read-only: false
+
 # Can the player send mail to themselves?
 can-send-to-self: true
 

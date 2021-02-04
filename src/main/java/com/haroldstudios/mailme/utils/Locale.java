@@ -36,8 +36,8 @@ public class Locale {
         serverLangToken = plugin.getConfig().getString("lang");
 
         File folder = new File(plugin.getDataFolder() + "/languages");
-        if (folder.mkdir()) {
-            plugin.getLogger().log(Level.SEVERE, "Could not create languages directory! Are we permitted to write here?");
+        if (!folder.mkdir()) {
+            MailMe.debug(Locale.class, "Did not create languages directory! May already exist. Are we permitted to write here?");
         }
         // Save all preset resources here
         if (!new File(MailMe.getInstance().getDataFolder(), "languages/EN.yml").exists()) {
