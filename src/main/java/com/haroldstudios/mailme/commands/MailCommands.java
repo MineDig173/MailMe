@@ -5,8 +5,8 @@ import com.haroldstudios.mailme.database.PlayerSettings;
 import com.haroldstudios.mailme.database.transition.Json2MySQL;
 import com.haroldstudios.mailme.database.transition.Legacy2Json;
 import com.haroldstudios.mailme.database.transition.MySQL2Json;
-import com.haroldstudios.mailme.gui.ChooseMailTypeGui;
-import com.haroldstudios.mailme.gui.InboxGui;
+import com.haroldstudios.mailme.gui.child.ChooseMailTypeGui;
+import com.haroldstudios.mailme.gui.child.InboxGui;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailMessage;
 import com.haroldstudios.mailme.utils.ConfigValue;
@@ -61,14 +61,14 @@ public class MailCommands extends CommandBase {
     @Alias("compose")
     @Permission(PermissionConstants.COMPOSE_MAIL)
     public void compose(Player player) {
-        new ChooseMailTypeGui(plugin, player, null, null).open();
+        new ChooseMailTypeGui(plugin, null, ChooseMailTypeGui.getDefaultGuiOptions(player)).open();
     }
 
     @SubCommand("read")
     @Alias("inbox")
     @Permission(PermissionConstants.READ_MAIL)
     public void read(Player player) {
-        new InboxGui(plugin, player, null, null, plugin.getGuiConfig().getGuiTypeFor("inbox-menu"), ConfigValue.MAILBOX_READ_ONLY).open();
+        new InboxGui(plugin, null, InboxGui.getDefaultGuiOptions(player).withReadOnlyMode(ConfigValue.MAILBOX_READ_ONLY)).open();
     }
 
     @SubCommand("help")
@@ -120,7 +120,7 @@ public class MailCommands extends CommandBase {
 
                 Mail.Builder<?> builder = new MailMessage.Builder();
                 builder.addRecipient(target.getUniqueId());
-                new ChooseMailTypeGui(plugin, player, null, builder).open();
+                new ChooseMailTypeGui(plugin, builder, ChooseMailTypeGui.getDefaultGuiOptions(player)).open();
             });
         });
     }

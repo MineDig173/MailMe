@@ -29,6 +29,13 @@ public class PlayerDataFile {
         return new PlayerDataFile(uuid);
     }
 
+    public void deleteMail(Mail[] mail) {
+        for (Mail mail1 : mail) {
+            this.mail.remove(mail1.getColId());
+        }
+        save();
+    }
+
     public void deleteMail(Mail mail) {
         this.mail.remove(mail.getColId());
         save();

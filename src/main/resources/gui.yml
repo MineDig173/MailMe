@@ -53,7 +53,7 @@ inbox-menu:
     col: 5
     expandedRow: 6
     expandedCol: 5
-  filter-unread:
+  filter:
     enabled: true
     row: 5
     col: 5
@@ -103,3 +103,24 @@ recipient-selector-menu:
     col: 9
     expandedRow: 6
     expandedCol: 9
+filter-menu:
+  delete-all:
+    enabled: true
+    row: 1
+    col: 9
+  unread:
+    enabled: true
+    row: 1
+    col: 1
+  read:
+    enabled: true
+    row: 1
+    col: 2
+  archived:
+    enabled: true
+    row: 1
+    col: 3
+  go-back:
+    enabled: true
+    row: 2
+    col: 5

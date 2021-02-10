@@ -134,6 +134,7 @@ mail:
 gui:
   search: "Type the name of the player you wish to find. This can be online or offline."
   titles:
+    filters: "Filters"
     click-to-send: "Click to Send"
     choose-type: "Choose Mail Type"
     icon-selector: "Select an Icon!"
@@ -146,6 +147,7 @@ gui:
       - '&7&m----------'
       - '&7Type: &e%type%'
       - '&7Received at: &e%date%'
+      - '&7Archived: &e%archived%'
       - '&cExpires: &n%expiry%'
       - '&7&m----------'
       - '&eContents: %contents%'
@@ -322,6 +324,7 @@ gui:
     lore:
       - '&7&nYour Inbox'
       - '&eLeft &7click to read'
+      - '&eShift &7click to archive'
       - '&eRight &7click to delete'
     glow: true
     skull-texture: ''
@@ -398,3 +401,70 @@ gui:
       - '&7Executes command on read'
       - '&7Visibility: &aHidden'
       - '&7Placeholder: &a%player_name%'
+  filters:
+    choose-filters:
+      title: '&e&lChoose Filters'
+      material: LAVA_BUCKET
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Click to view your'
+        - '&7filter options'
+    delete-all:
+      title: '&c&lDelete All Selected Mail'
+      material: LAVA_BUCKET
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Deletes all mail currently'
+        - '&7present in your inbox with filters'
+        - '&7 applied'
+    delete-all-check:
+      title: '&c&lARE YOU SURE!'
+      material: EMERALD_BLOCK
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7This Action cannot be undone'
+        - '&7mail will be erased.'
+        - '&7Left click to confirm'
+        - '&7Right click to abort'
+    unread:
+      title: '&e&lFilter Unread Mail'
+      material: BOOK
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Click to filter menu'
+        - '&7to only &eunread &7mail.'
+    archived:
+      title: '&e&lView Archived Mail'
+      material: ARROW
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Click to view archived'
+        - '&7mail.'
+    read:
+      title: '&e&lView Read Mail'
+      material: FEATHER
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Click to view all read'
+        - '&7mail.'
+    go-back:
+      title: '&e&lGo Back'
+      material: STICK
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Click to go back to'
+        - '&7inbox menu.'

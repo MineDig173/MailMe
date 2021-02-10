@@ -47,6 +47,8 @@ public interface PlayerMailDAO {
      */
     CompletableFuture<Boolean> setRead(final UUID uuid, Mail mail);
 
+    CompletableFuture<Boolean> setArchived(final UUID uuid, Mail mail);
+
     /**
      * Saves a preset mail.
      * Different to {@link #saveMailObj(Mail)} as this saves in unique locations dependant on database type
@@ -86,6 +88,8 @@ public interface PlayerMailDAO {
      * @param mail Mail {@link com.haroldstudios.mailme.mail.Mail} to delete
      */
     void deletePlayerMail(UUID uuid, final Mail mail);
+    // We don't care what it returns.
+    CompletableFuture<?> deletePlayerMail(UUID uuid, final Mail[] mail);
 
     /**
      * Saves a mail object to database

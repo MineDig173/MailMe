@@ -27,6 +27,7 @@ public abstract class Mail {
     private boolean read = false;
     private Integer colId;
     private long dateReceived;
+    private boolean archived = false;
     // Legacy loading fields
     private transient boolean legacy = false;
 
@@ -44,6 +45,14 @@ public abstract class Mail {
         this.sender = sender;
         this.expiryTimeMins = expiryTimeMins;
         this.dateCreated = System.currentTimeMillis();
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
     public void setLegacy(boolean legacy) {

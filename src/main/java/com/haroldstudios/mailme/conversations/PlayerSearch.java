@@ -17,8 +17,7 @@
 package com.haroldstudios.mailme.conversations;
 
 import com.haroldstudios.mailme.MailMe;
-import com.haroldstudios.mailme.gui.Expandable;
-import com.haroldstudios.mailme.gui.RecipientSelectorGui;
+import com.haroldstudios.mailme.gui.child.RecipientSelectorGui;
 import com.haroldstudios.mailme.mail.Mail;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -53,7 +52,7 @@ public final class PlayerSearch extends StringPrompt {
         Bukkit.getScheduler().runTaskAsynchronously(MailMe.getInstance(), () -> {
             OfflinePlayer search = Bukkit.getOfflinePlayer(s);
 
-            Bukkit.getScheduler().runTask(MailMe.getInstance(), () -> new RecipientSelectorGui(MailMe.getInstance(), player, null, mail, Expandable.GuiType.COMPACT, search).open());
+            Bukkit.getScheduler().runTask(MailMe.getInstance(), () -> new RecipientSelectorGui(MailMe.getInstance(), mail,RecipientSelectorGui.getDefaultGuiOptions(player), search).open());
         });
 
         return Prompt.END_OF_CONVERSATION;

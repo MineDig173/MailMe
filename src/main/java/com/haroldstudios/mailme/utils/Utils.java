@@ -95,6 +95,7 @@ public class Utils {
         string = string.replace("%expiry%", getTimeFromMS((builder.getExpiryTimeMins() * 60L) * 1000L));
         string = string.replace("%date%", getDateFromMs(builder.getDateCreated()));
         string = string.replace("%player_name%", player.getName());
+        string = string.replace("%archived%", "false");
 
         String[] str;
         if (string.contains("%contents%")) {
@@ -127,6 +128,10 @@ public class Utils {
     }
 
     public static String getTimeFromMS(long millis) {
+        if ((TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis))) < 0) {
+            millis = 0;
+        }
+
         return String.format("%02dd:%02dh:%02dm", TimeUnit.MILLISECONDS.toDays(millis),
                 TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis)),
                 TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
@@ -148,6 +153,7 @@ public class Utils {
         string = string.replace("%expiry%", getTimeFromMS((mail.getDateReceived() - System.currentTimeMillis() + mail.getExpiryTimeMilliSeconds())));
         string = string.replace("%date%", getDateFromMs(mail.getDateReceived()));
         string = string.replace("%player_name%", player.getName());
+        string = string.replace("%archived%", mail.isArchived() + "");
 
         String[] str;
         if (string.contains("%contents%")) {

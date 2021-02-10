@@ -1,6 +1,8 @@
-package com.haroldstudios.mailme.gui;
+package com.haroldstudios.mailme.gui.child;
 
 import com.haroldstudios.mailme.MailMe;
+import com.haroldstudios.mailme.gui.AbstractScrollingMailGui;
+import com.haroldstudios.mailme.gui.GuiOptions;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.utils.ConfigValue;
 import com.haroldstudios.mailme.utils.Utils;
@@ -8,20 +10,26 @@ import me.mattstudios.gui.guis.GuiItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 
 public class IconSelectorGui extends AbstractScrollingMailGui {
 
-    public IconSelectorGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder) {
-        super(plugin, player, previousMenu, 6, plugin.getLocale().getMessage(player, "gui.titles.icon-selector"), builder, Expandable.GuiType.COMPACT);
+    public IconSelectorGui(final MailMe plugin, final Mail.Builder<?> builder, final GuiOptions guiOptions) {
+        super(plugin, builder, guiOptions);
         addItem(getCloseMenu(), getGuiConfig().getItemGContainer("icon-selector-menu.exit"));
     }
 
+    public static GuiOptions getDefaultGuiOptions(Player player) {
+        return new GuiOptions()
+                .withRows(5)
+                .setForWhom(player)
+                .withTitle(MailMe.getInstance().getLocale().getMessage("gui.titles.icon-selector"))
+                .withGuiType(MailMe.getInstance().getGuiConfig().getGuiTypeFor("recipient-selector-menu"));
+    }
+
     @Override
-    void nextMenu() {
-        playUISound();
-        new RecipientSelectorGui(getPlugin(), getPlayer(), this, getBuilder(), getPlugin().getGuiConfig().getGuiTypeFor("recipient-selector-menu")).open();
+    protected void nextMenu() {
+        new RecipientSelectorGui(getPlugin(), getBuilder(), RecipientSelectorGui.getDefaultGuiOptions(getPlayer()).withPreviousMenu(this)).open();
     }
 
     @Override

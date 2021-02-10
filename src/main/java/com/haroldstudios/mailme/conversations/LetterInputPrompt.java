@@ -17,7 +17,7 @@
 package com.haroldstudios.mailme.conversations;
 
 import com.haroldstudios.mailme.MailMe;
-import com.haroldstudios.mailme.gui.ClickToSendGui;
+import com.haroldstudios.mailme.gui.child.ClickToSendGui;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailMessage;
 import org.bukkit.conversations.ConversationContext;
@@ -33,7 +33,7 @@ public final class LetterInputPrompt extends StringPrompt {
 
     public LetterInputPrompt(Mail.Builder<?> mail, Player player) {
         this.mail = mail;
-        this.runnable = () -> new ClickToSendGui(MailMe.getInstance(), player, null, mail).open();
+        this.runnable = () -> new ClickToSendGui(MailMe.getInstance(), mail, ClickToSendGui.getDefaultGuiOptions(player)).open();
     }
 
     public String getPromptText(ConversationContext context) {
@@ -61,7 +61,7 @@ public final class LetterInputPrompt extends StringPrompt {
         return this;
     }
 
-    public static void begin(MailMe plugin, Mail.Builder builder, Player player, Runnable runnable) {
+    public static void begin(MailMe plugin, Mail.Builder<?> builder, Player player, Runnable runnable) {
        new ConversationFactory(plugin).withModality(true)
                 .withFirstPrompt(new LetterInputPrompt(builder, player).withRunnable(runnable))
                 .withEscapeSequence("cancel").withTimeout(300)

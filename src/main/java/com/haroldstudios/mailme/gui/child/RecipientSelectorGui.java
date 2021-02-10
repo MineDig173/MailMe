@@ -1,11 +1,15 @@
-package com.haroldstudios.mailme.gui;
+package com.haroldstudios.mailme.gui.child;
 
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.conversations.ConsoleMailInput;
 import com.haroldstudios.mailme.conversations.LetterInputPrompt;
 import com.haroldstudios.mailme.conversations.PlayerSearch;
+import com.haroldstudios.mailme.gui.AbstractScrollingMailGui;
+import com.haroldstudios.mailme.gui.Expandable;
+import com.haroldstudios.mailme.gui.GuiOptions;
 import com.haroldstudios.mailme.mail.*;
 import com.haroldstudios.mailme.utils.ConfigValue;
+import com.haroldstudios.mailme.utils.PlayerUtils;
 import me.mattstudios.gui.components.util.ItemBuilder;
 import me.mattstudios.gui.components.xseries.XMaterial;
 import me.mattstudios.gui.guis.GuiItem;
@@ -13,7 +17,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,35 +25,42 @@ public class RecipientSelectorGui extends AbstractScrollingMailGui implements Ex
 
     private final List<OfflinePlayer> playerList;
 
-    public RecipientSelectorGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, GuiType type) {
-        super(plugin, player, previousMenu, 6,  plugin.getLocale().getMessage(player, "gui.titles.recipient-selector"), builder, type);
+    public RecipientSelectorGui(final MailMe plugin, final Mail.Builder<?> builder, final GuiOptions guiOptions) {
+        super(plugin, builder, guiOptions);
 
-        GuiItem searchPlayers = new GuiItem(getPlugin().getLocale().getItemStack(player,"gui.search-players"), event -> {
-            PlayerSearch.begin(plugin, builder, player);
+        GuiItem searchPlayers = new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(),"gui.search-players"), event -> {
+            PlayerSearch.begin(plugin, builder, getPlayer());
             gracefulExit = true;
             getGui().close(getPlayer());
         });
         GuiItem removeFilter = new GuiItem(getFilterItem(), event -> {
-            new RecipientSelectorGui(getPlugin(), getPlayer(), this, getBuilder(), type).open();
-            playUISound();
+            new RecipientSelectorGui(getPlugin(), getBuilder(), getGuiOptions().setPreviousMenu(this)).open();
+            PlayerUtils.playUISound(getPlayer());
         });
         GuiItem nextMenu = new GuiItem(getNextMenuButton(), event -> {
-            playUISound();
+            PlayerUtils.playUISound(getPlayer());
             if (getBuilder().getRecipients().size() > 0) {
                 next();
             }
         });
-        addItem(searchPlayers, getGuiConfig().getItemGContainer("recipient-selector-menu.search-players"), type);
-        addItem(removeFilter, getGuiConfig().getItemGContainer("recipient-selector-menu.remove-filter"), type);
-        addItem(nextMenu, getGuiConfig().getItemGContainer("recipient-selector-menu.next-menu"), type);
-        addExpandableItems(this, type);
+        addItem(searchPlayers, getGuiConfig().getItemGContainer("recipient-selector-menu.search-players"), guiOptions.getGuiType());
+        addItem(removeFilter, getGuiConfig().getItemGContainer("recipient-selector-menu.remove-filter"), guiOptions.getGuiType());
+        addItem(nextMenu, getGuiConfig().getItemGContainer("recipient-selector-menu.next-menu"), guiOptions.getGuiType());
+        addExpandableItems(this, guiOptions.getGuiType());
         this.playerList = new ArrayList<>(Bukkit.getOnlinePlayers());
     }
 
-    public RecipientSelectorGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder, GuiType type, OfflinePlayer p) {
-        this(plugin, player, previousMenu, builder, type);
+    public RecipientSelectorGui(final MailMe plugin, final Mail.Builder<?> builder, final GuiOptions guiOptions, final OfflinePlayer p) {
+        this(plugin, builder, guiOptions);
         this.playerList.clear();
         this.playerList.add(p);
+    }
+
+    public static GuiOptions getDefaultGuiOptions(final Player player) {
+        return new GuiOptions()
+                .setForWhom(player)
+                .withTitle(MailMe.getInstance().getLocale().getMessage("gui.titles.recipient-selector"))
+                .withRows(6);
     }
 
     @Override
@@ -78,7 +88,7 @@ public class RecipientSelectorGui extends AbstractScrollingMailGui implements Ex
         }
         return itemBuilder.asGuiItem(event -> {
 
-            playUISound();
+            PlayerUtils.playUISound(getPlayer());
             if (getBuilder().isRecipient(p.getUniqueId())) {
                 getBuilder().removeRecipient(p.getUniqueId());
             } else {
@@ -89,15 +99,16 @@ public class RecipientSelectorGui extends AbstractScrollingMailGui implements Ex
     }
 
     @Override
-    void nextMenu() {
+    protected void nextMenu() {
+
         if (getBuilder() instanceof MailMessage.Builder) {
             gracefulExit = true;
             getGui().close(getPlayer());
             LetterInputPrompt.begin(getPlugin(), getBuilder(), getPlayer(), null);
         } else if (getBuilder() instanceof MailItems.Builder) {
-            new ItemInputGui(getPlugin(), getPlayer(), this, getBuilder(), new ArrayList<>()).open();
+            new ItemInputGui(getPlugin(), getBuilder(), new ArrayList<>(), getGuiOptions().withPreviousMenu(this)).open();
         } else if (getBuilder() instanceof MailBook.Builder) {
-            new ClickToSendGui(getPlugin(), getPlayer(), this, getBuilder()).open();
+            new ClickToSendGui(getPlugin(), getBuilder(), getGuiOptions().withPreviousMenu(this)).open();
         } else if (getBuilder() instanceof MailConsoleCommand.Builder) {
             gracefulExit = true;
             getGui().close(getPlayer());
@@ -107,11 +118,11 @@ public class RecipientSelectorGui extends AbstractScrollingMailGui implements Ex
 
     @Override
     public void expand() {
-        new RecipientSelectorGui(getPlugin(), getPlayer(), this, getBuilder(), GuiType.EXPANDED).open();
+        new RecipientSelectorGui(getPlugin(), getBuilder(), getGuiOptions().withPreviousMenu(this).withGuiType(GuiType.EXPANDED)).open();
     }
 
     @Override
     public void collapse() {
-        new RecipientSelectorGui(getPlugin(), getPlayer(), this, getBuilder(), GuiType.COMPACT).open();
+        new RecipientSelectorGui(getPlugin(), getBuilder(), getGuiOptions().withPreviousMenu(this).withGuiType(GuiType.COMPACT)).open();
     }
 }

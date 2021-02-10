@@ -3,9 +3,9 @@ package com.haroldstudios.mailme.commands;
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.conversations.ConsoleMailInput;
 import com.haroldstudios.mailme.conversations.LetterInputPrompt;
-import com.haroldstudios.mailme.gui.ChooseMailTypeGui;
-import com.haroldstudios.mailme.gui.IconSelectorGui;
-import com.haroldstudios.mailme.gui.ItemInputGui;
+import com.haroldstudios.mailme.gui.child.ChooseMailTypeGui;
+import com.haroldstudios.mailme.gui.child.IconSelectorGui;
+import com.haroldstudios.mailme.gui.child.ItemInputGui;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailConsoleCommand;
 import com.haroldstudios.mailme.mail.MailItems;
@@ -59,8 +59,8 @@ public class PresetCommands extends CommandBase {
     @SubCommand("create")
     @Permission(PermissionConstants.ADMIN)
     public void create(Player player) {
-        ChooseMailTypeGui gui = new ChooseMailTypeGui(plugin, player, null, null);
-        gui.withRunnable(() -> {
+        ChooseMailTypeGui gui = new ChooseMailTypeGui(plugin, null, ChooseMailTypeGui.getDefaultGuiOptions(player));
+        gui.getGuiOptions().withRunnable(() -> {
             plugin.getCache().getPresetMailBuilders().put(player.getUniqueId(), gui.getBuilder());
             gui.getGui().close(player);
             edit(player, new String[0]);
@@ -161,8 +161,8 @@ public class PresetCommands extends CommandBase {
         }
 
         if (args[1].equalsIgnoreCase("icon")){
-            IconSelectorGui gui = new IconSelectorGui(plugin, player, null, builder);
-            gui.withRunnable(() -> {
+            IconSelectorGui gui = new IconSelectorGui(plugin, builder, IconSelectorGui.getDefaultGuiOptions(player).withPreviousMenu(null));
+            gui.getGuiOptions().withRunnable(() -> {
                 gui.getGui().close(player);
                 player.performCommand("mailpreset edit");
             });
@@ -170,8 +170,8 @@ public class PresetCommands extends CommandBase {
             return;
         } else if (args[1].equalsIgnoreCase("contents")) {
             if (builder instanceof MailItems.Builder) {
-                ItemInputGui gui = new ItemInputGui(plugin, player, null, builder, new ArrayList<>());
-                gui.withRunnable(() -> {
+                ItemInputGui gui = new ItemInputGui(plugin, builder, new ArrayList<>(), ItemInputGui.getDefaultGuiOptions(player));
+                gui.getGuiOptions().withRunnable(() -> {
                     gui.getGui().close(player);
                     ((MailItems.Builder) builder).setItemStackList(gui.getInputtedItems(gui.getGui().getInventory()));
                     player.performCommand("mailpreset edit");

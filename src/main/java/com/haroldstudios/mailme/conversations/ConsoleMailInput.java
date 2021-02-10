@@ -1,10 +1,9 @@
 package com.haroldstudios.mailme.conversations;
 
 import com.haroldstudios.mailme.MailMe;
-import com.haroldstudios.mailme.gui.ClickToSendGui;
+import com.haroldstudios.mailme.gui.child.ClickToSendGui;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailConsoleCommand;
-import com.haroldstudios.mailme.mail.MailMessage;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.Prompt;
@@ -18,7 +17,7 @@ public final class ConsoleMailInput extends StringPrompt {
 
     public ConsoleMailInput(Mail.Builder<?> mail, Player player) {
         this.mail = mail;
-        this.runnable = () -> new ClickToSendGui(MailMe.getInstance(), player, null, mail).open();
+        this.runnable = () -> new ClickToSendGui(MailMe.getInstance(), mail, ClickToSendGui.getDefaultGuiOptions(player)).open();
     }
 
     public String getPromptText(ConversationContext context) {

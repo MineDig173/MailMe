@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
-import java.util.logging.Level;
 
 import static com.haroldstudios.mailme.utils.Utils.colour;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -28,6 +27,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class Locale {
 
     //          TOKEN       YAML
+    private final static String[] LANGUAGE_FILE_NAMES = {"EN", "DE", "PT", "CN"};
     private final Map<String, YamlConfiguration> languagesMap = new HashMap<>();
     private final String serverLangToken;
 
@@ -40,19 +40,13 @@ public class Locale {
             MailMe.debug(Locale.class, "Did not create languages directory! May already exist. Are we permitted to write here?");
         }
         // Save all preset resources here
-        if (!new File(MailMe.getInstance().getDataFolder(), "languages/EN.yml").exists()) {
-            plugin.saveResource("languages/EN.yml", false);
-        }
-        if (!new File(MailMe.getInstance().getDataFolder(), "languages/DE.yml").exists()) {
-            plugin.saveResource("languages/DE.yml", false);
-        }
-        if (!new File(MailMe.getInstance().getDataFolder(), "languages/PT.yml").exists()) {
-            plugin.saveResource("languages/PT.yml", false);
-        }
-        if (!new File(MailMe.getInstance().getDataFolder(), "languages/CN.yml").exists()) {
-            plugin.saveResource("languages/CN.yml", false);
+        for (String fileName : LANGUAGE_FILE_NAMES) {
+            if (!new File(MailMe.getInstance().getDataFolder(), "languages/EN.yml").exists()) {
+                plugin.saveResource("languages/"+fileName+".yml", false);
+            }
         }
 
+        // Iterates through all files in directory (including ones a user has inputted)
         for (File lang : folder.listFiles()) {
             if (!lang.toString().endsWith(".yml")) continue;
             String fileName = lang.getName();

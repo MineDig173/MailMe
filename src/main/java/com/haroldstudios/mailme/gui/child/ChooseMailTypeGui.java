@@ -1,29 +1,30 @@
-package com.haroldstudios.mailme.gui;
+package com.haroldstudios.mailme.gui.child;
 
 import com.haroldstudios.mailme.MailMe;
+import com.haroldstudios.mailme.gui.AbstractMailGui;
+import com.haroldstudios.mailme.gui.GuiOptions;
 import com.haroldstudios.mailme.mail.*;
-import com.haroldstudios.mailme.utils.ConfigValue;
-import com.haroldstudios.mailme.utils.GuiConfig;
 import com.haroldstudios.mailme.utils.PermissionConstants;
+import com.haroldstudios.mailme.utils.PlayerUtils;
 import com.haroldstudios.mailme.utils.Utils;
 import me.mattstudios.gui.components.util.ItemBuilder;
 import me.mattstudios.gui.components.xseries.XMaterial;
+import me.mattstudios.gui.guis.Gui;
 import me.mattstudios.gui.guis.GuiItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 public class ChooseMailTypeGui extends AbstractMailGui {
 
-    private boolean anonymous = false;
+    private boolean anonymous;
 
-    public ChooseMailTypeGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder) {
-        super(plugin, player, previousMenu, 3, plugin.getLocale().getMessage(player, "gui.titles.choose-type"), builder);
+    public ChooseMailTypeGui(final MailMe plugin, final Mail.Builder<?> builder, final GuiOptions guiOptions) {
+        super(plugin, new Gui(guiOptions.getRows(), guiOptions.getTitle()), builder, guiOptions);
         getGui().getFiller().fill(getFillerItem());
 
         addItem(getCloseMenu(), getGuiConfig().getItemGContainer("choose-type-menu.exit", getGui().getRows()));
 
-        if (player.hasPermission(PermissionConstants.SEND_ANONYMOUS)) {
+        if (getPlayer().hasPermission(PermissionConstants.SEND_ANONYMOUS)) {
             addItem(getSetAnonymousItem(), getGuiConfig().getItemGContainer("choose-type-menu.anonymous", getGui().getRows()));
         }
     }
@@ -74,14 +75,21 @@ public class ChooseMailTypeGui extends AbstractMailGui {
     }
 
     @Override
-    void nextMenu() {
+    protected void nextMenu() {
         if (anonymous) {
             getBuilder().setSender(getPlugin().getLocale().getMessage(getPlayer(), "mail.anonymous"));
         } else {
             getBuilder().setSender(getPlayer().getName());
         }
-        playUISound();
-        new IconSelectorGui(getPlugin(), getPlayer(), this, getBuilder()).open();
+        PlayerUtils.playUISound(getPlayer());
+        new IconSelectorGui(getPlugin(),getBuilder(), IconSelectorGui.getDefaultGuiOptions(getPlayer()).withPreviousMenu(this)).open();
+    }
+
+    public static GuiOptions getDefaultGuiOptions(final Player player) {
+        return new GuiOptions()
+                .setForWhom(player)
+                .withTitle(MailMe.getInstance().getLocale().getMessage("gui.titles.choose-type"))
+                .withRows(3);
     }
 
     public GuiItem getSetAnonymousItem() {

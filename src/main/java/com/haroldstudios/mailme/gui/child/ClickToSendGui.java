@@ -1,14 +1,17 @@
-package com.haroldstudios.mailme.gui;
+package com.haroldstudios.mailme.gui.child;
 
 import com.haroldstudios.mailme.MailMe;
+import com.haroldstudios.mailme.gui.AbstractMailGui;
+import com.haroldstudios.mailme.gui.GuiOptions;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailItems;
 import com.haroldstudios.mailme.mail.MailType;
+import com.haroldstudios.mailme.utils.PlayerUtils;
 import com.haroldstudios.mailme.utils.Utils;
+import me.mattstudios.gui.guis.Gui;
 import me.mattstudios.gui.guis.GuiItem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,13 +22,11 @@ public class ClickToSendGui extends AbstractMailGui {
     private final GuiItem sentItem;
     private boolean canSend = true;
 
-    public ClickToSendGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, Mail.Builder<?> builder) {
-        super(plugin, player, previousMenu, 1, plugin.getLocale().getMessage(player, "gui.titles.click-to-send"), builder);
+    public ClickToSendGui(final MailMe plugin, final Mail.Builder<?> builder, final GuiOptions guiOptions) {
+        super(plugin, new Gui(1, guiOptions.getTitle()), builder, guiOptions);
         getGui().setItem(1,9, new GuiItem(plugin.getLocale().getItemStack("gui.send-to-mailbox")));
         getGui().setItem(1,1, new GuiItem(Utils.getItemFromBuilder(getBuilder(), getPlayer())));
-        GuiItem notSent = new GuiItem(plugin.getLocale().getItemStack("gui.not-sent"), event -> {
-            sendMail();
-        });
+        GuiItem notSent = new GuiItem(plugin.getLocale().getItemStack("gui.not-sent"), event -> sendMail());
         for ( int i = 2; i < 9; i++) {
             getGui().setItem(1,i, notSent);
         }
@@ -33,10 +34,17 @@ public class ClickToSendGui extends AbstractMailGui {
     }
 
     @Override
-    void nextMenu() {
+    protected void nextMenu() {
         if (getGui().getInventory().getViewers().contains(getPlayer())) {
             getGui().close(getPlayer());
         }
+    }
+
+    public static GuiOptions getDefaultGuiOptions(final Player player) {
+        return new GuiOptions()
+                .withRows(1)
+                .withTitle(MailMe.getInstance().getLocale().getMessage("gui.titles.click-to-send"))
+                .setForWhom(player);
     }
 
     // Returns if success or not
@@ -77,7 +85,7 @@ public class ClickToSendGui extends AbstractMailGui {
                 } else {
                     getBuilder().build().send(recipients);
                 }
-                playUISound();
+                PlayerUtils.playUISound(getPlayer());
                 getPlayer().sendMessage(getPlugin().getLocale().getMessage(getPlayer(),"mail.sent"));
                 Bukkit.getScheduler().runTaskLater(getPlugin(), this::next, 80L);
             }

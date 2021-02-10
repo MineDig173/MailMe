@@ -23,7 +23,7 @@ public class JsonDatabase implements PlayerMailDAO {
         return CompletableFuture.supplyAsync(() -> {
             PlayerDataFile data = PlayerDataFile.getPlayerDataFile(uuid, plugin);
             Collection<Mail> mail = data.getAllMail();
-            mail = mail.stream().filter(m -> !isExpired(uuid, m, m.getDateReceived())).collect(Collectors.toList());
+            mail = mail.stream().filter(m -> m.isArchived() || !isExpired(uuid, m, m.getDateReceived())).collect(Collectors.toList());
             List<Mail> dirtyReverse = Arrays.asList(mail.toArray(new Mail[0]));
             Collections.reverse(dirtyReverse);
             return dirtyReverse.toArray(new Mail[0]);
@@ -34,11 +34,23 @@ public class JsonDatabase implements PlayerMailDAO {
     }
 
     @Override
+    public CompletableFuture<Boolean> setArchived(UUID uuid, Mail mail) {
+        return CompletableFuture.supplyAsync(() -> {
+            PlayerDataFile data = PlayerDataFile.getPlayerDataFile(uuid, plugin);
+            mail.setArchived(mail.isArchived());
+            return data.updateMail(mail.getColId(), mail);
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return false;
+        });
+    }
+
+    @Override
     public CompletableFuture<Mail[]> getUnreadMail(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
             PlayerDataFile data = PlayerDataFile.getPlayerDataFile(uuid, plugin);
             Collection<Mail> mail = data.getAllMail();
-            mail = mail.stream().filter(m -> !m.isRead()).filter(m -> !isExpired(uuid, m, m.getDateReceived())).collect(Collectors.toList());
+            mail = mail.stream().filter(m -> !m.isRead()).filter(m -> m.isArchived() || !isExpired(uuid, m, m.getDateReceived())).collect(Collectors.toList());
             List<Mail> dirtyReverse = Arrays.asList(mail.toArray(new Mail[0]));
             Collections.reverse(dirtyReverse);
             return dirtyReverse.toArray(new Mail[0]);
@@ -119,6 +131,17 @@ public class JsonDatabase implements PlayerMailDAO {
     }
 
     @Override
+    public CompletableFuture<?> deletePlayerMail(UUID uuid, Mail[] mail) {
+        return CompletableFuture.runAsync(() -> {
+            PlayerDataFile data = PlayerDataFile.getPlayerDataFile(uuid, plugin);
+            data.deleteMail(mail);
+        }).exceptionally(e -> {
+            MailMe.debug(e);
+            return null;
+        });
+    }
+
+    @Override
     public void deletePlayerMail(UUID uuid, Mail mail) {
         CompletableFuture.runAsync(() -> {
             PlayerDataFile data = PlayerDataFile.getPlayerDataFile(uuid, plugin);
@@ -148,13 +171,11 @@ public class JsonDatabase implements PlayerMailDAO {
 
     private boolean isExpired(UUID uuid, Mail mail, long timeMillis) {
 
-        boolean expired = timeMillis + mail.getExpiryTimeMilliSeconds() < System.currentTimeMillis();
-        if (expired) {
-            CompletableFuture.runAsync(() -> {
-                deletePlayerMail(uuid, mail);
-            });
+        if (timeMillis + mail.getExpiryTimeMilliSeconds() < System.currentTimeMillis()) {
+            CompletableFuture.runAsync(() -> deletePlayerMail(uuid, mail));
+            return true;
         }
 
-        return expired;
+        return false;
     }
 }

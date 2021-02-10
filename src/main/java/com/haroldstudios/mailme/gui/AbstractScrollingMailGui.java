@@ -5,8 +5,6 @@ import com.haroldstudios.mailme.mail.Mail;
 import me.mattstudios.gui.components.ScrollType;
 import me.mattstudios.gui.guis.GuiItem;
 import me.mattstudios.gui.guis.ScrollingGui;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +14,11 @@ public abstract class AbstractScrollingMailGui extends AbstractMailGui {
     private final ScrollingGui gui;
     private final List<GuiItem> items = new ArrayList<>();
 
-    public AbstractScrollingMailGui(MailMe plugin, Player player, @Nullable AbstractMailGui previousMenu, int rows, String name, Mail.Builder<?> builder, Expandable.GuiType type) {
-        super(plugin, player, previousMenu, new ScrollingGui(rows, type.getPageSize(), name, type == Expandable.GuiType.COMPACT ? ScrollType.HORIZONTAL : ScrollType.VERTICAL), builder);
+    public AbstractScrollingMailGui(final MailMe plugin, final Mail.Builder<?> builder, final GuiOptions guiOptions) {
+        super(plugin, new ScrollingGui(guiOptions.getRows() == null ? 6 : guiOptions.getRows(), guiOptions.getGuiType().getPageSize(), guiOptions.getTitle(), guiOptions.getGuiType() == Expandable.GuiType.COMPACT ? ScrollType.HORIZONTAL : ScrollType.VERTICAL), builder, guiOptions);
 
         gui = (ScrollingGui) super.getGui();
-
+        final Expandable.GuiType type = guiOptions.getGuiType();
         gui.getFiller().fillBetweenPoints(InteractableItem.FILL_FROM.getRow(type),InteractableItem.FILL_FROM.getCol(type),InteractableItem.FILL_TO.getRow(type),InteractableItem.FILL_TO.getCol(type), getFillerItem());
         getGui().getFiller().fillBorder(getFillerItem());
 
@@ -31,11 +29,11 @@ public abstract class AbstractScrollingMailGui extends AbstractMailGui {
     }
 
     protected GuiItem getPreviousPage() {
-        return new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(),"gui.previous-page"), event -> getGui().previous());
+        return new GuiItem(getPlugin().getLocale().getItemStack(getGuiOptions().getForWhom(),"gui.previous-page"), event -> getGui().previous());
     }
 
     protected GuiItem getNextPage() {
-        return new GuiItem(getPlugin().getLocale().getItemStack(getPlayer(), "gui.next-page"), event -> getGui().next());
+        return new GuiItem(getPlugin().getLocale().getItemStack(getGuiOptions().getForWhom(), "gui.next-page"), event -> getGui().next());
     }
 
     public List<GuiItem> getItems() {

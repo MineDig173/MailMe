@@ -17,6 +17,8 @@ import static org.bukkit.Bukkit.getServer;
 
 public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMailDAO {
 
+    //TODO Database cleanup and perhaps refactor.
+
     protected final Logger logger;
     protected Connection connection = null;
     @Nullable protected final DatabaseSettingsImpl settings;
@@ -118,7 +120,7 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
 
     @Override
     public CompletableFuture<Mail[]> getAllMail(UUID uuid) {
-        return getMailFromQuery("select mail_uuid, mail_read, id, ts from PlayerMail where uuid='" + uuid.toString() + "'");
+        return getMailFromQuery("select mail_uuid, mail_read, id, archived, ts from PlayerMail where uuid='" + uuid.toString() + "'");
     }
 
     public CompletableFuture<Mail[]> getMailFromQuery(String query) {
@@ -142,9 +144,11 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
                         Mail mailObj = MailMe.getInstance().getCache().getFileUtil().deserializeMail(mailRS.getString("mail_obj"));
                         mailObj.setRead(resultSet.getBoolean("mail_read"));
                         mailObj.setColId(resultSet.getInt("id"));
+                        mailObj.setArchived(resultSet.getBoolean("archived"));
                         long ts = resultSet.getLong("ts");
                         mailObj.setDateReceived(ts);
-                        if (!isExpired(mailObj, ts))
+                        // If archived or not expired (isExpired will auto delete it)
+                        if (mailObj.isArchived() || !isExpired(mailObj, ts))
                             mail.add(mailObj);
 
                     } else {
@@ -193,7 +197,7 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
             int sCode = 0;
             try {
                 Statement statement = connection.createStatement();
-                sCode = statement.executeUpdate("insert into PlayerMail(uuid, mail_uuid, ts) values ('"+uuid+"','"+mail.getUuid().toString()+"', "+System.currentTimeMillis()+")");
+                sCode = statement.executeUpdate("insert into PlayerMail(uuid, mail_uuid, ts, archived) values ('"+uuid+"','"+mail.getUuid().toString()+"', "+System.currentTimeMillis()+", "+mail.isArchived()+")");
 
 
                 statement.close();
@@ -209,9 +213,35 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
     }
 
     @Override
+    public CompletableFuture<Boolean> setArchived(UUID uuid, Mail mail) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (mail.getColId() == null) {
+                MailMe.debug(SQLDatabaseParent.class, "Cannot update mail! ColId is null! (We don't know what to update!!!)");
+                return false;
+            }
+            int sCode = 0;
+            try {
+                Statement statement = connection.createStatement();
+                sCode = statement.executeUpdate("update PlayerMail set archived = " + mail.isArchived() + " where id = "+ mail.getColId());
+                statement.close();
+
+            } catch (SQLException ignore) { }
+
+            return sCode > 0;
+
+        }).exceptionally(exception -> {
+            MailMe.debug(exception);
+            return false;
+        });
+    }
+
+    @Override
     public CompletableFuture<Boolean> setRead(UUID uuid, Mail mail) {
         return CompletableFuture.supplyAsync(() -> {
-            if (mail.getColId() == null) return false;
+            if (mail.getColId() == null) {
+                MailMe.debug(SQLDatabaseParent.class, "Cannot update mail! ColId is null! (We don't know what to update!!!)");
+                return false;
+            }
             int sCode = 0;
             try {
                 Statement statement = connection.createStatement();
@@ -257,8 +287,6 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
                 statement.close();
 
                 return result > 0;
-
-                // Exceptions do not get caught during execution of completablefuture. Must be caught using exceptionally
             } catch (SQLException ignore) { }
             return false;
         }).exceptionally(e -> {
@@ -268,21 +296,39 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
     }
 
     @Override
-    public void deletePlayerMail(UUID uuid, Mail mail) {
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("delete from PlayerMail where id="+mail.getColId());
-            statement.close();
+    public CompletableFuture<?> deletePlayerMail(UUID uuid, Mail[] mail) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                Statement statement = connection.createStatement();
+                for (Mail m : mail) {
+                    statement.executeUpdate("delete from PlayerMail where id=" + m.getColId());
+                }
+                statement.close();
 
-        } catch (SQLException throwables) {
-            MailMe.debug(throwables);
-        }
+            } catch (SQLException throwables) {
+                MailMe.debug(throwables);
+            }
+        });
+    }
+
+    @Override
+    public void deletePlayerMail(UUID uuid, Mail mail) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                Statement statement = connection.createStatement();
+                statement.executeUpdate("delete from PlayerMail where id=" + mail.getColId());
+                statement.close();
+
+            } catch (SQLException throwables) {
+                MailMe.debug(throwables);
+            }
+        });
     }
 
     private boolean isExpired(Mail mail, long timeMillis) {
 
         boolean expired = timeMillis + mail.getExpiryTimeMilliSeconds() < System.currentTimeMillis();
-        if (expired) {
+        if (expired && !mail.isArchived()) {
             CompletableFuture.runAsync(() -> {
                 try {
                     Statement statement = connection.createStatement();
@@ -314,11 +360,22 @@ public abstract class SQLDatabaseParent implements DatabaseConnector, PlayerMail
         try {
             Statement stmt = connection.createStatement();
             // Create Tables if not already there
-            stmt.execute("create table if not exists PlayerMail(id int auto_increment primary key, uuid varchar(36) not null, mail_uuid varchar(36) not null, mail_read tinyint(1) not null default false, ts bigint not null)");
+            stmt.execute("create table if not exists PlayerMail(id int auto_increment primary key, uuid varchar(36) not null, mail_uuid varchar(36) not null, mail_read tinyint(1) not null default false, ts bigint not null, archived boolean not null default false)");
             stmt.execute("create table if not exists Mail(mail_uuid varchar(36) not null, mail_obj mediumtext not null, identifier_name varchar(36))");
-
+            applyMissingCols(stmt);
         } catch (SQLException e) {
             MailMe.debug(SQLDatabaseParent.class, "Error occurred while asserting table readiness. Error code: " + e.getErrorCode() + ", " + e.getMessage());
+            MailMe.debug(e);
+        }
+    }
+
+    // Used when columns are added
+    private void applyMissingCols(Statement stmt) {
+        try {
+            stmt.execute("ALTER TABLE PlayerMail ADD archived boolean not null default false");
+        } catch (Exception e) {
+            // Typically we don't care if an exception occurs. Usually means already exists and just a way of checking it exists without restricting sql versions
+            MailMe.debug(SQLDatabaseParent.class, "THIS MAY NOT BE AN ERROR! DO NOT REPORT THIS TO DEVELOPER UNLESS ASKED!");
             MailMe.debug(e);
         }
     }
