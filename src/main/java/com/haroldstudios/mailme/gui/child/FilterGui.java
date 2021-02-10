@@ -25,7 +25,11 @@ public class FilterGui extends AbstractMailGui {
         GuiItem deleteAllSelectedMail = new GuiItem(plugin.getLocale().getItemStack("gui.filters.delete-all"));
         GuiItem deleteAllSelectedMailConfirm = new GuiItem(plugin.getLocale().getItemStack("gui.filters.delete-all-check"), event -> {
             if (event.getClick().isLeftClick()) {
-                plugin.getPlayerMailDAO().deletePlayerMail(getPlayer().getUniqueId(), guiOptions.getMailList().stream().filter(mail -> !mail.isArchived()).toArray(Mail[]::new)).thenRun(() -> new InboxGui(plugin, builder, InboxGui.getDefaultGuiOptions(getPlayer())).open());
+                Mail[] mailL = guiOptions.getMailList().stream().filter(mail -> !mail.isArchived()).toArray(Mail[]::new);
+                plugin.getPlayerMailDAO().deletePlayerMail(getPlayer().getUniqueId(), mailL).thenRun(() -> {
+                    guiOptions.getMailList().removeAll(Arrays.asList(mailL));
+                    Bukkit.getScheduler().runTask(plugin, () -> new InboxGui(plugin, builder, InboxGui.getDefaultGuiOptions(getPlayer()).withMail(guiOptions.getMailList().toArray(new Mail[0]))).open());
+                });
             } else if (event.getClick().isRightClick()) {
                 getGui().updateItem(event.getSlot(), deleteAllSelectedMail);
             }

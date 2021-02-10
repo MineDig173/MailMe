@@ -35,10 +35,8 @@ public class RecipientSelectorGui extends AbstractScrollingMailGui implements Ex
         });
         GuiItem removeFilter = new GuiItem(getFilterItem(), event -> {
             new RecipientSelectorGui(getPlugin(), getBuilder(), getGuiOptions().setPreviousMenu(this)).open();
-            PlayerUtils.playUISound(getPlayer());
         });
         GuiItem nextMenu = new GuiItem(getNextMenuButton(), event -> {
-            PlayerUtils.playUISound(getPlayer());
             if (getBuilder().getRecipients().size() > 0) {
                 next();
             }
@@ -88,7 +86,6 @@ public class RecipientSelectorGui extends AbstractScrollingMailGui implements Ex
         }
         return itemBuilder.asGuiItem(event -> {
 
-            PlayerUtils.playUISound(getPlayer());
             if (getBuilder().isRecipient(p.getUniqueId())) {
                 getBuilder().removeRecipient(p.getUniqueId());
             } else {

@@ -136,6 +136,7 @@ mail:
 gui:
   search: "Schreibe den Namen des Spielers, welchen du gerne finden willst. Dieser kann online oder offline sein."
   titles:
+    filters: "Filter"
     click-to-send: "Klicke zum senden"
     choose-type: "Wähle Brieftyp"
     icon-selector: "Setze ein Icon!"
@@ -148,6 +149,7 @@ gui:
       - "&7&m----------"
       - "&7Typ: &e%type%"
       - "&7Erhalten am: &e%date%"
+      - "&7Archiviert: &e%archived%"
       - "&cLäuft ab: &n%expiry%"
       - "&7&m----------"
       - "&eInhalte: %contents%"
@@ -278,16 +280,6 @@ gui:
       - '&7als Text zu lesen'
     glow: true
     skull-texture: ''
-  filter-unread:
-    title: '&8[&eUngelesene Filtern&8]'
-    material: BOOK
-    amount: 1
-    custom-model-data: 0
-    lore:
-      - '&7Klicke um deine Briefe nur nach'
-      - '&7ungelesenen zu filtern'
-    glow: true
-    skull-texture: ''
   next-menu:
     title: '&a&lKlicke für das nächste Menü!'
     material: EMERALD_BLOCK
@@ -404,3 +396,70 @@ gui:
       - "&7Führt einen Befehl beim lesen aus"
       - "&7Sichtbarkeit: &aVersteckt"
       - "&7Platzhalter: &a%player_name%"
+  filters:
+    choose-filters:
+      title: '&e&lWählen Sie Filter'
+      material: LAVA_BUCKET
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Klicken Sie hier, um Ihre anzuzeigen'
+        - '&7Filteroptionen'
+    delete-all:
+      title: '&c&lAlle ausgewählten E-Mails löschen'
+      material: LAVA_BUCKET
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Löscht derzeit alle E-Mails'
+        - '&7in Ihrem Posteingang mit Filtern vorhanden'
+        - '&7 angewendet'
+    delete-all-check:
+      title: '&c&lBIST DU SICHER!'
+      material: EMERALD_BLOCK
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Diese Aktion kann nicht rückgängig gemacht werden'
+        - '&7Mail wird gelöscht.'
+        - '&7Klicken Sie zur Bestätigung mit der linken Maustaste'
+        - '&7Klicken Sie mit der rechten Maustaste, um den Vorgang abzubrechen'
+    unread:
+      title: '&e&lUngelesene E-Mails filtern'
+      material: BOOK
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Klicken Sie hier, um das Menü zu filtern'
+        - '&7nur ungelesene E-Mails.'
+    archived:
+      title: '&e&lArchivierte E-Mails anzeigen'
+      material: ARROW
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Klicken Sie hier, um das Archiv anzuzeigen'
+        - '&7mail.'
+    read:
+      title: '&e&lRead Mail anzeigen'
+      material: FEATHER
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Klicken Sie hier, um alle gelesenen Informationen anzuzeigen'
+        - '&7mail.'
+    go-back:
+      title: '&e&lGeh zurück'
+      material: STICK
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Klicken Sie hier, um zu zurückzukehren'
+        - '&7Posteingang Menü.'

@@ -85,7 +85,6 @@ public class ClickToSendGui extends AbstractMailGui {
                 } else {
                     getBuilder().build().send(recipients);
                 }
-                PlayerUtils.playUISound(getPlayer());
                 getPlayer().sendMessage(getPlugin().getLocale().getMessage(getPlayer(),"mail.sent"));
                 Bukkit.getScheduler().runTaskLater(getPlugin(), this::next, 80L);
             }

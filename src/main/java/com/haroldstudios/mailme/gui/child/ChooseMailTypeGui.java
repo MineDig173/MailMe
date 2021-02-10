@@ -81,7 +81,6 @@ public class ChooseMailTypeGui extends AbstractMailGui {
         } else {
             getBuilder().setSender(getPlayer().getName());
         }
-        PlayerUtils.playUISound(getPlayer());
         new IconSelectorGui(getPlugin(),getBuilder(), IconSelectorGui.getDefaultGuiOptions(getPlayer()).withPreviousMenu(this)).open();
     }
 

@@ -276,16 +276,6 @@ gui:
       - '&7read your mail as text'
     glow: true
     skull-texture: ''
-  filter-unread:
-    title: '&8[&eFilter Unread&8]'
-    material: BOOK
-    amount: 1
-    custom-model-data: 0
-    lore:
-      - '&7Click to filter your'
-      - '&7mail to unread only'
-    glow: true
-    skull-texture: ''
   next-menu:
     title: '&a&lClick for the Next Menu!'
     material: EMERALD_BLOCK

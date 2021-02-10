@@ -3,6 +3,7 @@ package com.haroldstudios.mailme.gui;
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.utils.GuiConfig;
+import com.haroldstudios.mailme.utils.PlayerUtils;
 import com.haroldstudios.mailme.utils.Utils;
 import me.mattstudios.gui.guis.BaseGui;
 import me.mattstudios.gui.guis.GuiItem;
@@ -43,6 +44,7 @@ public abstract class AbstractMailGui {
             }
             if (event.getClickedInventory() != null && event.getClickedInventory().getType().equals(InventoryType.PLAYER)) return;
             event.setCancelled(true);
+            PlayerUtils.playUISound(getPlayer());
         });
         gui.setDragAction(event -> event.setCancelled(true));
         gui.setCloseGuiAction(event -> {

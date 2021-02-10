@@ -105,6 +105,7 @@ public class MailboxCommands extends CommandBase {
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             for (Location mailbox : mailboxes) {
+                if (mailbox == null) continue;
                 if (mailbox.distance(playerLocation) > ConfigValue.MAILBOX_FIND_DISTANCE) continue;
                 Utils.particleTower(player, mailbox);
             }

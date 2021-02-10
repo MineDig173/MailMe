@@ -134,6 +134,7 @@ mail:
 gui:
   search: "Digite o nome do jogador que deseja encontrar. Isso pode ser online ou offline."
   titles:
+    filters: "Filtros"
     click-to-send: "Clique para enviar"
     choose-type: "Escolha o tipo de correio"
     icon-selector: "Selecione um ícone!"
@@ -398,3 +399,70 @@ gui:
       - "&7Executa o comando na leitura"
       - "&7Visibilidade: &aEscondido"
       - "&7Placeholder: &a%player_name%"
+  filters:
+    choose-filters:
+      title: '&e&lEscolha os filtros'
+      material: LAVA_BUCKET
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Clique para ver o seu'
+        - '&7opções de filtro'
+    delete-all:
+      title: '&c&lExcluir todos os e-mails selecionados'
+      material: LAVA_BUCKET
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Exclui todos os e-mails atualmente'
+        - '&7presente em sua caixa de entrada com filtros'
+        - '&7aplicado'
+    delete-all-check:
+      title: '&c&lVOCÊ TEM CERTEZA!'
+      material: EMERALD_BLOCK
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Essa ação não pode ser desfeita'
+        - '&7o correio será apagado.'
+        - '&7Clique com o botão esquerdo para confirmar'
+        - '&7Clique com o botão direito para abortar'
+    unread:
+      title: '&e&lFiltrar mensagens não lidas'
+      material: BOOK
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Clique para filtrar o menu'
+        - '&7para apenas mensagens não lidas'
+    archived:
+      title: '&e&lVer correio arquivado'
+      material: ARROW
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Clique para ver arquivado'
+        - '&7enviar.'
+    read:
+      title: '&e&lVer Ler Correio'
+      material: FEATHER
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Clique para ver todas as lidas'
+        - '&7enviar.'
+    go-back:
+      title: '&e&lVolte'
+      material: STICK
+      amount: 1
+      custom-model-data: 0
+      glow: true
+      lore:
+        - '&7Clique para voltar para'
+        - '&7menu da caixa de entrada.'
