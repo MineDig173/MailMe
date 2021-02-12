@@ -22,6 +22,10 @@
 #
 config-ver: 3
 
+# Disable this plugin's tracking individually here. As a developer I ask you leave this as true
+# as it allows me to direct my development focus. However, it is not required.
+enable-bstats: true
+
 
 # This is the default global language that is used across the server if one is not selected
 # Default "EN"

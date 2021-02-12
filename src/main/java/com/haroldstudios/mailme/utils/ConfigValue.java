@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ConfigValue {
 
@@ -27,6 +26,7 @@ public class ConfigValue {
     public static boolean CAN_SEND_TO_SELF = false;
     public static String DATE_FORMAT = "dd-MM-yyyy";
     public static boolean MAILBOX_READ_ONLY = false;
+    public static boolean USE_BSTATS = false; // disabled by default if cannot load
 
     private ConfigValue() {}
 
@@ -64,5 +64,6 @@ public class ConfigValue {
         CAN_SEND_TO_SELF = config.getBoolean("can-send-to-self");
         DATE_FORMAT = config.getString("date-format");
         MAILBOX_READ_ONLY = config.getBoolean("mailbox-read-only");
+        USE_BSTATS = config.getBoolean("enable-bstats");
     }
 }

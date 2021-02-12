@@ -4,7 +4,7 @@ import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.database.PlayerMailDAO;
 import com.haroldstudios.mailme.database.json.JsonPresetFile;
 import com.haroldstudios.mailme.database.json.PlayerDataFile;
-import com.haroldstudios.mailme.database.sql.MySQLDatabase;
+import com.haroldstudios.mailme.database.mysql.MySQLDatabase;
 import com.haroldstudios.mailme.mail.Mail;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
 
@@ -53,6 +53,7 @@ public class Json2MySQL implements Transitionable {
             }
 
             for (Mail mail : dataFile.getAllMail()) {
+                MailMe.debug(Json2MySQL.class, "Converting mail: " + mail.getUuid());
                 mySQLDatabase.saveMailObj(mail);
                 mySQLDatabase.savePlayerMail(uuid, mail);
             }

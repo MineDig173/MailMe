@@ -47,6 +47,11 @@ public abstract class Mail {
         this.dateCreated = System.currentTimeMillis();
     }
 
+    protected Mail(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived) {
+        this(icon, sender, expiryTimeMins, identifier);
+        this.archived = archived;
+    }
+
     public boolean isArchived() {
         return archived;
     }
@@ -169,6 +174,7 @@ public abstract class Mail {
         protected ItemStack icon;
         protected int expiryTimeMins = ConfigValue.EXPIRY_TIME_MINS;
         private final List<UUID> recipients = new ArrayList<>();
+        protected boolean archived = false;
 
         public T setSender(String sender) {
             this.sender = sender;
@@ -212,6 +218,14 @@ public abstract class Mail {
             return System.currentTimeMillis();
         }
 
+        public void setArchived(boolean archived) {
+            this.archived = archived;
+        }
+
+        public boolean isArchived() {
+            return archived;
+        }
+
         public ItemStack getIcon() {
             if (icon != null)
                 return icon.clone();
@@ -238,6 +252,7 @@ public abstract class Mail {
             this.setIcon(combineTo.getIcon());
             this.setSender(combineTo.getSender());
             this.setExpiryTimeMins(combineTo.getExpiryTimeMins());
+            this.setArchived(combineTo.isArchived());
             return this;
         }
 

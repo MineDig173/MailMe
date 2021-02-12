@@ -12,13 +12,14 @@ import com.haroldstudios.mailme.database.DatabaseSettingsImpl;
 import com.haroldstudios.mailme.database.PlayerMailDAO;
 import com.haroldstudios.mailme.database.json.DataCache;
 import com.haroldstudios.mailme.database.json.JsonDatabase;
-import com.haroldstudios.mailme.database.sql.MySQLDatabase;
+import com.haroldstudios.mailme.database.mysql.MySQLDatabase;
 import com.haroldstudios.mailme.listeners.EntityEvents;
 import com.haroldstudios.mailme.mail.MailboxTaskManager;
 import com.haroldstudios.mailme.utils.ConfigValue;
 import com.haroldstudios.mailme.utils.GuiConfig;
 import com.haroldstudios.mailme.utils.Locale;
 import me.mattstudios.mf.base.CommandManager;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -76,6 +77,7 @@ public final class MailMe extends JavaPlugin implements MailMeAPI{
         this.mailboxTaskManager = new MailboxTaskManager(this);
         this.mailboxTaskManager.beginTasks();
 
+        registerBStats();
 
         if (getConfig().getInt("config-ver") <= 2) {
             getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "WARNING!");
@@ -120,6 +122,15 @@ public final class MailMe extends JavaPlugin implements MailMeAPI{
             connector = null;
             playerMailDAO = new JsonDatabase(this);
         }
+    }
+
+    private void registerBStats() {
+        // If bstats is disabled in config
+        if (!ConfigValue.USE_BSTATS) return;
+        Metrics metrics = new Metrics(this, 10296);
+
+        metrics.addCustomChart(new Metrics.SimplePie("database_connection_type", () -> playerMailDAO.getClass().getSimpleName()));
+        metrics.addCustomChart(new Metrics.SimplePie("main_server_language", () -> getLocale().getServerLangToken()));
     }
 
     public static void debug(Class<?> clazz, String msg) {

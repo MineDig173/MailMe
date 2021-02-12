@@ -73,6 +73,7 @@ preset-creator:
   - '[&7▹ &e設置過期時間 (分鐘)](suggest: /mailpreset edit expiry:|hover: 點擊以編輯)'
   - '[&7▹ &e設置圖標](command: /mailpreset edit icon|hover: 點擊以編輯)'
   - '[&7▹ &e設置內容](command: /mailpreset edit contents|hover: 點擊以編輯)'
+  - '[&7▹ &e(TR)Set Auto Archive](command: /mailpreset edit archive:|hover: (TR)Click to edit)'
   - '[&7▹ &a&l完成](command: /mailpreset complete|hover: 點擊以保存)'
 requires-written-book: '&e&lMailMe &7▹ &c您必須帶著一本成書來進行點擊才能發送此類型郵件!'
 hologram-format: '&e&l@name&e 的郵箱'

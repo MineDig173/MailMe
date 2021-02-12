@@ -15,10 +15,12 @@ repositories {
     maven { url = 'https://jitpack.io' }
     maven { url = "https://repo.mattstudios.me/artifactory/public" }
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+
 }
 
 dependencies {
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+    compile 'org.bstats:bstats-bukkit:1.8'
     compileOnly 'mysql:mysql-connector-java:8.0.22'
     compile 'me.mattstudios.utils:matt-framework:1.4'
     implementation 'me.mattstudios:triumph-gui:3.0.5-SNAPSHOT'
@@ -27,10 +29,12 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 
 group = 'com.haroldstudios'
-version = '1.5.8'
+version = '1.5.9'
 description = 'MailMe'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
@@ -42,5 +46,10 @@ shadowJar {
     relocate 'me.mattstudios.mfgui', 'com.haroldstudios.mailme.mfgui'
     relocate 'me.mattstudios.mf', 'com.haroldstudios.mailme.mf'
     relocate 'me.mattstudios.mfmsg', 'com.haroldstudios.mailme.mfmsg'
+    relocate 'org.bstats', 'com.haroldstudios.mailme'
     destinationDir = file("/Users/harrydrummond/Desktop/Coding Applications/Servers/1.16.5/plugins")
+}
+
+test {
+    useJUnitPlatform()
 }

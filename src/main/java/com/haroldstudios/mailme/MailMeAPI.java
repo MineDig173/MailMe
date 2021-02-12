@@ -2,7 +2,6 @@ package com.haroldstudios.mailme;
 
 import com.haroldstudios.mailme.database.PlayerMailDAO;
 import com.haroldstudios.mailme.database.json.DataCache;
-import com.haroldstudios.mailme.gui.AbstractMailGui;
 
 @SuppressWarnings("unused")
 public interface MailMeAPI {

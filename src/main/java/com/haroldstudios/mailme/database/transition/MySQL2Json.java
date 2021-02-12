@@ -4,7 +4,7 @@ import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.database.DatabaseSettingsImpl;
 import com.haroldstudios.mailme.database.PlayerMailDAO;
 import com.haroldstudios.mailme.database.json.JsonDatabase;
-import com.haroldstudios.mailme.database.sql.MySQLDatabase;
+import com.haroldstudios.mailme.database.mysql.MySQLDatabase;
 import com.haroldstudios.mailme.mail.Mail;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 
 public class MySQL2Json implements Transitionable {
@@ -49,7 +50,7 @@ public class MySQL2Json implements Transitionable {
             return;
         }
 
-        connector.getMailFromQuery("select * from PlayerMail").thenAccept(mailArr -> {
+        CompletableFuture<Void> future1 = connector.getMailFromQuery("SELECT * FROM PlayerMail").thenAccept(mailArr -> {
             for (Mail mail : mailArr) {
 
                 try {
@@ -68,7 +69,7 @@ public class MySQL2Json implements Transitionable {
             }
         });
 
-        connector.getPresetMailIdentifiers().thenAccept(identifiers -> {
+        CompletableFuture<Void> future2 = connector.getPresetMailIdentifiers().thenAccept(identifiers -> {
             for (String identifier : identifiers) {
 
                 connector.getPresetMail(identifier).thenAccept(mail -> {
@@ -78,11 +79,10 @@ public class MySQL2Json implements Transitionable {
                     }
                     jsonDatabase.savePreset(mail);
                 });
-
             }
         });
 
-        connector.disconnect();
-
+        // Once above futures complete, disconnect from sql
+        CompletableFuture.allOf(future1, future2).thenRun(connector::disconnect);
     }
 }

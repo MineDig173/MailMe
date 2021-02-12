@@ -14,8 +14,8 @@ public class MailMessage extends Mail {
 
     private final String message;
 
-    public MailMessage(ItemStack icon, String sender, int expiryTimeMins, String identifier, String message) {
-        super(icon, sender, expiryTimeMins, identifier);
+    public MailMessage(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived, String message) {
+        super(icon, sender, expiryTimeMins, identifier, archived);
         this.message = message;
     }
 
@@ -61,7 +61,7 @@ public class MailMessage extends Mail {
         @Override
         public MailMessage build() {
 
-            return new MailMessage(icon, sender, expiryTimeMins, identifier, message);
+            return new MailMessage(icon, sender, expiryTimeMins, identifier, archived, message);
         }
     }
 }

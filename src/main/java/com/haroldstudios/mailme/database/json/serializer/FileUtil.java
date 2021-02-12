@@ -63,9 +63,9 @@ public class FileUtil {
                 .setDateFormat("dd-MM-yyyy-hh:mm:ss.SSS")
                 .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
                 .registerTypeAdapter(Mail.class, new AbstractClassSerializer<Mail>())
-                .registerTypeAdapterFactory(new MailTypeAdapterFactory(MailMe.getInstance()))
                 .registerTypeAdapterFactory(EnumTypeAdapter.ENUM_FACTORY)
                 .registerTypeAdapter(Location.class, new LocationTypeAdapter())
+                .registerTypeAdapterFactory(new MailTypeAdapterFactory(MailMe.getInstance()))
                 .setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
@@ -128,6 +128,7 @@ public class FileUtil {
 
     public Mail deserializeMail(String json) {
         Type token = new TypeToken<Mail>() {}.getType();
+
         return gson.fromJson(json, token);
     }
 

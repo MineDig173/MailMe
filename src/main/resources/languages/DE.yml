@@ -78,6 +78,7 @@ preset-creator:
   - "[&7▹ &eSetze Ablaufzeit (Min)](suggest: /mailpreset edit expiry:|hover: Klicke zum bearbeiten)"
   - "[&7▹ &eSetze Icon](command: /mailpreset edit icon|hover: Klicke zum bearbeiten)"
   - "[&7▹ &eSetze Inhalte](command: /mailpreset edit contents|hover: Klicke zum bearbeiten)"
+  - '[&7▹ &eSetza Sie die automatische Archivierung ein](command: /mailpreset edit archive:|hover: Klicke zum bearbeiten)'
   - "[&7▹ &a&lFertigstellen](command: /mailpreset complete|hover: Klicke zum fertigstellen)"
 
 requires-written-book: "&e&lMailMe &7▹ &cDu musst mit einem Beschriebenen Buch klicken um diesen Brieftyp zu verwenden!"

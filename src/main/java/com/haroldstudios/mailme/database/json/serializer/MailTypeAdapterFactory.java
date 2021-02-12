@@ -31,7 +31,6 @@ public class MailTypeAdapterFactory implements com.google.gson.TypeAdapterFactor
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
         Class<?> rawType = type.getRawType();
         if (ItemStack.class.isAssignableFrom(rawType)) {
-            // Use our current location adapter for backward compatibility
             return (TypeAdapter<T>) new ItemStackTypeAdapter();
         } else if (PotionEffectType.class.isAssignableFrom(rawType)) {
             return (TypeAdapter<T>) new PotionTypeAdapter();

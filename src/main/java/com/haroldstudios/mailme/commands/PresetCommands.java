@@ -217,9 +217,14 @@ public class PresetCommands extends CommandBase {
             }
             builder.setExpiryTimeMins(expire);
             return;
+        } else if (args[1].startsWith("archived:")) {
+            String archived = args[1].split(":")[1];
+            boolean bool = Boolean.parseBoolean(archived);
+            builder.setArchived(bool);
+            edit(player, new String[0]);
+            return;
         } else {
             player.sendMessage(plugin.getLocale().getMessage(player, "cmd.unknown-argument"));
         }
     }
-
 }

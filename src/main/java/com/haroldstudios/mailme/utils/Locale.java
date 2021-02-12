@@ -115,6 +115,10 @@ public class Locale {
         p.sendMessage(getMessage(p, msg));
     }
 
+    public String getServerLangToken() {
+        return serverLangToken;
+    }
+
     public String[] getMessages(String string) {
         return getMessages(serverLangToken, string);
     }

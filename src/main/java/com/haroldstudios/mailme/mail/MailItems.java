@@ -25,8 +25,8 @@ public class MailItems extends Mail {
      * @param expiryTimeMins Minutes until the mail should expire and delete itself from existence!
      * @param itemStackList  Items for this mail type to hold
      */
-    protected MailItems(ItemStack icon, String sender, int expiryTimeMins, String identifier, List<ItemStack> itemStackList) {
-        super(icon, sender, expiryTimeMins, identifier);
+    protected MailItems(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived, List<ItemStack> itemStackList) {
+        super(icon, sender, expiryTimeMins, identifier, archived);
         this.itemStackList = itemStackList;
     }
 
@@ -81,7 +81,7 @@ public class MailItems extends Mail {
 
         @Override
         public MailItems build() {
-            return new MailItems(icon, sender, expiryTimeMins, getIdentifier(), itemStackList);
+            return new MailItems(icon, sender, expiryTimeMins, getIdentifier(), archived, itemStackList);
         }
     }
 }

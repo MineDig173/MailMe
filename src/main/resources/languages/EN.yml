@@ -76,6 +76,7 @@ preset-creator:
   - '[&7▹ &eSet Expiry Time (Mins)](suggest: /mailpreset edit expiry:|hover: Click to edit)'
   - '[&7▹ &eSet Icon](command: /mailpreset edit icon|hover: Click to edit)'
   - '[&7▹ &eSet Contents](command: /mailpreset edit contents|hover: Click to edit)'
+  - '[&7▹ &eSet Auto Archive](command: /mailpreset edit archive:|hover: Click to edit)'
   - '[&7▹ &a&lComplete](command: /mailpreset complete|hover: Click to complete)'
 
 requires-written-book: "&e&lMailMe &7▹ &cYou need to click with a written book to compose this mail type!"

@@ -21,20 +21,6 @@ public final class ItemStackTypeAdapter extends TypeAdapter<ItemStack>{
             return;
         }
         YamlConfiguration c = new YamlConfiguration();
-        // Things to consider before implementing -> Will it affect version upgrades in future e.g 1.16 -> 1.17. Netty protocol changes, will json?
-//        if (value.getType().equals(Material.WRITTEN_BOOK) && value.hasItemMeta() && value.getItemMeta() instanceof BookMeta) {
-//            BookMeta bookMeta = (BookMeta) value.getItemMeta();
-//            for (int i = 1; i <= bookMeta.getPageCount(); i++) {
-//                int in = 0;
-//                for (BaseComponent component : bookMeta.spigot().getPage(i)) {
-//                    System.out.println(component.toLegacyText());
-//                    c.set("page." + i + "." + in, component.toLegacyText());
-//                    in++;
-//                }
-//            }
-//        }
-
-
         c.set("is", value);
         out.value(c.saveToString());
     }
@@ -45,6 +31,7 @@ public final class ItemStackTypeAdapter extends TypeAdapter<ItemStack>{
             reader.nextNull();
             return null;
         }
+
         YamlConfiguration c = new YamlConfiguration();
         String n = reader.nextString();
         // Verify material type because yaml loading errors of unknown materials cannot be trapped by try clause.
@@ -56,7 +43,6 @@ public final class ItemStackTypeAdapter extends TypeAdapter<ItemStack>{
                 return new ItemStack(Material.STONE);
             }
         }
-
         try {
             c.loadFromString(n);
             ItemStack stack = c.getItemStack("is");
