@@ -64,7 +64,6 @@ public class FileUtil {
                 .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
                 .registerTypeAdapter(Mail.class, new AbstractClassSerializer<Mail>())
                 .registerTypeAdapterFactory(EnumTypeAdapter.ENUM_FACTORY)
-                .registerTypeAdapter(Location.class, new LocationTypeAdapter())
                 .registerTypeAdapterFactory(new MailTypeAdapterFactory(MailMe.getInstance()))
                 .setExclusionStrategies(new ExclusionStrategy() {
                     @Override

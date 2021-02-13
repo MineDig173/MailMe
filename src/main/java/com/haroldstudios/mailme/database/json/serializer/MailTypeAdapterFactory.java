@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.haroldstudios.mailme.MailMe;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
@@ -38,6 +39,8 @@ public class MailTypeAdapterFactory implements com.google.gson.TypeAdapterFactor
             return (TypeAdapter<T>) new WorldTypeAdapter();
         } else if (Vector.class.isAssignableFrom(rawType)) {
             return (TypeAdapter<T>) new VectorTypeAdapter();
+        } else if (Location.class.isAssignableFrom(rawType)) {
+            return (TypeAdapter<T>) new LocationTypeAdapter();
         } else if (ConfigurationSerializable.class.isAssignableFrom(rawType)) {
             // This covers a lot of Bukkit objects
             return (TypeAdapter<T>) new BukkitObjectTypeAdapter(gson.getAdapter(Map.class));

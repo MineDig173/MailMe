@@ -67,4 +67,3 @@ public class LocationTypeAdapter extends TypeAdapter<Location> {
 
     }
 }
-
