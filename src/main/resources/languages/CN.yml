@@ -1,146 +1,145 @@
-# CN
+# zh_CN
 
 # 玩家切换语言所使用的代号
 T: 'CN'
 VER: 1.2
 
 cmd:
-  read-only: "&e&lMailMe &7▹ &f&l( Requires Translation ) &cInbox is read only! Visit the postoffice to claim the rewards."
-  mailbox-removeall: '&e&lMailMe &7▹ &a移除所有郵箱。'
-  no-space: '&e&lMailMe &7▹ &c您的背包已滿! 您需要清理出一些空間才能獲得物品。'
+  read-only: "&e&lMailMe &7▹ &c收件箱目前只能读取! 来到邮局以领取更多奖品。"
+  mailbox-removeall: '&e&lMailMe &7▹ &a移除所有邮箱。'
+  no-space: '&e&lMailMe &7▹ &c您的背包已满! 您需要清理出一些空间才能获得物品。'
   not-required: '&e&lMailMe &7▹ &e非必要的。'
-  needs-value: '&e&lMailMe &7▹ &c您需要輸入一個值，例如，參數:數據值'
+  needs-value: '&e&lMailMe &7▹ &c您需要输入一个值，例如，参数:数据值'
   generic-processing: '&e&l...'
   generic-success: '&a&l✔✔✔'
-  has-unread: '&e&lMailMe &7▹ &e您有未讀郵件!'
-  identifiers: '&e&lMailMe &7▹ &a辨識符: &7@identifiers'
-  reload: '&e&lMailMe &7▹ &a已重載插件。'
-  default-mb-set: '&e&lMailMe &7▹ &a已設置默認郵箱!'
-  no-permission: '&e&lMailMe &7▹ &c您缺少對應的權限! 權限節點: &f@perm'
-  invalid-preset: '&e&lMailMe &7▹ &c預設無效或不存在 (大小寫區分)。'
-  preset-saved: '&e&lMailMe &7▹ &a已保存預設。'
-  id-taken: '&e&lMailMe &7▹ &c預設 Id 已經被使用了。'
-  preset-error: '&e&lMailMe &7▹ &c在應用預設時發生了錯誤。'
-  missing-params-preset: '&e&lMailMe &7▹ &c預設生成器缺失必要參數!'
-  unknown-argument: '&e&lMailMe &7▹ &c未知參數!'
-  must-create-preset-first: '&e&lMailMe &7▹ &c您必須預先運行 /mailpreset create !'
-  vault-insufficient-funds: '&e&lMailMe &7▹ &c資金不足!'
+  has-unread: '&e&lMailMe &7▹ &e您有未读邮件!'
+  identifiers: '&e&lMailMe &7▹ &a辨识符: &7@identifiers'
+  reload: '&e&lMailMe &7▹ &a已重载插件。'
+  default-mb-set: '&e&lMailMe &7▹ &a已设置默认邮箱!'
+  no-permission: '&e&lMailMe &7▹ &c您缺少对应的权限! 权限节点: &f@perm'
+  invalid-preset: '&e&lMailMe &7▹ &c预设无效或不存在 (大小写区分)。'
+  preset-saved: '&e&lMailMe &7▹ &a已保存预设。'
+  id-taken: '&e&lMailMe &7▹ &c预设 Id 已经被使用了。'
+  preset-error: '&e&lMailMe &7▹ &c在应用预设时发生了错误。'
+  missing-params-preset: '&e&lMailMe &7▹ &c预设生成器缺失必要参数!'
+  unknown-argument: '&e&lMailMe &7▹ &c未知参数!'
+  must-create-preset-first: '&e&lMailMe &7▹ &c您必须预先运行 /mailpreset create !'
+  vault-insufficient-funds: '&e&lMailMe &7▹ &c资金不足!'
   vault: '&e&lMailMe &7▹ &c-$@amount'
-  unknown-player: '&e&lMailMe &7▹ &c未知玩家或該玩家從未加入遊戲!'
+  unknown-player: '&e&lMailMe &7▹ &c未知玩家或该玩家从未加入游戏!'
   delete:
-    success: '&e&lMailMe &7▹ &a已成功刪除。'
-    failure: '&e&lMailMe &7▹ &c刪除失敗。'
+    success: '&e&lMailMe &7▹ &a已成功删除。'
+    failure: '&e&lMailMe &7▹ &c删除失败。'
   notify:
-    success: '&e&lMailMe &7▹ &a郵件通知設置已更新!'
-    failure: '&e&lMailMe &7▹ &c無效參數! 必須為 true 或 false。'
+    success: '&e&lMailMe &7▹ &a邮件通知设置已更新!'
+    failure: '&e&lMailMe &7▹ &c无效参数! 必须为 true 或 false。'
   lang:
-    failure: '&e&lMailMe &7▹ &c鍵入的語言代號不存在!'
-    success: '&e&lMailMe &7▹ &a語言已被成功更改!'
+    failure: '&e&lMailMe &7▹ &c键入的语言代号不存在!'
+    success: '&e&lMailMe &7▹ &a语言已被成功更改!'
   help:
     - '&7&m--------------------------'
     - '&e&lMailMe'
-    - '&7▹ &e/mailme compose &7- 寫一封郵件並發送'
-    - '&7▹ &e/mailme inbox &7- 閱讀郵件'
-    - '&7▹ &e/mailme lang <語言代號> &7- 更改語言'
-    - '&7▹ &e/mailme notify <true/false> &7- 切換郵件通知設置的開關'
-    - '&7▹ &e/mailbox &7- 顯示郵箱指令'
-    - '&7▹ &e/mailpreset &7- 顯示預設生成器指令'
-    - '&7▹ &e/postoffice &7- 顯示郵局指令'
+    - '&7▹ &e/mailme compose &7- 写一封邮件并发送'
+    - '&7▹ &e/mailme inbox &7- 阅读邮件'
+    - '&7▹ &e/mailme lang <语言代号> &7- 更改语言'
+    - '&7▹ &e/mailme notify <true/false> &7- 切换邮件通知设置的开关'
+    - '&7▹ &e/mailbox &7- 显示邮箱指令'
+    - '&7▹ &e/mailpreset &7- 显示预设生成器指令'
+    - '&7▹ &e/postoffice &7- 显示邮局指令'
     - '&7&m--------------------------'
 preset-help:
   - '&7&m--------------------------'
   - '&e&lMailMe'
-  - '&7▹ &e/mailpreset help &7- 幫助菜單'
-  - '&7▹ &e/mailpreset create &7- 開始預設的創建'
-  - '&7▹ &e/mailpreset edit &7- 顯示預設編輯器'
-  - '&7▹ &e/mailpreset give <玩家> <預設Id>'
-  - '&7▹ &e/mailpreset complete &7- 保存您的預設'
-  - '&7▹ &e/mailpreset delete <id> &7- 刪除指定預設'
+  - '&7▹ &e/mailpreset help &7- 帮助菜单'
+  - '&7▹ &e/mailpreset create &7- 开始预设的创建'
+  - '&7▹ &e/mailpreset edit &7- 显示预设编辑器'
+  - '&7▹ &e/mailpreset give <玩家> <预设Id>'
+  - '&7▹ &e/mailpreset complete &7- 保存您的预设'
+  - '&7▹ &e/mailpreset delete <id> &7- 删除指定预设'
   - '&7&m--------------------------'
 mailbox-help:
   - '&7&m--------------------------'
   - '&e&lMailMe'
-  - '&7▹ &e/mailbox help &7- 幫助菜單'
-  - '&7▹ &e/mailbox add &7- 添加一個郵箱'
-  - '&7▹ &e/mailbox remove &7- 移除一個郵箱'
-  - '&7▹ &e/mailbox find &7- 在郵箱附近的創建粒子效果以便您發現'
-  - '&7▹ &e/mailbox setdefault &7- 設置一個通用可訪問郵箱'
+  - '&7▹ &e/mailbox help &7- 帮助菜单'
+  - '&7▹ &e/mailbox add &7- 添加一个邮箱'
+  - '&7▹ &e/mailbox remove &7- 移除一个邮箱'
+  - '&7▹ &e/mailbox find &7- 在邮箱附近的创建粒子效果以便您发现'
+  - '&7▹ &e/mailbox setdefault &7- 设置一个通用可访问邮箱'
   - '&7&m--------------------------'
 preset-creator:
   - '&e&lMailMe'
-  - '[&7▹ &e設置](suggest: /mailpreset edit sender:|hover: 點擊以編輯)'
-  - '[&7▹ &e設置標識符](suggest: /mailpreset edit id:|hover: 點擊以編輯)'
-  - '[&7▹ &e設置過期時間 (分鐘)](suggest: /mailpreset edit expiry:|hover: 點擊以編輯)'
-  - '[&7▹ &e設置圖標](command: /mailpreset edit icon|hover: 點擊以編輯)'
-  - '[&7▹ &e設置內容](command: /mailpreset edit contents|hover: 點擊以編輯)'
-  - '[&7▹ &e(TR)Set Auto Archive](command: /mailpreset edit archive:|hover: (TR)Click to edit)'
-  - '[&7▹ &a&l完成](command: /mailpreset complete|hover: 點擊以保存)'
-requires-written-book: '&e&lMailMe &7▹ &c您必須帶著一本成書來進行點擊才能發送此類型郵件!'
-hologram-format: '&e&l@name&e 的郵箱'
+  - '[&7▹ &e设置](suggest: /mailpreset edit sender:|hover: 点击以编辑)'
+  - '[&7▹ &e设置标识符](suggest: /mailpreset edit id:|hover: 点击以编辑)'
+  - '[&7▹ &e设置过期时间 (分钟)](suggest: /mailpreset edit expiry:|hover: 点击以编辑)'
+  - '[&7▹ &e设置图标](command: /mailpreset edit icon|hover: 点击以编辑)'
+  - '[&7▹ &e设置内容](command: /mailpreset edit contents|hover: 点击以编辑)'
+  - '[&7▹ &a&l完成](command: /mailpreset complete|hover: 点击以保存)'
+requires-written-book: '&e&lMailMe &7▹ &c您必须带著一本成书来进行点击才能发送此类型邮件!'
+hologram-format: '&e&l@name&e 的邮箱'
 postoffice-help:
   - '&7&m--------------------------'
   - '&e&lMailMe'
-  - '&7▹ &e/postoffice add <inbox/compose> &7- 在您目光所及的位置添加一個郵局。指定類型 > inbox(收件) / compose(送件)'
-  - '&7▹ &e/postoffice remove &7- 移除您目光所及位置的一個郵局。'
-  - '&7▹ &e/postoffice removeall &7- 移除所有郵局。'
+  - '&7▹ &e/postoffice add <inbox/compose> &7- 在您目光所及的位置添加一个邮局。指定类型 > inbox(收件) / compose(送件)'
+  - '&7▹ &e/postoffice remove &7- 移除您目光所及位置的一个邮局。'
+  - '&7▹ &e/postoffice removeall &7- 移除所有邮局。'
   - '&7&m--------------------------'
 postoffice:
-  add: '&e&lMailMe &7▹ &a已在該區域添加郵局!'
-  removed: '&e&lMailMe &7▹ &a已移除該位置的郵局!'
-  cleared: '&e&lMailMe &7▹ &a已移除所有郵局!'
-  no-po-here: '&e&lMailMe &7▹ &c當前位置沒有郵局!'
-  bad-material: '&e&lMailMe &7▹ &c所用材質不能為空氣!'
+  add: '&e&lMailMe &7▹ &a已在该区域添加邮局!'
+  removed: '&e&lMailMe &7▹ &a已移除该位置的邮局!'
+  cleared: '&e&lMailMe &7▹ &a已移除所有邮局!'
+  no-po-here: '&e&lMailMe &7▹ &c当前位置没有邮局!'
+  bad-material: '&e&lMailMe &7▹ &c所用材质不能为空气!'
 mailbox:
-  limit-reached: '&e&lMailMe &7▹ &c您已經達到了您所能擁有郵箱的上限值!'
-  invalid-item: '&e&lMailMe &7▹ &c您不能以此類型方塊作為郵箱!'
-  location-occupied: '&e&lMailMe &7▹ &c此處已經有一個郵箱了!'
-  placement-success: '&e&lMailMe &7▹ &a郵箱位置已添加!'
-  no-mailbox-here: '&e&lMailMe &7▹ &c這里沒有可移除的郵箱!'
-  location-removed: '&e&lMailMe &7▹ &a郵箱位置已移除!'
-  highlighted: '&e&lMailMe &7▹ &e已經高亮標出範圍內的所有郵箱。'
+  limit-reached: '&e&lMailMe &7▹ &c您已经达到了您所能拥有邮箱的上限值!'
+  invalid-item: '&e&lMailMe &7▹ &c您不能以此类型方块作为邮箱!'
+  location-occupied: '&e&lMailMe &7▹ &c此处已经有一个邮箱了!'
+  placement-success: '&e&lMailMe &7▹ &a邮箱位置已添加!'
+  no-mailbox-here: '&e&lMailMe &7▹ &c这里没有可移除的邮箱!'
+  location-removed: '&e&lMailMe &7▹ &a邮箱位置已移除!'
+  highlighted: '&e&lMailMe &7▹ &e已经高亮标出范围内的所有邮箱。'
 mail-types:
-  message: 訊息
+  message: 讯息
   item: 包裹
-  book: 書信
+  book: 书信
   console: 控制台命令
 text:
   format:
     - '&7&m----------'
-    - '&7郵件來自: &b%sender%'
-    - '&7收到於: &b%date%'
-    - '&c過期於: &n%expiry%'
-    - '&7內容: %contents%'
-  hover: '&c點擊以回覆!'
-  prev-page: '&e<<< 前一頁'
-  prev-page-hover: '&c點擊以跳轉到前一頁!'
-  next-page: '&e後一頁 >>>'
-  next-page-hover: '&c點擊以跳轉到後一頁!'
+    - '&7邮件来自: &b%sender%'
+    - '&7收到于: &b%date%'
+    - '&c过期于: &n%expiry%'
+    - '&7内容: %contents%'
+  hover: '&c点击以回覆!'
+  prev-page: '&e<<< 前一页'
+  prev-page-hover: '&c点击以跳转到前一页!'
+  next-page: '&e后一页 >>>'
+  next-page-hover: '&c点击以跳转到后一页!'
 mail:
-  console: 輸入閱讀時執行的命令。
+  console: 输入阅读时执行的命令。
   message-contents: '&e&l%sender% &7▹ &e%contents%'
-  message: 您想在您的信件中說些什麽?
-  sent: '&e&lMailMe &7▹ &a郵件已成功發出。'
-  received: '&e&lMailMe &7▹ 您收到了一封郵件!'
+  message: 您想在您的信件中说些什么?
+  sent: '&e&lMailMe &7▹ &a邮件已成功发出。'
+  received: '&e&lMailMe &7▹ 您收到了一封邮件!'
   anonymous: 匿名
 gui:
-  search: 輸入您要尋找的玩家姓名。支持在線或離線。
+  search: 输入您要寻找的玩家姓名。支持在线或离线。
   titles:
-    filters: "(TR)Filters"
-    click-to-send: 點擊以發送
-    choose-type: 選擇郵件類型
-    icon-selector: 選擇一個圖片!
-    recipient-selector: 選擇您的收件人
+    filters: "筛选"
+    click-to-send: 点击以发送
+    choose-type: 选择邮件类型
+    icon-selector: 选择一个图片!
+    recipient-selector: 选择您的收件人
     inbox: 您的收件箱
     item-input: 放入您的物品
   revealed-contents:
-    title: '&7來自: &e&l%sender%'
+    title: '&7来自: &e&l%sender%'
     lore:
       - '&7&m----------'
-      - '&7類型: &e%type%'
-      - '&7收信於: &e%date%'
-      - '&c過期於: &n%expiry%'
+      - '&7类型: &e%type%'
+      - '&7收信于: &e%date%'
+      - '&c过期于: &n%expiry%'
       - '&7&m----------'
-      - '&e內容: %contents%'
+      - '&e内容: %contents%'
       - '&7&m----------'
   filler:
     title: ''
@@ -157,153 +156,153 @@ gui:
     glow: false
     lore: []
   close-menu:
-    title: '&c關閉菜單'
+    title: '&c关闭菜单'
     material: BARRIER
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊這里'
-      - '&7關閉菜單!'
+      - '&7点击这里'
+      - '&7关闭菜单!'
     glow: true
     skull-texture: ''
   previous-menu:
-    title: '&8[&e前一頁&8]'
+    title: '&8[&e前一页&8]'
     material: OAK_DOOR
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊這里跳轉至'
-      - '&7前一頁面!'
+      - '&7点击这里跳转至'
+      - '&7前一页面!'
     glow: true
     skull-texture: ''
   previous-page:
-    title: '&8[&e前一頁&8]'
+    title: '&8[&e前一页&8]'
     material: REDSTONE_TORCH
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊這里跳轉至'
-      - '&7前一頁!'
+      - '&7点击这里跳转至'
+      - '&7前一页!'
     glow: true
     skull-texture: ''
   next-page:
-    title: '&8[&e後一頁&8]'
+    title: '&8[&e后一页&8]'
     material: REDSTONE_TORCH
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊這里跳轉至'
-      - '&7後一頁!'
+      - '&7点击这里跳转至'
+      - '&7后一页!'
     glow: true
     skull-texture: ''
   message:
-    title: '&8[&e訊息郵件&8]'
+    title: '&8[&e讯息邮件&8]'
     material: OAK_SIGN
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊以發送給某人'
-      - '&7一封訊息郵件!'
+      - '&7点击以发送给某人'
+      - '&7一封讯息邮件!'
     glow: true
     skull-texture: ''
   item:
-    title: '&8[&e包裹郵件&8]'
+    title: '&8[&e包裹邮件&8]'
     material: CHEST
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊以發送給某人'
-      - '&7一個包裹!'
+      - '&7点击以发送给某人'
+      - '&7一个包裹!'
     glow: true
     skull-texture: ''
   book:
-    title: '&8[&e書信郵件&8]'
+    title: '&8[&e书信邮件&8]'
     material: WRITTEN_BOOK
     amount: 1
     custom-model-data: 0
     lore:
-      - '&e&l手持成書點擊'
-      - '&e&l以發送隨書郵件!'
+      - '&e&l手持成书点击'
+      - '&e&l以发送随书邮件!'
     glow: true
     skull-texture: ''
   icon-custom:
-    title: '&8[&c自定義&8]'
+    title: '&8[&c自定义&8]'
     material: YELLOW_STAINED_GLASS_PANE
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊物品作為圖標。'
-      - '&7您將不會失去您點擊的物品。'
+      - '&7点击物品作为图标。'
+      - '&7您将不会失去您点击的物品。'
     glow: true
     skull-texture: ''
   search-players:
-    title: '&8[&e檢索&8]'
+    title: '&8[&e检索&8]'
     material: FEATHER
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊以根據'
-      - '&7玩家姓名進行搜索!'
+      - '&7点击以根据'
+      - '&7玩家姓名进行搜索!'
     glow: true
     skull-texture: ''
   remove-filters:
-    title: '&8[&d移除過濾器&8]'
+    title: '&8[&d移除筛选方式&8]'
     material: IRON_BARS
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊以移除菜單中的'
-      - '&7任何過濾器!'
+      - '&7点击以移除菜单中的'
+      - '&7任何筛选方式!'
     glow: true
     skull-texture: ''
   read-as-text:
-    title: '&8[&e作為文本閱覽&8]'
+    title: '&8[&e作为文本阅览&8]'
     material: MAP
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊以'
-      - '&7文本方式進行郵件閱讀'
+      - '&7点击以'
+      - '&7文本方式进行邮件阅读'
     glow: true
     skull-texture: ''
   filter-unread:
-    title: '&8[&e過濾未讀&8]'
+    title: '&8[&e筛选未读&8]'
     material: BOOK
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊以過濾您的'
-      - '&7郵件為只顯示未讀'
+      - '&7点击以筛选您的'
+      - '&7邮件为只显示未读'
     glow: true
     skull-texture: ''
   next-menu:
-    title: '&a&l點擊以跳轉至下一菜單!'
+    title: '&a&l点击以跳转至下一菜单!'
     material: EMERALD_BLOCK
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊這里跳轉至'
-      - '&7下一個菜單'
+      - '&7点击这里跳转至'
+      - '&7下一个菜单'
     glow: true
     skull-texture: ''
   expand:
-    title: '&e&l點擊以延展!'
+    title: '&e&l点击以延展!'
     material: CHEST
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊以獲得'
-      - '&7一個更大的菜單視野'
+      - '&7点击以获得'
+      - '&7一个更大的菜单视野'
     glow: true
     skull-texture: ''
   collapse:
-    title: '&e&l點擊以收縮!'
+    title: '&e&l点击以收缩!'
     material: CHEST
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊收縮'
-      - '&7菜單視野'
+      - '&7点击收缩'
+      - '&7菜单视野'
     glow: true
     skull-texture: ''
   inbox:
@@ -313,12 +312,12 @@ gui:
     custom-model-data: 0
     lore:
       - '&7&n您的收件箱'
-      - '&e左鍵&7 點擊閱讀'
-      - '&e右鍵&7 點擊刪除'
+      - '&e左键&7 点击阅读'
+      - '&e右键&7 点击删除'
     glow: true
     skull-texture: ''
   send-to-mailbox:
-    title: '&e&l郵箱'
+    title: '&e&l邮箱'
     material: PLAYER_HEAD
     amount: 1
     custom-model-data: 0
@@ -326,16 +325,16 @@ gui:
     glow: true
     skull-texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjI4NDM1ZDc5MWEwMThmY2E3OTI2ODU0Zjc3ZWNkN2RmMmQxZGYwYjFjMWM3ZjlhNjM4YjhhOTMxZGI5NWEifX19
   not-sent:
-    title: '&c&l未發送'
+    title: '&c&l未发送'
     material: RED_STAINED_GLASS_PANE
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊以發送'
+      - '&7点击以发送'
     glow: false
     skull-texture: ''
   sent:
-    title: '&a&l發送'
+    title: '&a&l发送'
     material: GREEN_STAINED_GLASS_PANE
     amount: 1
     custom-model-data: 0
@@ -343,38 +342,38 @@ gui:
     glow: false
     skull-texture: ''
   anonymous:
-    title: '&e點擊切換為匿名'
+    title: '&e点击切换为匿名'
     material: OAK_SIGN
     amount: 1
     custom-model-data: 0
     lore:
-      - '&7點擊將使你以'
-      - '&7匿名身份發送這封郵件。'
+      - '&7点击将使你以'
+      - '&7匿名身份发送这封邮件。'
     glow: false
     skull-texture: ''
   are-you-sure:
-    title: '&a您確定嗎?'
+    title: '&a您确定吗?'
     material: EMERALD_BLOCK
     amount: 1
     custom-model-data: 0
     glow: true
     lore:
-      - '&7再次右鍵將'
-      - '&7刪除這封郵件'
+      - '&7再次右键将'
+      - '&7删除这封邮件'
       - ''
-      - '&7相反的，左鍵可以'
-      - '&7取消刪除操作'
+      - '&7相反的，左键可以'
+      - '&7取消删除操作'
   deleted:
-    title: '&c[&f已刪除&c]'
+    title: '&c[&f已删除&c]'
     material: REDSTONE_BLOCK
     amount: 1
     custom-model-data: 0
     glow: true
     lore:
-      - '&7已刪除的郵件將在這里'
-      - '&7重新打開gui以查看更改。'
+      - '&7已删除的邮件将在这里'
+      - '&7重新打开gui以查看更改。'
   send-from-inbox:
-    title: '&e&l發送郵件'
+    title: '&e&l发送邮件'
     material: OAK_SIGN
     amount: 1
     custom-model-data: 0
@@ -387,22 +386,22 @@ gui:
     custom-model-data: 0
     glow: true
     lore:
-      - '&7閱讀時執行的命令'
-      - '&7可見性: &a隱藏'
-      - '&7變量: &a%player_name%'
+      - '&7阅读时执行的命令'
+      - '&7可见性: &a隐藏'
+      - '&7变量: &a%player_name%'
   # REQUIRES TRANSLATION! (TR = Translation Required)
   filters:
     choose-filters:
-      title: '&e&l(TR)Choose Filters'
+      title: '&e&l选择筛选方式'
       material: LAVA_BUCKET
       amount: 1
       custom-model-data: 0
       glow: true
       lore:
-        - '&7Click to view your'
-        - '&7filter options'
+        - '&7点击以查看'
+        - '&7您的筛选选项'
     delete-all:
-      title: '&c&l(TR)Delete All Selected Mail'
+      title: '&c&l删除所有选中邮件'
       material: LAVA_BUCKET
       amount: 1
       custom-model-data: 0
@@ -412,49 +411,49 @@ gui:
         - '&7present in your inbox with filters'
         - '&7 applied'
     delete-all-check:
-      title: '&c&l(TR)ARE YOU SURE!'
+      title: '&c&l您真的要那么做?'
       material: EMERALD_BLOCK
       amount: 1
       custom-model-data: 0
       glow: true
       lore:
-        - '&7This Action cannot be undone'
-        - '&7mail will be erased.'
-        - '&7Left click to confirm'
-        - '&7Right click to abort'
+        - '&7这个操作不可撤回，'
+        - '&7邮件将被抹除。'
+        - '&7左键以确认'
+        - '&7右键以退出'
     unread:
-      title: '&e&l(TR)Filter Unread Mail'
+      title: '&e&l筛选出未读邮件'
       material: BOOK
       amount: 1
       custom-model-data: 0
       glow: true
       lore:
-        - '&7Click to filter menu'
-        - '&7to only &eunread &7mail.'
+        - '&7点击以筛选菜单'
+        - '&7为只剩 &e未读 &7邮件。'
     archived:
-      title: '&e&l(TR)View Archived Mail'
+      title: '&e&l阅览归档邮件'
       material: ARROW
       amount: 1
       custom-model-data: 0
       glow: true
       lore:
-        - '&7Click to view archived'
-        - '&7mail.'
+        - '&7点击以查看'
+        - '&7归档邮件。'
     read:
-      title: '&e&l(TR)View Read Mail'
+      title: '&e&l阅览已读邮件'
       material: FEATHER
       amount: 1
       custom-model-data: 0
       glow: true
       lore:
-        - '&7Click to view all read'
-        - '&7mail.'
+        - '&7点击以查看'
+        - '&7所有已读邮件。'
     go-back:
-      title: '&e&l(TR)Go Back'
+      title: '&e&l返回'
       material: STICK
       amount: 1
       custom-model-data: 0
       glow: true
       lore:
-        - '&7Click to go back to'
-        - '&7inbox menu.'
+        - '&7点击以返回至'
+        - '&7收件箱菜单。'
