@@ -27,7 +27,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class Locale {
 
     //          TOKEN       YAML
-    private final static String[] LANGUAGE_FILE_NAMES = {"EN", "DE", "PT", "CN"};
+    private final static String[] LANGUAGE_FILE_NAMES = {"EN", "DE", "PT", "zh_CN"};
     private final Map<String, YamlConfiguration> languagesMap = new HashMap<>();
     private final String serverLangToken;
 
