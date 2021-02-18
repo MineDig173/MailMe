@@ -84,6 +84,8 @@ valid-mailboxes:
 mailbox-ping-distance: 50
 # Similar to ping except just queries the cache -> less expensive and can be safely altered. But beware of render distance.
 mailbox-find-distance: 50
+# When the delete-all function is used, should it delete the unread mail as well?
+can-mass-delete-unreads: true
 
 expiry-time-mins: 43200 # 30 days
 

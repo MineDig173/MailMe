@@ -27,6 +27,7 @@ public class ConfigValue {
     public static String DATE_FORMAT = "dd-MM-yyyy";
     public static boolean MAILBOX_READ_ONLY = false;
     public static boolean USE_BSTATS = false; // disabled by default if cannot load
+    public static boolean SHOULD_MASS_DELETE_UNREADS = true;
 
     private ConfigValue() {}
 
@@ -65,5 +66,6 @@ public class ConfigValue {
         DATE_FORMAT = config.getString("date-format");
         MAILBOX_READ_ONLY = config.getBoolean("mailbox-read-only");
         USE_BSTATS = config.getBoolean("enable-bstats");
+        SHOULD_MASS_DELETE_UNREADS = config.getBoolean("can-mass-delete-unreads");
     }
 }

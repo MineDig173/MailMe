@@ -4,6 +4,7 @@ import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.gui.AbstractMailGui;
 import com.haroldstudios.mailme.gui.GuiOptions;
 import com.haroldstudios.mailme.mail.Mail;
+import com.haroldstudios.mailme.utils.ConfigValue;
 import me.mattstudios.gui.guis.Gui;
 import me.mattstudios.gui.guis.GuiItem;
 import org.bukkit.Bukkit;
@@ -25,7 +26,12 @@ public class FilterGui extends AbstractMailGui {
         GuiItem deleteAllSelectedMail = new GuiItem(plugin.getLocale().getItemStack("gui.filters.delete-all"));
         GuiItem deleteAllSelectedMailConfirm = new GuiItem(plugin.getLocale().getItemStack("gui.filters.delete-all-check"), event -> {
             if (event.getClick().isLeftClick()) {
-                Mail[] mailL = guiOptions.getMailList().stream().filter(mail -> !mail.isArchived()).toArray(Mail[]::new);
+                Mail[] mailL = guiOptions.getMailList().stream().filter(mail -> !mail.isArchived()).filter(mail -> {
+                    if (!ConfigValue.SHOULD_MASS_DELETE_UNREADS) {
+                        return mail.isRead();
+                    }
+                    return true;
+                }).toArray(Mail[]::new);
                 plugin.getPlayerMailDAO().deletePlayerMail(getPlayer().getUniqueId(), mailL).thenRun(() -> {
                     guiOptions.getMailList().removeAll(Arrays.asList(mailL));
                     Bukkit.getScheduler().runTask(plugin, () -> new InboxGui(plugin, builder, InboxGui.getDefaultGuiOptions(getPlayer()).withMail(guiOptions.getMailList().toArray(new Mail[0]))).open());
