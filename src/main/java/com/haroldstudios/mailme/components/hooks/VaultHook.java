@@ -17,11 +17,13 @@
 package com.haroldstudios.mailme.components.hooks;
 
 import com.haroldstudios.mailme.MailMe;
-import com.haroldstudios.mailme.mail.Mail;
 import com.haroldstudios.mailme.mail.MailType;
 import com.haroldstudios.mailme.utils.ConfigValue;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -30,18 +32,25 @@ import java.util.logging.Level;
 public final class VaultHook {
 
     private static Economy econ = null;
+    private static Permission perms = null;
     private final MailMe plugin;
 
     public VaultHook(final MailMe plugin) {
         this.plugin = plugin;
         RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
+        RegisteredServiceProvider<Permission> rspp = plugin.getServer().getServicesManager().getRegistration(Permission.class);
         if (rsp == null) {
             plugin.getLogger().log(Level.WARNING, "No Vault Economy Plugin found!");
-            return;
+        } else {
+            econ = rsp.getProvider();
         }
-
-        econ = rsp.getProvider();
+        if (rspp == null) {
+            plugin.getLogger().log(Level.WARNING, "No Vault Permissions Plugin found!");
+        } else {
+            perms = rspp.getProvider();
+        }
     }
+
 
     /**
      * Attempts to use economy for sending mail
@@ -85,5 +94,10 @@ public final class VaultHook {
         }
 
        return attemptTransaction(player, r);
+    }
+
+    public boolean hasPermission(OfflinePlayer player, String permission) {
+        if (perms == null) return true;
+        return perms.playerHas(Bukkit.getWorlds().get(0).getName(), player, permission);
     }
 }

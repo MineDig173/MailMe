@@ -76,7 +76,8 @@ preset-creator:
   - "[&7▹ &eDefinir o tempo de expiração (minutos)](suggest: /mailpreset edit expiry:|hover: Clique para editar)"
   - "[&7▹ &eDefinir ícone](command: /mailpreset edit icon|hover: Clique para editar)"
   - "[&7▹ &eDefinir conteúdo](command: /mailpreset edit contents|hover: Clique para editar)"
-  - '[&7▹ &eDefinir Arquivo Automático](command: /mailpreset edit archive:|hover: Clique para editar)'
+  - '[&7▹ &eDefinir Arquivo Automático](suggest: /mailpreset edit archived:|hover: Clique para editar)'
+  - '[&7▹ &eDefinir razão](suggest: /mailpreset edit reason:|hover: Clique para editar)'
   - "[&7▹ &a&lCompleto](command: /mailpreset complete|hover: Clique para editar)"
 
 requires-written-book: "&e&lMailMe &7▹ &cVocê precisa clicar em um livro escrito para compor este tipo de mail!"
@@ -118,6 +119,7 @@ text:
     - '&7Recebido em: &b%date%'
     - "&cExpira: &n%expiry%"
     - '&7Conteúdo: %contents%'
+    - '&e%reason%'
   hover: '&cClique para responder!'
   prev-page: '&e<<< Página Anterior'
   prev-page-hover: '&cClique para a página anterior!'
@@ -149,6 +151,7 @@ gui:
       - "&7Tipo: &e%type%"
       - "&7Recebido Em: &e%date%"
       - "&cExpira: &n%expiry%"
+      - '&e%reason%'
       - "&7&m----------"
       - "&eConteúdo: %contents%"
       - "&7&m----------"

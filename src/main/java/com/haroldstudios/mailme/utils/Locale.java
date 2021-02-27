@@ -41,7 +41,7 @@ public class Locale {
         }
         // Save all preset resources here
         for (String fileName : LANGUAGE_FILE_NAMES) {
-            if (!new File(MailMe.getInstance().getDataFolder(), "languages/EN.yml").exists()) {
+            if (!new File(MailMe.getInstance().getDataFolder(), "languages/"+fileName+".yml").exists()) {
                 plugin.saveResource("languages/"+fileName+".yml", false);
             }
         }

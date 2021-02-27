@@ -1,12 +1,7 @@
 package com.haroldstudios.mailme.mail;
 
-import com.haroldstudios.mailme.utils.NMSReflection;
 import com.haroldstudios.mailme.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,8 +20,8 @@ public class MailItems extends Mail {
      * @param expiryTimeMins Minutes until the mail should expire and delete itself from existence!
      * @param itemStackList  Items for this mail type to hold
      */
-    protected MailItems(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived, List<ItemStack> itemStackList) {
-        super(icon, sender, expiryTimeMins, identifier, archived);
+    protected MailItems(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived, List<ItemStack> itemStackList, String commentary) {
+        super(icon, sender, expiryTimeMins, identifier, archived, commentary);
         this.itemStackList = itemStackList;
     }
 
@@ -81,7 +76,7 @@ public class MailItems extends Mail {
 
         @Override
         public MailItems build() {
-            return new MailItems(icon, sender, expiryTimeMins, getIdentifier(), archived, itemStackList);
+            return new MailItems(icon, sender, expiryTimeMins, getIdentifier(), archived, itemStackList, getCommentary());
         }
     }
 }

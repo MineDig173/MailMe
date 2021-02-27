@@ -2,8 +2,6 @@ package com.haroldstudios.mailme.mail;
 
 import com.haroldstudios.mailme.MailMe;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,8 +12,8 @@ public class MailMessage extends Mail {
 
     private final String message;
 
-    public MailMessage(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived, String message) {
-        super(icon, sender, expiryTimeMins, identifier, archived);
+    public MailMessage(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived, String message, String commentary) {
+        super(icon, sender, expiryTimeMins, identifier, archived, commentary);
         this.message = message;
     }
 
@@ -61,7 +59,7 @@ public class MailMessage extends Mail {
         @Override
         public MailMessage build() {
 
-            return new MailMessage(icon, sender, expiryTimeMins, identifier, archived, message);
+            return new MailMessage(icon, sender, expiryTimeMins, identifier, archived, message, getCommentary());
         }
     }
 }

@@ -20,8 +20,8 @@ public class MailBook extends Mail{
      * @param sender         String of the sender e.g "Harry", "Server" etc
      * @param expiryTimeMins Minutes until the mail should expire and delete itself from existence!
      */
-    protected MailBook(ItemStack icon, String sender, int expiryTimeMins, String identifier, ItemStack book, boolean archived) {
-        super(icon, sender, expiryTimeMins, identifier, archived);
+    protected MailBook(ItemStack icon, String sender, int expiryTimeMins, String identifier, ItemStack book, boolean archived, String commentary) {
+        super(icon, sender, expiryTimeMins, identifier, archived, commentary);
         this.book = book;
     }
 
@@ -70,7 +70,7 @@ public class MailBook extends Mail{
 
         @Override
         public Mail build() {
-            return new MailBook(getIcon(), getSender(), getExpiryTimeMins(), getIdentifier(), book, isArchived());
+            return new MailBook(getIcon(), getSender(), getExpiryTimeMins(), getIdentifier(), book, isArchived(), getCommentary());
         }
     }
 }

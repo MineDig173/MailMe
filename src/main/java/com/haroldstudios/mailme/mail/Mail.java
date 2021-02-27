@@ -9,6 +9,7 @@ import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public abstract class Mail {
     private final String sender;
     private final ItemStack icon;
     private final String identifier;
+    private String commentary = ""; // Commentary is a short reason for receiving mail.
     // Per Player Fields
     private boolean read = false;
     private Integer colId;
@@ -47,9 +49,10 @@ public abstract class Mail {
         this.dateCreated = System.currentTimeMillis();
     }
 
-    protected Mail(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived) {
+    protected Mail(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived, String commentary) {
         this(icon, sender, expiryTimeMins, identifier);
         this.archived = archived;
+        this.commentary = commentary;
     }
 
     public boolean isArchived() {
@@ -70,6 +73,11 @@ public abstract class Mail {
 
     public long getDateReceived() {
         return dateReceived;
+    }
+
+    @Nullable
+    public String getCommentary() {
+        return commentary;
     }
 
     public void setDateReceived(long dateReceived) {
@@ -175,6 +183,7 @@ public abstract class Mail {
         protected int expiryTimeMins = ConfigValue.EXPIRY_TIME_MINS;
         private final List<UUID> recipients = new ArrayList<>();
         protected boolean archived = false;
+        protected String commentary;
 
         public T setSender(String sender) {
             this.sender = sender;
@@ -218,6 +227,12 @@ public abstract class Mail {
             return System.currentTimeMillis();
         }
 
+        public void setCommentary(final String commentary) { this.commentary = commentary; }
+
+        public String getCommentary() {
+            return commentary;
+        }
+
         public void setArchived(boolean archived) {
             this.archived = archived;
         }
@@ -253,6 +268,7 @@ public abstract class Mail {
             this.setSender(combineTo.getSender());
             this.setExpiryTimeMins(combineTo.getExpiryTimeMins());
             this.setArchived(combineTo.isArchived());
+            this.setCommentary(combineTo.commentary);
             return this;
         }
 

@@ -22,8 +22,8 @@ public class MailConsoleCommand extends Mail {
      * @param expiryTimeMins Minutes until the mail should expire and delete itself from existence!
      * @param identifier     ID for preset
      */
-    protected MailConsoleCommand(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived, String command) {
-        super(icon, sender, expiryTimeMins, identifier, archived);
+    protected MailConsoleCommand(ItemStack icon, String sender, int expiryTimeMins, String identifier, boolean archived, String command, String commentary) {
+        super(icon, sender, expiryTimeMins, identifier, archived, commentary);
         this.command = command;
     }
 
@@ -70,7 +70,7 @@ public class MailConsoleCommand extends Mail {
 
         @Override
         public Mail build() {
-            return new MailConsoleCommand(getIcon(), getSender(), getExpiryTimeMins(), getIdentifier(), archived, getCommand());
+            return new MailConsoleCommand(getIcon(), getSender(), getExpiryTimeMins(), getIdentifier(), archived, getCommand(), getCommentary());
         }
     }
 

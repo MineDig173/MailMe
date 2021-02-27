@@ -107,6 +107,7 @@ public class Utils {
         string = string.replace("%date%", getDateFromMs(mail.getDateReceived()));
         string = string.replace("%player_name%", player.getName());
         string = string.replace("%archived%", mail.isArchived() + "");
+        string = string.replace("%reason%", mail.getCommentary() == null ? "" : mail.getCommentary());
 
         String[] str;
         if (string.contains("%contents%")) {

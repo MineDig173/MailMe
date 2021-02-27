@@ -1,6 +1,7 @@
 package com.haroldstudios.mailme.commands;
 
 import com.haroldstudios.mailme.MailMe;
+import com.haroldstudios.mailme.components.hooks.VaultHook;
 import com.haroldstudios.mailme.conversations.ConsoleMailInput;
 import com.haroldstudios.mailme.conversations.LetterInputPrompt;
 import com.haroldstudios.mailme.gui.child.ChooseMailTypeGui;
@@ -11,10 +12,7 @@ import com.haroldstudios.mailme.mail.MailConsoleCommand;
 import com.haroldstudios.mailme.mail.MailItems;
 import com.haroldstudios.mailme.mail.MailMessage;
 import com.haroldstudios.mailme.utils.PermissionConstants;
-import me.mattstudios.mf.annotations.Command;
-import me.mattstudios.mf.annotations.Default;
-import me.mattstudios.mf.annotations.Permission;
-import me.mattstudios.mf.annotations.SubCommand;
+import me.mattstudios.mf.annotations.*;
 import me.mattstudios.mf.base.CommandBase;
 import me.mattstudios.msg.bukkit.BukkitMessage;
 import org.bukkit.Bukkit;
@@ -22,8 +20,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Command("mailpreset")
 public class PresetCommands extends CommandBase {
@@ -84,28 +83,34 @@ public class PresetCommands extends CommandBase {
 
     @SubCommand("give")
     @Permission(PermissionConstants.ADMIN)
-    public void give(CommandSender sender, String playerName, String preset) {
+    public void give(CommandSender sender, String playerName, String preset, @Optional String permission) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
 
             Bukkit.getScheduler().runTask(plugin, () -> {
-                List<UUID> uuids = new ArrayList<>();
+                List<OfflinePlayer> uuids = new ArrayList<>();
                 if (playerName.equals("*")) {
-                    Bukkit.getOnlinePlayers().forEach(player -> uuids.add(player.getUniqueId()));
-                }
-                if (!playerName.equals("*") && !offlinePlayer.hasPlayedBefore()) {
+                    uuids.addAll(Bukkit.getOnlinePlayers());
+                } else if (playerName.equals("**")) {
+                    uuids.addAll(Arrays.asList(Bukkit.getOfflinePlayers()));
+                } else if (!offlinePlayer.hasPlayedBefore()) {
                     sender.sendMessage(plugin.getLocale().getMessage(sender, "cmd.unknown-player"));
                     return;
                 } else {
-                    UUID uuid = offlinePlayer.getUniqueId();
-                    uuids.add(uuid);
+                    uuids.add(offlinePlayer);
                 }
-                plugin.getPlayerMailDAO().getPresetMail(preset).thenAccept(mail -> {
+
+                plugin.getPlayerMailDAO().getPresetMail(preset).thenAcceptAsync(mail -> {
+                    List<OfflinePlayer> finalUuids = uuids;
+                    if (plugin.getVaultHook() != null && permission != null) {
+                        VaultHook vh = plugin.getVaultHook();
+                        finalUuids = uuids.stream().filter(player -> vh.hasPermission(player, permission)).collect(Collectors.toList());
+                    }
                     if (mail == null) {
                         sender.sendMessage(plugin.getLocale().getMessage(sender, "cmd.invalid-preset"));
                         return;
                     }
-                    mail.send(uuids);
+                    mail.send(finalUuids.stream().map(OfflinePlayer::getUniqueId).collect(Collectors.toList()));
                     sender.sendMessage(plugin.getLocale().getMessage(sender, "mail.sent"));
                 });
             });
@@ -223,6 +228,11 @@ public class PresetCommands extends CommandBase {
             builder.setArchived(bool);
             edit(player, new String[0]);
             return;
+        } else if (args[1].startsWith("reason:")) {
+            String reason = args[1].split(":")[1];
+            reason = reason.replaceAll("_", " ");
+            builder.setCommentary(reason);
+            edit(player, new String[0]);
         } else {
             player.sendMessage(plugin.getLocale().getMessage(player, "cmd.unknown-argument"));
         }

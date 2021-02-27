@@ -78,7 +78,8 @@ preset-creator:
   - "[&7▹ &eSetze Ablaufzeit (Min)](suggest: /mailpreset edit expiry:|hover: Klicke zum bearbeiten)"
   - "[&7▹ &eSetze Icon](command: /mailpreset edit icon|hover: Klicke zum bearbeiten)"
   - "[&7▹ &eSetze Inhalte](command: /mailpreset edit contents|hover: Klicke zum bearbeiten)"
-  - '[&7▹ &eSetza Sie die automatische Archivierung ein](command: /mailpreset edit archive:|hover: Klicke zum bearbeiten)'
+  - '[&7▹ &eSetza Sie die automatische Archivierung ein](suggest: /mailpreset edit archived:|hover: Klicke zum bearbeiten)'
+  - '[&7▹ &eGrund festlegen](suggest: /mailpreset edit reason:|hover: Klicke zum bearbeiten)'
   - "[&7▹ &a&lFertigstellen](command: /mailpreset complete|hover: Klicke zum fertigstellen)"
 
 requires-written-book: "&e&lMailMe &7▹ &cDu musst mit einem Beschriebenen Buch klicken um diesen Brieftyp zu verwenden!"
@@ -120,6 +121,7 @@ text:
     - '&7Erhaltem am: &b%date%'
     - "&cLäuft ab: &n%expiry%"
     - '&7Inhalte: %contents%'
+    - '&e%reason%'
   hover: '&cKlicke zum antworten!'
   prev-page: '&e<<< Vorherige Seite'
   prev-page-hover: '&cKlicke für die vorherige Seite!'
@@ -152,6 +154,7 @@ gui:
       - "&7Erhalten am: &e%date%"
       - "&7Archiviert: &e%archived%"
       - "&cLäuft ab: &n%expiry%"
+      - '&e%reason%'
       - "&7&m----------"
       - "&eInhalte: %contents%"
       - "&7&m----------"
