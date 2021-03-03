@@ -34,7 +34,7 @@ dependencies {
 }
 
 group = 'com.haroldstudios'
-version = '1.5.12'
+version = '1.5.13'
 description = 'MailMe'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 

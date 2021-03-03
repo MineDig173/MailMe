@@ -5,6 +5,7 @@ T: 'EN'
 VER: 1.2
 
 cmd:
+  plugin-disabled: "&cPlugin disabled. You cannot do this action."
   read-only: "&e&lMailMe &7▹ &cInbox is read only! Visit the postoffice to claim the rewards."
   mailbox-removeall: "&e&lMailMe &7▹ &aRemoved all Mailboxes."
   no-space: "&e&lMailMe &7▹ &cYour inventory is full! Make space to claim the items."
@@ -77,7 +78,7 @@ preset-creator:
   - '[&7▹ &eSet Icon](command: /mailpreset edit icon|hover: Click to edit)'
   - '[&7▹ &eSet Contents](command: /mailpreset edit contents|hover: Click to edit)'
   - '[&7▹ &eSet Auto Archive](suggest: /mailpreset edit archived:|hover: Click to edit)'
-  - '[&7▹ &eSet a Reason - Join words using _](suggest: /mailpreset edit reason:|hover: Click to edit)'
+  - '[&7▹ &eSet a Reason](suggest: /mailpreset edit reason:|hover: Click to edit)'
   - '[&7▹ &a&lComplete](command: /mailpreset complete|hover: Click to complete)'
 
 requires-written-book: "&e&lMailMe &7▹ &cYou need to click with a written book to compose this mail type!"

@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collections;
 import java.util.List;
 
-public class MailMessage extends Mail {
+public class MailMessage extends Mail implements Cloneable {
 
     private final String message;
 
@@ -61,5 +61,10 @@ public class MailMessage extends Mail {
 
             return new MailMessage(icon, sender, expiryTimeMins, identifier, archived, message, getCommentary());
         }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

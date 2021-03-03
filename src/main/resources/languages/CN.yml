@@ -5,6 +5,7 @@ T: 'CN'
 VER: 1.2
 
 cmd:
+  plugin-disabled: "&cPlugin disabled. You cannot do this action."
   read-only: "&e&lMailMe &7▹ &c收件箱目前只能读取! 来到邮局以领取更多奖品。"
   mailbox-removeall: '&e&lMailMe &7▹ &a移除所有邮箱。'
   no-space: '&e&lMailMe &7▹ &c您的背包已满! 您需要清理出一些空间才能获得物品。'

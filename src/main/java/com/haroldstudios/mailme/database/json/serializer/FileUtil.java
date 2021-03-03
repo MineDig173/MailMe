@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.haroldstudios.mailme.MailMe;
 import com.haroldstudios.mailme.mail.Mail;
-import org.bukkit.Bukkit;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -14,7 +13,6 @@ import java.lang.reflect.Type;
 import com.google.gson.Gson;
 
 import com.google.common.io.Files;
-import org.bukkit.Location;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -71,8 +69,7 @@ public class FileUtil {
                         boolean exclude = false;
                         try {
                             exclude = EXCLUDE.contains(f.getName());
-                        } catch (Exception ignore) {
-                        }
+                        } catch (Exception ignore) {}
                         return exclude;
                     }
 
@@ -146,7 +143,7 @@ public class FileUtil {
             return gson.fromJson(content, clazz);
         } catch (Exception ex) {
             MailMe.getInstance().getLogger().severe("Failed to parse " + file.toString() + ": " + ex.getMessage());
-            Bukkit.getPluginManager().disablePlugin(MailMe.getInstance());
+            //Bukkit.getPluginManager().disablePlugin(MailMe.getInstance());
         }
 
         return null;

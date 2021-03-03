@@ -92,6 +92,7 @@ public final class MailMe extends JavaPlugin implements MailMeAPI{
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(listener);
+
         if (connector != null)
             connector.disconnect();
         if (mailboxTaskManager != null)

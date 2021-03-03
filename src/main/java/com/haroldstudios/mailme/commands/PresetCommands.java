@@ -229,8 +229,8 @@ public class PresetCommands extends CommandBase {
             edit(player, new String[0]);
             return;
         } else if (args[1].startsWith("reason:")) {
-            String reason = args[1].split(":")[1];
-            reason = reason.replaceAll("_", " ");
+            String concat = String.join(" ", Arrays.copyOfRange(args, 1,args.length));
+            String reason = concat.split(":")[1];
             builder.setCommentary(reason);
             edit(player, new String[0]);
         } else {

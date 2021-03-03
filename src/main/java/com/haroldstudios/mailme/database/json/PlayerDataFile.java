@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class PlayerDataFile {
 
@@ -47,6 +49,7 @@ public class PlayerDataFile {
 
     public boolean updateMail(int colId, Mail mail) {
         boolean success =  this.mail.replace(colId, mail) != null;
+        MailMe.debug(PlayerDataFile.class, "Update Mail in file success: " + success);
         save();
         return success;
     }
@@ -67,8 +70,16 @@ public class PlayerDataFile {
         save();
     }
 
-    private synchronized void insertMailNoSave(Mail mail) {
+    private synchronized void insertMailNoSave(Mail x) {
         key++;
+        Mail mail = null;
+        try {
+            mail = (Mail) x.clone();
+        } catch (CloneNotSupportedException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "COULD NOT CLONE MAIL!");
+            MailMe.debug(e);
+            return;
+        }
         // May be linked when sending to multiple players. Should overwrite and ignore since we don't store it in a cache currently.
         mail.setColId(key);
         if (!mail.isLegacy()) {

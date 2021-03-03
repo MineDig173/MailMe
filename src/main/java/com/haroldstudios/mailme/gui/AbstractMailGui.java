@@ -53,6 +53,12 @@ public abstract class AbstractMailGui {
                 Utils.giveItem(guiOptions.getForWhom(), stack);
             }
         });
+        gui.setOpenGuiAction(event -> {
+            if (!getPlugin().isEnabled()) {
+                getPlayer().sendMessage(getPlugin().getLocale().getMessage(getPlayer(),"cmd.plugin-disabled"));
+                event.setCancelled(true);
+            }
+        });
     }
 
     protected void addItem(GuiItem item, GuiConfig.GContainer container) {

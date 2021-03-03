@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class Mail {
+public abstract class Mail implements Cloneable {
 
     // Mail class fields
     private final UUID uuid;
@@ -174,6 +174,11 @@ public abstract class Mail {
     public abstract boolean onMailClick(Player whoClicked);
     public abstract String[] getContentsAsString();
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
     // Hierarchical Builder Pattern
     public abstract static class Builder<T extends Builder<T>>{
 
@@ -227,14 +232,18 @@ public abstract class Mail {
             return System.currentTimeMillis();
         }
 
-        public void setCommentary(final String commentary) { this.commentary = commentary; }
+        public T setCommentary(final String commentary) {
+            this.commentary = commentary;
+            return self();
+        }
 
         public String getCommentary() {
             return commentary;
         }
 
-        public void setArchived(boolean archived) {
+        public T setArchived(boolean archived) {
             this.archived = archived;
+            return self();
         }
 
         public boolean isArchived() {

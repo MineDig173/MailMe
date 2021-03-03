@@ -171,12 +171,7 @@ public class MySQLDatabase implements DatabaseConnector, PlayerMailDAO {
     @Override
     public CompletableFuture<Mail> getPresetMail(String presetName) {
         return CompletableFuture.supplyAsync(() -> {
-            Mail[] mail = new Mail[0];
-            try {
-                mail = getMailFromQuery("SELECT * FROM Mail WHERE identifier_name='" + presetName + "'").get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+            Mail[] mail = getPresetMailFromTableQuery("SELECT * FROM Mail WHERE identifier_name='" + presetName + "'");
             if (mail.length == 0) {
                 return null;
             }
@@ -268,9 +263,6 @@ public class MySQLDatabase implements DatabaseConnector, PlayerMailDAO {
             MailMe.debug(MySQLDatabase.class, "------------");
             Bukkit.getLogger().log(Level.WARNING, "Could not close prepared statement. This may cause backend issues in future.");
             MailMe.debug(MySQLDatabase.class, String.format("SQL State: %s | Error Msg: %s | Error Code: %s", throwables.getSQLState(), throwables.getMessage(), throwables.getErrorCode()));
-        } finally {
-            MailMe.debug(MySQLDatabase.class, "Attempted to close statement THIS IS NOT AN ERROR: " + statement);
-            MailMe.debug(MySQLDatabase.class, "------------");
         }
     }
 
@@ -301,6 +293,30 @@ public class MySQLDatabase implements DatabaseConnector, PlayerMailDAO {
     private static void setValues(PreparedStatement preparedStatement, Object... values) throws SQLException {
         for (int i = 0; i < values.length; i++) {
             preparedStatement.setObject(i + 1, values[i]);
+        }
+    }
+
+    private Mail[] getPresetMailFromTableQuery(String query) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            if (rs == null) {
+                MailMe.debug(MySQLDatabase.class, "Result was null (mailtablequery)");
+                return new Mail[0];
+            }
+
+            List<Mail> mailList = new ArrayList<>();
+
+            while (rs.next()) {
+                Mail mailObj = MailMe.getInstance().getCache().getFileUtil().deserializeMail(rs.getString("mail_obj"));
+                mailList.add(mailObj);
+            }
+
+            return mailList.toArray(new Mail[0]);
+
+        } catch (SQLException ex) {
+            MailMe.debug(MySQLDatabase.class, ex.getMessage());
+            return new Mail[0];
         }
     }
 

@@ -37,12 +37,12 @@ public class Utils {
 
     public static boolean hasSpaceInInventory(List<ItemStack> items, Inventory inventory) {
         int freeSlots = 0;
-        for (ItemStack it : inventory.getContents()) {
-            if (it == null) continue;
+        for (ItemStack it : inventory.getStorageContents()) {
+            if (it == null || it.getType() == Material.AIR) continue;
             freeSlots++;
         }
         // Inventory is size 36
-        freeSlots = 36 - freeSlots;
+        freeSlots = inventory.getStorageContents().length - freeSlots;
         return freeSlots >= items.size();
     }
 
@@ -109,24 +109,17 @@ public class Utils {
         string = string.replace("%archived%", mail.isArchived() + "");
         string = string.replace("%reason%", mail.getCommentary() == null ? "" : mail.getCommentary());
 
-        String[] str;
+        List<String> stringList = new ArrayList<>();
+
         if (string.contains("%contents%")) {
-            String[] contents = mail.getContentsAsString();
-            for (int i = 0; i < contents.length; i++) {
-                contents[i] = contents[i].replace("%player_name%", player.getName());
+            for (String content : mail.getContentsAsString()) {
+                stringList.add(content.replace("%player_name%", player.getName()));
             }
-            str = new String[contents.length + 1];
-
             string = string.replace("%contents%", "");
-            str[0] = string;
-
-            System.arraycopy(contents, 0, str, 1, contents.length);
-
-        } else {
-            str = new String[]{string};
         }
 
-        return str;
+        stringList.add(0, string);
+        return stringList.toArray(new String[0]);
     }
 
     public static int getAllowedAmountOfMailboxes(final Player player) {

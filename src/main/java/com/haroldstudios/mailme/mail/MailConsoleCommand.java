@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collections;
 import java.util.List;
 
-public class MailConsoleCommand extends Mail {
+public class MailConsoleCommand extends Mail implements Cloneable {
 
     private final String command;
 
@@ -74,5 +74,8 @@ public class MailConsoleCommand extends Mail {
         }
     }
 
-
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
