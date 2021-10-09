@@ -1,18 +1,10 @@
 # MailMe-RW
 This is the repository for the rewrite of MailMe.
 
-## Compiling the code
-You are more than welcome to compile the code and use publically on your server. Just be advised, 
-if anything goes wrong you will not receive any support from the developer unfortunately. To gain any support 
-you will need to purchase the plugin. 
+## About
+This plugin has been archived and is no longer being updated or supported by me personally. You can find the new author upkeeping it on spigot.
 
-The code here may be upstream, behind or up to date. I therefore do not guarantee that the code at the time of download and compile will work.
+MailMe is an original plugin built for use on minecraft servers using the spigot software. It adds electronic mail to the game where players can send messages, items or even books. It has smart mailbox sorting using GUIs and inventory events to optimize the player experience along with the server admin experience for sending global mail to players and mail on special events such as first login. The plugin also implements physical mailboxes and post offices which can add an authenticity feel to the game where players have to visit a location to collect mail such as real life. Alongside this, players can adjust their notification settings for getting pinged when a mail is received. Has cross server support using the mysql database.
 
-## Contributing
-Contributions are always welcome, whether that be languages, code or bug reports. 
-You can contribute to the codebase by creating a branch and then creating a pull request and bug reports can go under
-issues.
-
-## Developers
-If you're here to use the API be advised, the plugin currently has a limited API and incorrect use may have damaging effects.
-You can find the API at: https://wiki.haroldstudios.com
+### Please be aware
+This program was written very early on in my 'programming career' if you will. Before the start of university infact. So take the code structure and quality with a pinch of salt however, still showcases my abilities
